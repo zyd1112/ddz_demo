@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "6f565816-9979-4ee0-a223-3ff124a98d03",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "joininputBg": {
+      "ver": "1.0.4",
+      "uuid": "0b5aa862-ba73-46ea-b354-9ae1cf4608d7",
+      "rawTextureUuid": "6f565816-9979-4ee0-a223-3ff124a98d03",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0.5,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 774,
+      "height": 647,
+      "rawWidth": 774,
+      "rawHeight": 648,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "6f565816-9979-4ee0-a223-3ff124a98d03@6c48a",
+      "displayName": "joininputBg",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "6f565816-9979-4ee0-a223-3ff124a98d03",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "6f565816-9979-4ee0-a223-3ff124a98d03@6c48a"
+  }
+}

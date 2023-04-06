@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "bee5d208-011d-416a-8dce-cff306de87ef",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "btn_weixin": {
+      "ver": "1.0.4",
+      "uuid": "21464690-a416-4d5e-abed-a50668afea81",
+      "rawTextureUuid": "bee5d208-011d-416a-8dce-cff306de87ef",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0.5,
+      "offsetY": 7.5,
+      "trimX": 10,
+      "trimY": 0,
+      "width": 378,
+      "height": 122,
+      "rawWidth": 397,
+      "rawHeight": 137,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "bee5d208-011d-416a-8dce-cff306de87ef@6c48a",
+      "displayName": "btn_weixin",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "bee5d208-011d-416a-8dce-cff306de87ef",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "bee5d208-011d-416a-8dce-cff306de87ef@6c48a"
+  }
+}

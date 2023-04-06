@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "122b7e95-d673-44ad-a768-d5f1023c21ab",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "join_6": {
+      "ver": "1.0.4",
+      "uuid": "aea70361-edd8-4786-88c7-24545f3381f4",
+      "rawTextureUuid": "122b7e95-d673-44ad-a768-d5f1023c21ab",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 190,
+      "height": 90,
+      "rawWidth": 190,
+      "rawHeight": 90,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "122b7e95-d673-44ad-a768-d5f1023c21ab@6c48a",
+      "displayName": "join_6",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "122b7e95-d673-44ad-a768-d5f1023c21ab",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "122b7e95-d673-44ad-a768-d5f1023c21ab@6c48a"
+  }
+}

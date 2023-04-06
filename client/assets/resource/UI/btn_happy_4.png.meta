@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "c52714a1-04fc-4fbe-83f1-186674b27f01",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "btn_happy_4": {
+      "ver": "1.0.4",
+      "uuid": "4218012f-f9e5-46d9-9041-41ffc4bc0a70",
+      "rawTextureUuid": "c52714a1-04fc-4fbe-83f1-186674b27f01",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 3,
+      "offsetY": 4,
+      "trimX": 10,
+      "trimY": 1,
+      "width": 274,
+      "height": 377,
+      "rawWidth": 288,
+      "rawHeight": 387,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "c52714a1-04fc-4fbe-83f1-186674b27f01@6c48a",
+      "displayName": "btn_happy_4",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "c52714a1-04fc-4fbe-83f1-186674b27f01",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "c52714a1-04fc-4fbe-83f1-186674b27f01@6c48a"
+  }
+}

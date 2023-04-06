@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "6a499af6-22cf-4881-85ed-6f858fb1c1e4",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "qiangzhuang": {
+      "ver": "1.0.4",
+      "uuid": "99572d99-242d-4a7f-bc80-37c81c62e5a1",
+      "rawTextureUuid": "6a499af6-22cf-4881-85ed-6f858fb1c1e4",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": -1.5,
+      "trimX": 0,
+      "trimY": 3,
+      "width": 118,
+      "height": 65,
+      "rawWidth": 118,
+      "rawHeight": 68,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "6a499af6-22cf-4881-85ed-6f858fb1c1e4@6c48a",
+      "displayName": "qiangzhuang",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "6a499af6-22cf-4881-85ed-6f858fb1c1e4",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "6a499af6-22cf-4881-85ed-6f858fb1c1e4@6c48a"
+  }
+}

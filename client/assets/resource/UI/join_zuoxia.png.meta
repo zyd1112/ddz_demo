@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "366615ea-a8c2-4714-8495-6528829fef8c",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "join_zuoxia": {
+      "ver": "1.0.4",
+      "uuid": "baf323a9-843d-438f-9c58-f9168fa3f989",
+      "rawTextureUuid": "366615ea-a8c2-4714-8495-6528829fef8c",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 190,
+      "height": 90,
+      "rawWidth": 190,
+      "rawHeight": 90,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "366615ea-a8c2-4714-8495-6528829fef8c@6c48a",
+      "displayName": "join_zuoxia",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "366615ea-a8c2-4714-8495-6528829fef8c",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "366615ea-a8c2-4714-8495-6528829fef8c@6c48a"
+  }
+}

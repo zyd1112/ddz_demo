@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.25",
+  "importer": "image",
+  "imported": true,
+  "uuid": "7cd26c8c-3d74-4c8c-9aa7-cc7299ef0e0d",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "lobby_pic_logo_xx": {
+      "ver": "1.0.4",
+      "uuid": "caffea57-3c21-48f8-84a8-a226dd331cc5",
+      "rawTextureUuid": "7cd26c8c-3d74-4c8c-9aa7-cc7299ef0e0d",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 3,
+      "width": 442,
+      "height": 72,
+      "rawWidth": 442,
+      "rawHeight": 78,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "7cd26c8c-3d74-4c8c-9aa7-cc7299ef0e0d@6c48a",
+      "displayName": "lobby_pic_logo_xx",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "7cd26c8c-3d74-4c8c-9aa7-cc7299ef0e0d",
+        "visible": true
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "hasAlpha": true,
+    "redirect": "7cd26c8c-3d74-4c8c-9aa7-cc7299ef0e0d@6c48a"
+  }
+}
