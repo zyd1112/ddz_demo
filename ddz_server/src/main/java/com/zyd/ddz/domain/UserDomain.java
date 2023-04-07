@@ -30,9 +30,15 @@ public class UserDomain {
     @Column(name = "password", nullable = false, comment = "用户密码", length = 20)
     private String password;
 
+    @Column(name = "nickname", nullable = false, comment = "用户昵称", length = 20)
+    private String nickname;
+
     @Column(name = "create_time", nullable = false, comment = "创建时间")
     private Date createTime;
 
     @Column(name = "ip", nullable = false, comment = "ip")
     private String ip;
+
+    @Column(name = "joy_beans", nullable = false, comment = "欢乐豆")
+    private String joyBeans;
 }
