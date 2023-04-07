@@ -12,5 +12,5 @@ public interface LoginService {
     /**
      * 游客登录
      */
-    UserDomain visitorLogin(Session session, String username, String password);
+    UserDomain visitorLogin(Session session);
 }
