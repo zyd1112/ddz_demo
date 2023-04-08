@@ -1,6 +1,8 @@
 package com.zyd.ddz.service.impl;
 
 import com.zyd.ddz.dao.UserDao;
+import com.zyd.ddz.domain.UserDomain;
+import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomFactory;
 import com.zyd.ddz.room.RoomEvent;
@@ -40,7 +42,8 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public boolean enterRoom(Session session, long uid, int roomType) {
         RoomEvent roomEvent = RoomFactory.getRoom(roomType);
-        if (roomEvent == null){
+        UserDomain userDomain = userDao.cacheGet(uid);
+        if (roomEvent == null || userDomain == null){
             return false;
         }
         Long roomId = roleToRoomMap.get(uid);
@@ -57,11 +60,15 @@ public class RoomServiceImpl implements RoomService {
             roomEvent.onCreate(room);
         }
         room = roomMap.get(roomId);
-        if(room.getRoleList().size() == roomEvent.getSize()){
+        if(room.getPlayerList().size() == roomEvent.getSize()){
             return false;
         }
-        room.getRoleList().add(uid);
-        roomEvent.onEnter(room);
+        Player player = new Player();
+        player.setRoomId(roomId);
+        player.setUid(uid);
+        player.setJoyBeans(userDomain.getJoyBeans());
+        room.getPlayerList().add(player);
+        roomEvent.onPlayerEnter(room, player);
 
         return true;
     }

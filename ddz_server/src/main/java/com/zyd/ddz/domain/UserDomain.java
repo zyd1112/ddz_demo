@@ -40,5 +40,5 @@ public class UserDomain {
     private String ip;
 
     @Column(name = "joy_beans", nullable = false, comment = "欢乐豆")
-    private String joyBeans;
+    private int joyBeans;
 }

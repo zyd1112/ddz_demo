@@ -22,7 +22,7 @@ public class Room {
 
     private long createTime;
 
-    private List<Long> roleList = new CopyOnWriteArrayList<>();
+    private List<Player> playerList = new CopyOnWriteArrayList<>();
 
     private RoomEvent roomEvent;
 }

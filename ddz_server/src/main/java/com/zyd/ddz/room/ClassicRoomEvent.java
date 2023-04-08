@@ -1,5 +1,6 @@
 package com.zyd.ddz.room;
 
+import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,12 +25,17 @@ public class ClassicRoomEvent implements RoomEvent {
     }
 
     @Override
-    public void onEnter(Room room) {
+    public void onPlayerEnter(Room room, Player player) {
 
     }
 
     @Override
-    public void ondestroy(Room room) {
+    public void onDestroy(Room room) {
+
+    }
+
+    @Override
+    public void onHeart(Room room) {
 
     }
 }

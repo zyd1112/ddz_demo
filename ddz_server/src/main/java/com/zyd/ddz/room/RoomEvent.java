@@ -1,5 +1,6 @@
 package com.zyd.ddz.room;
 
+import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 
 /**
@@ -21,12 +22,17 @@ public interface RoomEvent {
     void onCreate(Room room);
 
     /**
-     * 加入房间事件
+     * 玩家加入房间事件
      */
-    void onEnter(Room room);
+    void onPlayerEnter(Room room, Player player);
 
     /**
      * 房间销毁事件
      */
-    void ondestroy(Room room);
+    void onDestroy(Room room);
+
+    /**
+     * 房间心跳事件
+     */
+    void onHeart(Room room);
 }
