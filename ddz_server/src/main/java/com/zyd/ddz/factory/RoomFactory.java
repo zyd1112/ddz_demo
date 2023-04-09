@@ -2,8 +2,8 @@ package com.zyd.ddz.factory;
 
 
 import com.zyd.ddz.constant.RoomType;
-import com.zyd.ddz.room.ClassicRoomEvent;
-import com.zyd.ddz.room.RoomEvent;
+import com.zyd.ddz.room.ClassicAbstractRoomEvent;
+import com.zyd.ddz.room.AbstractRoomEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.Map;
  */
 public class RoomFactory {
 
-    private static final Map<Integer, RoomEvent> ROOM_TYPE = new HashMap<Integer, RoomEvent>(){{
-        put(RoomType.CLASSIC, new ClassicRoomEvent());
+    private static final Map<Integer, AbstractRoomEvent> ROOM_TYPE = new HashMap<Integer, AbstractRoomEvent>(){{
+        put(RoomType.CLASSIC, new ClassicAbstractRoomEvent());
     }};
 
-    public static RoomEvent getRoom(int type){
+    public static AbstractRoomEvent getRoom(int type){
         return ROOM_TYPE.get(type);
     }
 }

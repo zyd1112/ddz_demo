@@ -10,7 +10,6 @@ import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
 
-import javax.swing.plaf.PanelUI;
 
 /**
  * @author zyd

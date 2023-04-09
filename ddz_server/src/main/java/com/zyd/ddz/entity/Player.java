@@ -15,4 +15,14 @@ public class Player {
     int joyBeans;
 
     List<Card> cardList = new ArrayList<>();
+
+    /**
+     * 是否是托管机器人
+     */
+    boolean auto;
+
+    /**
+     * 是否准备
+     */
+    boolean ready;
 }

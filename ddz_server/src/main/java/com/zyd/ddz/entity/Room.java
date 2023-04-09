@@ -1,10 +1,9 @@
 package com.zyd.ddz.entity;
 
-import com.zyd.ddz.room.RoomEvent;
+import com.zyd.ddz.room.AbstractRoomEvent;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,5 +23,11 @@ public class Room {
 
     private List<Player> playerList = new CopyOnWriteArrayList<>();
 
-    private RoomEvent roomEvent;
+    private AbstractRoomEvent abstractRoomEvent;
+
+    private boolean isDestroy;
+
+    private long gameStartTime;
+
+
 }
