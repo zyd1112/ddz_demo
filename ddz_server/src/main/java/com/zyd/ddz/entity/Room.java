@@ -29,7 +29,11 @@ public class Room {
 
     private long gameStartTime;
 
+    private int gameReadyTime;
+
     private int waitDestroyTime;
+
+    private boolean start;
 
 
 }

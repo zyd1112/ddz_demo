@@ -42,9 +42,9 @@ public abstract class AbstractRoomManager {
     public void onDestroy(Room room){};
 
     /**
-     * 游戏开始事件
+     * 玩家准备事件
      */
-    public void onGameStart(Room room){};
+    public void onPlayerReady(Room room, long uid, boolean ready){};
 
     /**
      * 房间心跳事件

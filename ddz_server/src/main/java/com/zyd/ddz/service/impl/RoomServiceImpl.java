@@ -21,12 +21,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     UserDao userDao;
-    @Autowired
-    RoomManagerFactory roomManagerFactory;
-
     @Override
     public boolean enterRoom(Session session, long uid, int roomType) {
-        AbstractRoomManager roomManager = roomManagerFactory.getRoom(roomType);
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return false;
         }
@@ -45,7 +42,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void exitRoom(Session session, long uid, long roomId, int roomType) {
-        AbstractRoomManager roomManager = roomManagerFactory.getRoom(roomType);
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
         }
@@ -57,8 +54,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void destroyRoom(long roomId, int roomType) {
-        AbstractRoomManager roomManager = roomManagerFactory.getRoom(roomType);
+    public void gameReady(Session session, long uid, long roomId, int roomType, boolean ready) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
         }
@@ -66,20 +63,7 @@ public class RoomServiceImpl implements RoomService {
         if(room == null){
             return;
         }
-        roomManager.onDestroy(room);
-    }
-
-    @Override
-    public void gameStart(long roomId, int roomType) {
-        AbstractRoomManager roomManager = roomManagerFactory.getRoom(roomType);
-        if(roomManager == null){
-            return;
-        }
-        Room room = roomManager.getRoom(roomId);
-        if(room == null){
-            return;
-        }
-        roomManager.onGameStart(room);
+        roomManager.onPlayerReady(room, uid, ready);
     }
 
 }

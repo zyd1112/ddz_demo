@@ -44,16 +44,5 @@ public class GameServerConfiguration {
         return idManager;
     }
 
-    @Bean
-    public RoomManagerFactory startExecutor(){
-        RoomManagerFactory factory = new RoomManagerFactory();
-        factory.init();
-        RoomHeartEvent roomHeartEvent = new RoomHeartEvent();
-        roomHeartEvent.setRoomManagerFactory(factory);
-        ExecutorUtils.startScheduleTask(ExecutorType.ROOM, roomHeartEvent, 0, 100, TimeUnit.MILLISECONDS);
-        return factory;
-    }
-
-
 
 }

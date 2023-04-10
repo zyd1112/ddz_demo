@@ -1,9 +1,6 @@
 package com.zyd.ddz.service;
 
-import com.zyd.ddz.entity.Room;
 import xyz.noark.core.network.Session;
-
-import java.util.List;
 
 /**
  * @author zyd
@@ -15,8 +12,6 @@ public interface RoomService {
 
     void exitRoom(Session session, long uid, long roomId, int roomType);
 
-    void destroyRoom(long roomId, int roomType);
-
-    void gameStart(long roomId, int roomType);
+    void gameReady(Session session, long uid, long roomId, int roomType, boolean ready);
 
 }

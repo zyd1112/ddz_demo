@@ -4,7 +4,6 @@ import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
 import com.zyd.ddz.room.AbstractRoomManager;
-import lombok.Setter;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,8 +11,6 @@ import java.util.Map;
 
 public class RoomHeartEvent extends GameTask {
 
-    @Setter
-    RoomManagerFactory roomManagerFactory;
 
     long curTime = System.currentTimeMillis();
 
@@ -22,7 +19,7 @@ public class RoomHeartEvent extends GameTask {
         long now = System.currentTimeMillis();
         int dt = (int) (now - curTime);
         curTime = now;
-        Map<Integer, AbstractRoomManager> rooms = roomManagerFactory.getRooms();
+        Map<Integer, AbstractRoomManager> rooms = RoomManagerFactory.getRooms();
         rooms.forEach((type, roomManager) -> {
             Collection<Room> roomList = roomManager.getRooms();
             roomManager.getAvailableRooms()

@@ -18,17 +18,16 @@ import java.util.Map;
 public class RoomManagerFactory {
 
 
-    private final Map<Integer, AbstractRoomManager> ROOM_TYPE = new HashMap<>();
+    private static final Map<Integer, AbstractRoomManager> ROOM_TYPE = new HashMap<Integer, AbstractRoomManager>(){{
+        put(RoomType.CLASSIC, new ClassicAbstractRoomManager());
+    }};
 
-    public void init(){
-        ROOM_TYPE.put(RoomType.CLASSIC, new ClassicAbstractRoomManager());
-    }
 
-    public AbstractRoomManager getRoom(int type){
+    public static AbstractRoomManager getRoom(int type){
         return ROOM_TYPE.get(type);
     }
 
-    public Map<Integer, AbstractRoomManager> getRooms(){
+    public static Map<Integer, AbstractRoomManager> getRooms(){
         return ROOM_TYPE;
     }
 }
