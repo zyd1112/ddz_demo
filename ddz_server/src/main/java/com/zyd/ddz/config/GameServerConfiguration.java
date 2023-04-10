@@ -1,13 +1,20 @@
 package com.zyd.ddz.config;
 
+import com.zyd.ddz.constant.ExecutorType;
 import com.zyd.ddz.dao.UserDao;
+import com.zyd.ddz.event.RoomHeartEvent;
+import com.zyd.ddz.factory.RoomManagerFactory;
+import com.zyd.ddz.utils.ExecutorUtils;
 import com.zyd.ddz.utils.IdManager;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Configuration;
 import xyz.noark.core.annotation.Value;
 import xyz.noark.core.annotation.configuration.Bean;
+import xyz.noark.core.event.EventManager;
 import xyz.noark.game.monitor.MonitorManager;
 import xyz.noark.game.monitor.impl.MemoryMonitorService;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zyd
@@ -22,6 +29,7 @@ public class GameServerConfiguration {
     @Autowired
     UserDao userDao;
 
+
     @Bean
     public MonitorManager monitorManager() {
         MonitorManager manager = new MonitorManager();
@@ -35,4 +43,17 @@ public class GameServerConfiguration {
         idManager.setSid(sid);
         return idManager;
     }
+
+    @Bean
+    public RoomManagerFactory startExecutor(){
+        RoomManagerFactory factory = new RoomManagerFactory();
+        factory.init();
+        RoomHeartEvent roomHeartEvent = new RoomHeartEvent();
+        roomHeartEvent.setRoomManagerFactory(factory);
+        ExecutorUtils.startScheduleTask(ExecutorType.ROOM, roomHeartEvent, 0, 100, TimeUnit.MILLISECONDS);
+        return factory;
+    }
+
+
+
 }

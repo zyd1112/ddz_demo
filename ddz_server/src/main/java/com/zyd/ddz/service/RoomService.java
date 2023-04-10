@@ -13,13 +13,10 @@ public interface RoomService {
 
     boolean enterRoom(Session session, long uid, int roomType);
 
-    void exitRoom(Session session, long uid, long roomId);
+    void exitRoom(Session session, long uid, long roomId, int roomType);
 
-    void destroyRoom(Room room);
+    void destroyRoom(long roomId, int roomType);
 
-    void onGameStart(Room room);
+    void gameStart(long roomId, int roomType);
 
-    List<Room> getRoom();
-
-    List<Room> getAvailableRoom();
 }

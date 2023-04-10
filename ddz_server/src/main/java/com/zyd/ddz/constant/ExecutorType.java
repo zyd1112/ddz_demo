@@ -1,8 +1,19 @@
 package com.zyd.ddz.constant;
 
-public interface ExecutorType {
+import lombok.Getter;
 
-    int ROOM = 1;
+@Getter
+public enum ExecutorType {
 
-    int PLAYER = 2;
+    ROOM(1, "房间处理器"),
+
+    PLAYER(2, "玩家处理器");
+
+    int type;
+    String name;
+
+    ExecutorType(int type, String name){
+        this.name = name;
+        this.type = type;
+    }
 }

@@ -2,6 +2,7 @@ package com.zyd.ddz.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.noark.core.network.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,4 +26,6 @@ public class Player {
      * 是否准备
      */
     boolean ready;
+
+    Session session;
 }

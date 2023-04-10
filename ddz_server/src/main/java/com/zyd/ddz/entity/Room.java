@@ -1,6 +1,6 @@
 package com.zyd.ddz.entity;
 
-import com.zyd.ddz.room.AbstractRoomEvent;
+import com.zyd.ddz.room.AbstractRoomManager;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,11 +23,13 @@ public class Room {
 
     private List<Player> playerList = new CopyOnWriteArrayList<>();
 
-    private AbstractRoomEvent abstractRoomEvent;
+    private AbstractRoomManager abstractRoomManager;
 
     private boolean isDestroy;
 
     private long gameStartTime;
+
+    private int waitDestroyTime;
 
 
 }

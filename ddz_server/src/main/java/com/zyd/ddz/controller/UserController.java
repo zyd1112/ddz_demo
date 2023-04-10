@@ -6,6 +6,7 @@ import com.zyd.ddz.service.UserService;
 import com.zyd.ddz.utils.DtoUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Controller;
+import xyz.noark.core.annotation.PlayerId;
 import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PacketMapping(opcode = 1002, state = Session.State.CONNECTED)
-    public void enterRoom(Session session, long uid){
+    public void enterRoom(Session session, @PlayerId long uid){
 
     }
 }
