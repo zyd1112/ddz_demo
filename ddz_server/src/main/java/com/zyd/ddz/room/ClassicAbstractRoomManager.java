@@ -112,6 +112,12 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     public void onDestroy(Room room) {
         logger.warn("{}, 销毁", room.getName());
         room.setDestroy(true);
+
+        roomMap.remove(room.getId());
+        for (Player player : room.getPlayerList()) {
+            playerMap.remove(player.getUid());
+            playerToRoomMap.remove(player.getUid());
+        }
     }
 
     @Override

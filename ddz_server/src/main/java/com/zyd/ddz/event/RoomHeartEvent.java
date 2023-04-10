@@ -5,9 +5,6 @@ import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
 import com.zyd.ddz.room.AbstractRoomManager;
 import lombok.Setter;
-import xyz.noark.core.annotation.Autowired;
-import xyz.noark.core.annotation.Component;
-import xyz.noark.core.event.Event;
 
 import java.util.Collection;
 import java.util.List;
