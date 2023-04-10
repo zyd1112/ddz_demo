@@ -18,9 +18,9 @@ import xyz.noark.core.network.Session;
 @Service
 public class RoomServiceImpl implements RoomService {
 
-
     @Autowired
     UserDao userDao;
+
     @Override
     public boolean enterRoom(Session session, long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
@@ -54,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void gameReady(Session session, long uid, long roomId, int roomType, boolean ready) {
+    public void playerReady(Session session, long uid, long roomId, int roomType, boolean ready) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -64,6 +64,11 @@ public class RoomServiceImpl implements RoomService {
             return;
         }
         roomManager.onPlayerReady(room, uid, ready);
+    }
+
+    @Override
+    public void scramble(Session session, long uid, int roomType, long roomId, int type) {
+
     }
 
 }

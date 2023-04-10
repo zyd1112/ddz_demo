@@ -2,13 +2,8 @@ package com.zyd.ddz.room;
 
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
-import com.zyd.ddz.service.DdzService;
-import com.zyd.ddz.utils.IdManager;
+
 import com.zyd.ddz.utils.RandomUtils;
-import com.zyd.ddz.utils.TimeUtils;
-import lombok.Setter;
-import xyz.noark.core.annotation.Autowired;
-import xyz.noark.core.annotation.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,10 +42,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
 
     private final Map<Long, Player> playerMap = new ConcurrentHashMap<>();
 
-    /**
-     * 准备时间
-     */
-    private final int readyTime = 1000;
+
 
     @Override
     public int getSize() {
@@ -78,7 +70,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
 
         player.setRoomId(roomId);
 
-        room.getPlayerList().add(player);
+        room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
     }
 
@@ -87,16 +79,9 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
         if (!this.playerToRoomMap.containsKey(uid)) {
             return;
         }
-        List<Player> playerList = room.getPlayerList();
-        Player player = null;
-        int index = 0;
-        for (Player p : playerList) {
-            if(p.getUid() == uid){
-                player = p;
-                break;
-            }
-            index++;
-        }
+        Map<Long, Player> players = room.getPlayers();
+        Player player = players.get(uid);
+
         if(player == null) {
             return;
         }
@@ -104,7 +89,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
         logger.info("{} 玩家 离开: {}", uid, room.getName());
 
         if(!room.isStart()){
-            playerList.remove(index);
+            players.remove(uid);
         }else{
             player.setAuto(true);
         }
@@ -125,40 +110,19 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
         room.setDestroy(true);
         room.setStart(false);
         roomMap.remove(room.getId());
-        for (Player player : room.getPlayerList()) {
-            playerMap.remove(player.getUid());
-            playerToRoomMap.remove(player.getUid());
-        }
+        room.getPlayers().forEach((playerId, player) -> {
+            playerMap.remove(playerId);
+            playerToRoomMap.remove(playerId);
+        });
     }
 
     @Override
     public void onHeart(Room room, int dt) {
-        List<Player> playerList = room.getPlayerList();
-        if(!room.isStart()){
-            boolean ready = false;
-            int gameReadyTime = room.getGameReadyTime();
-            long gameStartTime = room.getGameStartTime();
-            if(playerList.size() == room.getAbstractRoomManager().getSize()){
-                ready = true;
-                for (Player player : playerList) {
-                    if(!player.isReady()){
-                        ready = false;
-                        break;
-                    }
-                }
-            }
-            gameReadyTime = ready ? gameReadyTime + dt : 0;
-            if(gameReadyTime >= readyTime){
-                gameStartTime = TimeUtils.getNowTimeMillis();
-                logger.info("{} 游戏开始", room.getName());
-                room.setStart(true);
-                gameReadyTime = 0;
-            }
-            room.setGameStartTime(gameStartTime);
-            room.setGameReadyTime(gameReadyTime);
-        }else {
-            //todo
+        if (!room.isStart()){
+            return;
         }
+
+
     }
 
     @Override
