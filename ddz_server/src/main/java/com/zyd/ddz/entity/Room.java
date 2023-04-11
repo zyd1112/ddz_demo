@@ -1,9 +1,12 @@
 package com.zyd.ddz.entity;
 
+import com.zyd.ddz.constant.CharacterType;
 import com.zyd.ddz.room.AbstractRoomManager;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,11 +38,15 @@ public class Room {
 
     private boolean start;
 
+    int multiple = 15;
+
+    private List<CharacterType> characterTypeList = new ArrayList<CharacterType>(){{
+        add(CharacterType.FARMER);
+        add(CharacterType.PARTNER);
+    }};
     /**
-     * 玩家角色分配 id -> type 1: 地主
-     *                       2-3: 农民
-     *
+     * 当前牌面
      */
-    private Map<Long, Integer> playerCharacter = new ConcurrentHashMap<>();
+    private List<Card> curTableCars = new ArrayList<>();
 
 }

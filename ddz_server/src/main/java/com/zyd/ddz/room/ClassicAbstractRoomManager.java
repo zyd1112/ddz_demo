@@ -2,8 +2,7 @@ package com.zyd.ddz.room;
 
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
-
-import com.zyd.ddz.utils.RandomUtils;
+import xyz.noark.core.util.RandomUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,10 +35,8 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     private final Map<Long, Room> roomMap = new ConcurrentHashMap<>();
 
     /**
-     * roleId -> roomId
+     * uid -> player
      */
-    private final Map<Long, Long> playerToRoomMap = new ConcurrentHashMap<>();
-
     private final Map<Long, Player> playerMap = new ConcurrentHashMap<>();
 
 
@@ -54,20 +51,19 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     public void onPlayerEnter(Player player) {
         long uid = player.getUid();
 
-        Long roomId = playerToRoomMap.get(uid);
+        long roomId;
         Room room;
         if(availableRoom.isEmpty()){
             room = new Room();
             roomId = ROOM_ID.incrementAndGet();
-            playerToRoomMap.put(uid, roomId);
             room.setCreateTime(System.currentTimeMillis());
             room.setId(roomId);
             room.setName("房间-" + ROOM_NUM.incrementAndGet());
             roomMap.put(roomId, room);
             availableRoom.add(room);
         }
-        room = availableRoom.get(RandomUtils.getRandomNum(availableRoom.size()));
-
+        room = availableRoom.get(RandomUtils.nextInt(availableRoom.size()));
+        roomId = room.getId();
         player.setRoomId(roomId);
 
         room.getPlayers().put(uid, player);
@@ -75,33 +71,19 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     }
 
     @Override
-    public void onPlayerExit(Room room, long uid) {
-        if (!this.playerToRoomMap.containsKey(uid)) {
-            return;
-        }
-        Map<Long, Player> players = room.getPlayers();
-        Player player = players.get(uid);
-
-        if(player == null) {
-            return;
-        }
-
-        logger.info("{} 玩家 离开: {}", uid, room.getName());
+    public void onPlayerExit(Room room, Player player) {
+        logger.info("{} 玩家 离开: {}", player.getUid(), room.getName());
 
         if(!room.isStart()){
-            players.remove(uid);
+            playerMap.remove(player.getUid());
         }else{
             player.setAuto(true);
         }
     }
 
     @Override
-    public void onPlayerReady(Room room, long uid, boolean ready){
-        Player player = playerMap.get(uid);
-        if(player == null){
-            return;
-        }
-        player.setReady(ready);
+    public void onPlayerReady(Room room, Player player, boolean ready){
+
     }
 
     @Override
@@ -112,7 +94,6 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
         roomMap.remove(room.getId());
         room.getPlayers().forEach((playerId, player) -> {
             playerMap.remove(playerId);
-            playerToRoomMap.remove(playerId);
         });
     }
 
@@ -138,6 +119,11 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     @Override
     public Room getRoom(long roomId) {
         return roomMap.get(roomId);
+    }
+
+    @Override
+    public Map<Long, Player> getPlayers() {
+        return this.playerMap;
     }
 
 }

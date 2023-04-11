@@ -1,9 +1,8 @@
 package com.zyd.ddz.service.impl;
 
-import com.zyd.ddz.dao.UserDao;
 import com.zyd.ddz.domain.UserDomain;
 import com.zyd.ddz.service.LoginService;
-import com.zyd.ddz.utils.IdManager;
+import com.zyd.ddz.utils.IdUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Service;
 import xyz.noark.core.network.Session;
@@ -18,15 +17,15 @@ import java.util.Date;
 public class LoginServiceImpl implements LoginService {
 
     @Autowired
-    IdManager idManager;
+    IdUtils idUtils;
 
     @Override
     public UserDomain visitorLogin(Session session) {
         UserDomain userDomain = new UserDomain();
-        String name = "visitor-" + idManager.getVisitorId();
+        String name = "visitor-" + idUtils.getVisitorId();
         userDomain.setUsername(name);
         userDomain.setNickname(name);
-        userDomain.setId(idManager.generator());
+        userDomain.setId(idUtils.generator());
         userDomain.setCreateTime(new Date());
         userDomain.setIp(session.getIp());
         userDomain.setPassword("111");

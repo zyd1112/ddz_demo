@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author zyd
  * @date 2023/1/10 17:44
  */
-public class IdManager {
+public class IdUtils {
     private static final long MAX_SEQUENCE = 1L << 15;
 
     /**

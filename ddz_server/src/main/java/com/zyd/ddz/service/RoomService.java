@@ -1,6 +1,9 @@
 package com.zyd.ddz.service;
 
+import com.zyd.ddz.entity.Card;
 import xyz.noark.core.network.Session;
+
+import java.util.List;
 
 /**
  * @author zyd
@@ -16,17 +19,22 @@ public interface RoomService {
     /**
      * 玩家离开房间
      */
-    void exitRoom(Session session, long uid, long roomId, int roomType);
+    void exitRoom(Session session, long uid, int roomType);
 
     /**
      * 玩家准备
      */
-    void playerReady(Session session, long uid, long roomId, int roomType, boolean ready);
+    void playerReady(Session session, long uid, int roomType, boolean ready);
 
 
     /**
      * 争夺地主
-     * @param type 1: 叫地主, 2: 抢地主
+     * @param scramble 是否抢地主
      */
-    void scramble(Session session, long uid, int roomType, long roomId, int type);
+    void scramble(Session session, long uid, int roomType, boolean scramble);
+
+    /**
+     * 出牌
+     */
+    void sendCard(Session session, long uid, int roomType, List<Card> cards);
 }

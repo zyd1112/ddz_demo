@@ -1,20 +1,13 @@
 package com.zyd.ddz.config;
 
-import com.zyd.ddz.constant.ExecutorType;
 import com.zyd.ddz.dao.UserDao;
-import com.zyd.ddz.event.RoomHeartEvent;
-import com.zyd.ddz.factory.RoomManagerFactory;
-import com.zyd.ddz.utils.ExecutorUtils;
-import com.zyd.ddz.utils.IdManager;
+import com.zyd.ddz.utils.IdUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Configuration;
 import xyz.noark.core.annotation.Value;
 import xyz.noark.core.annotation.configuration.Bean;
-import xyz.noark.core.event.EventManager;
 import xyz.noark.game.monitor.MonitorManager;
 import xyz.noark.game.monitor.impl.MemoryMonitorService;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author zyd
@@ -38,10 +31,10 @@ public class GameServerConfiguration {
     }
 
     @Bean
-    public IdManager idManager(){
-        IdManager idManager = new IdManager();
-        idManager.setSid(sid);
-        return idManager;
+    public IdUtils idUtils(){
+        IdUtils idUtils = new IdUtils();
+        idUtils.setSid(sid);
+        return idUtils;
     }
 
 

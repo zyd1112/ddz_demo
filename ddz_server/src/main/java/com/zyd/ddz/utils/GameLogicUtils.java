@@ -14,6 +14,28 @@ import java.util.*;
 public class GameLogicUtils {
 
     /**
+     * 当前牌面是否大于目标牌面
+     * @param cards 出的牌
+     * @param target 目标牌
+     * @return 是否大于目标牌面
+     */
+    public static boolean check(List<Card> cards, List<Card> target){
+        CardGroupType targetType = CardFactory.getCardType(target);
+        if(targetType == null){
+            return false;
+        }
+        return check(cards, targetType);
+    }
+
+    private static boolean check(List<Card> cards, CardGroupType target){
+        CardGroupType curType = CardFactory.getCardType(cards);
+        if(target == null){
+            return false;
+        }
+        return curType != null && curType.compare(target);
+    }
+
+    /**
      * 获取有效牌集
      * @param own 手牌
      * @param target 目标牌
@@ -21,7 +43,11 @@ public class GameLogicUtils {
      */
     public static List<List<Card>> getAvailableCards(List<Card> own, List<Card> target){
         List<List<Card>> res = new ArrayList<>();
-        findCardGroup(own, CardFactory.getCardType(target), res, new ArrayList<>(), 0);
+        CardGroupType type = CardFactory.getCardType(target);
+        if(type == null){
+            return res;
+        }
+        findCardGroup(own, type, res, new ArrayList<>(), 0);
         return res;
     }
 
@@ -83,11 +109,7 @@ public class GameLogicUtils {
     }
 
     private static void findCardGroup(List<Card> own, CardGroupType target, List<List<Card>> resList, List<Card> curList, int begin){
-        if (target == null){
-            return;
-        }
-        CardGroupType curType = CardFactory.getCardType(curList);
-        if(curType != null && curType.compare(target)){
+        if(check(curList, target)){
             resList.add(new ArrayList<>(curList));
             return;
         }

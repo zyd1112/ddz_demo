@@ -34,7 +34,7 @@ public abstract class AbstractRoomManager {
     /**
      * 玩家离开房间事件
      */
-    public void onPlayerExit(Room room, long uid){};
+    public void onPlayerExit(Room room, Player player){};
 
     /**
      * 房间销毁事件
@@ -44,7 +44,7 @@ public abstract class AbstractRoomManager {
     /**
      * 玩家准备事件
      */
-    public void onPlayerReady(Room room, long uid, boolean ready){};
+    public void onPlayerReady(Room room, Player player, boolean ready){};
 
     /**
      * 房间心跳事件
@@ -56,5 +56,7 @@ public abstract class AbstractRoomManager {
     public abstract Collection<Room> getAvailableRooms();
 
     public abstract Room getRoom(long roomId);
+
+    public abstract Map<Long, Player> getPlayers();
 
 }

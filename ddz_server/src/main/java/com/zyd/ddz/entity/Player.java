@@ -1,5 +1,6 @@
 package com.zyd.ddz.entity;
 
+import com.zyd.ddz.constant.CharacterType;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.noark.core.network.Session;
@@ -28,4 +29,10 @@ public class Player {
     boolean ready;
 
     Session session;
+
+    CharacterType character;
+
+    long scrambleTime;
+
+    int scrambleCount;
 }
