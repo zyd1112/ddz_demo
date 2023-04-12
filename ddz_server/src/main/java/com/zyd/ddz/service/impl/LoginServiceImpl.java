@@ -1,5 +1,6 @@
 package com.zyd.ddz.service.impl;
 
+import com.zyd.ddz.dao.UserDao;
 import com.zyd.ddz.domain.UserDomain;
 import com.zyd.ddz.service.LoginService;
 import com.zyd.ddz.utils.IdUtils;
@@ -18,6 +19,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     IdUtils idUtils;
+    @Autowired
+    UserDao userDao;
 
     @Override
     public UserDomain visitorLogin(Session session) {
@@ -29,6 +32,7 @@ public class LoginServiceImpl implements LoginService {
         userDomain.setCreateTime(new Date());
         userDomain.setIp(session.getIp());
         userDomain.setPassword("111");
+        userDao.insert(userDomain);
         return userDomain;
     }
 }

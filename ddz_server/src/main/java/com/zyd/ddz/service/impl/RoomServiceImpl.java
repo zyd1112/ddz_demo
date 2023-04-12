@@ -14,6 +14,7 @@ import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Service;
 import xyz.noark.core.network.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static xyz.noark.log.LogHelper.logger;
@@ -41,6 +42,7 @@ public class RoomServiceImpl implements RoomService {
         player.setJoyBeans(userDomain.getJoyBeans());
         player.setUid(uid);
         player.setSession(session);
+        player.setName(userDomain.getNickname());
         roomManager.onPlayerEnter(player);
         return true;
     }
@@ -124,8 +126,31 @@ public class RoomServiceImpl implements RoomService {
             return;
         }
         List<Card> curTableCars = room.getCurTableCars();
+        List<Card> cardList = player.getCardList();
+        if(cardList.size() < cards.size() || !GameLogicUtils.check(cards, curTableCars)){
+            logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curTableCars);
+            return;
+        }
+        room.setCurTableCars(new ArrayList<>(cards));
+        cardList.removeIf(cards::contains);
 
-        //todo
+    }
+
+    @Override
+    public void autoRobot(Session session, long uid, int roomType, boolean choose) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
+        if(roomManager == null){
+            return;
+        }
+        if (!roomManager.getPlayers().containsKey(uid)) {
+            return;
+        }
+        Player player = roomManager.getPlayers().get(uid);
+        Room room = roomManager.getRoom(player.getRoomId());
+        if(room == null || !room.isStart()){
+            return;
+        }
+        player.setAuto(choose);
     }
 
 }

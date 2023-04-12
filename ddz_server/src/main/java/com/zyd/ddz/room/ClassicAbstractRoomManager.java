@@ -68,6 +68,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
 
         room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
+        logger.info("{[]:[]} 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
     }
 
     @Override
@@ -102,7 +103,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
         if (!room.isStart()){
             return;
         }
-
+        //托管机器人
 
     }
 

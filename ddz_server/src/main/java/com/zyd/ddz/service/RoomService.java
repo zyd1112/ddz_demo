@@ -37,4 +37,9 @@ public interface RoomService {
      * 出牌
      */
     void sendCard(Session session, long uid, int roomType, List<Card> cards);
+
+    /**
+     * 托管
+     */
+    void autoRobot(Session session, long uid, int roomType, boolean choose);
 }

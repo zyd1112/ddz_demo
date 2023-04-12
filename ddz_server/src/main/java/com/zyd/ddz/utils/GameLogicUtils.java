@@ -15,20 +15,20 @@ public class GameLogicUtils {
 
     /**
      * 当前牌面是否大于目标牌面
-     * @param cards 出的牌
+     * @param cast 出的牌
      * @param target 目标牌
      * @return 是否大于目标牌面
      */
-    public static boolean check(List<Card> cards, List<Card> target){
+    public static boolean check(List<Card> cast, List<Card> target){
         CardGroupType targetType = CardFactory.getCardType(target);
         if(targetType == null){
             return false;
         }
-        return check(cards, targetType);
+        return check(cast, targetType);
     }
 
-    private static boolean check(List<Card> cards, CardGroupType target){
-        CardGroupType curType = CardFactory.getCardType(cards);
+    private static boolean check(List<Card> cast, CardGroupType target){
+        CardGroupType curType = CardFactory.getCardType(cast);
         if(target == null){
             return false;
         }

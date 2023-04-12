@@ -13,6 +13,7 @@ import java.util.List;
 public class Player {
     long uid;
     long roomId;
+    String name;
 
     int joyBeans;
 
