@@ -9,6 +9,7 @@ import xyz.noark.core.annotation.Controller;
 import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
+import xyz.noark.core.network.SessionManager;
 
 import static xyz.noark.log.LogHelper.logger;
 
@@ -25,12 +26,18 @@ public class GameController {
     UserService userService;
 
     @PacketMapping(opcode = 10, state = Session.State.CONNECTED)
-    public void enterRoom(Session session, ReqEnterRoomMessage message){
-        UserDto userDto = userService.getById(session, message.getUid());
+    public void enterRoom(ReqEnterRoomMessage message){
+        long uid = message.getUid();
+        if (!SessionManager.isOnline(uid)){
+            logger.info("[{}] 用户没有在线", uid);
+            return;
+        }
+        Session session = SessionManager.getSessionByPlayerId(uid);
+        UserDto userDto = userService.getById(session, uid);
         if(userDto == null){
             logger.info("用户不存在");
             return;
         }
-        roomService.enterRoom(session, message.getUid(), message.getRoomType());
+        roomService.enterRoom(session, uid, message.getRoomType());
     }
 }

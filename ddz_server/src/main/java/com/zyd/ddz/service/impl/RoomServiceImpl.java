@@ -38,11 +38,14 @@ public class RoomServiceImpl implements RoomService {
         if(userDomain == null){
             return false;
         }
-        Player player = new Player();
-        player.setJoyBeans(userDomain.getJoyBeans());
-        player.setUid(uid);
-        player.setSession(session);
-        player.setName(userDomain.getNickname());
+        Player player = roomManager.getPlayers().get(uid);
+        if(player == null){
+            player = new Player();
+            player.setJoyBeans(userDomain.getJoyBeans());
+            player.setUid(uid);
+            player.setSession(session);
+            player.setName(userDomain.getNickname());
+        }
         roomManager.onPlayerEnter(player);
         return true;
     }

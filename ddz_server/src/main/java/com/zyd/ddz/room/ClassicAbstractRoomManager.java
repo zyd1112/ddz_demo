@@ -50,7 +50,11 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     @Override
     public void onPlayerEnter(Player player) {
         long uid = player.getUid();
-
+        if(playerMap.containsKey(uid)){
+            logger.info("{} 玩家, 断线重连", uid);
+            player.setAuto(false);
+            return;
+        }
         long roomId;
         Room room;
         if(availableRoom.isEmpty()){

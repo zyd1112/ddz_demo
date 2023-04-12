@@ -10,6 +10,7 @@ import xyz.noark.core.annotation.PlayerId;
 import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
+import xyz.noark.core.network.SessionManager;
 
 
 /**
@@ -28,12 +29,8 @@ public class UserController {
     @PacketMapping(opcode = 1001, state = Session.State.CONNECTED)
     public void visitorLogin(Session session){
         UserDomain userDomain = loginService.visitorLogin(session);
-
+        SessionManager.bindPlayerIdAndSession(userDomain.getId(), session);
         session.send(1001, DtoUtils.packUser(userDomain));
     }
 
-    @PacketMapping(opcode = 1002, state = Session.State.CONNECTED)
-    public void enterRoom(Session session, @PlayerId long uid){
-
-    }
 }
