@@ -128,15 +128,18 @@ public class RoomServiceImpl implements RoomService {
         if(room == null || !room.isStart()){
             return;
         }
-        List<Card> curTableCars = room.getCurTableCars();
+        Player curPlayer = room.getCurPlayer();
         List<Card> cardList = player.getCardList();
-        if(cardList.size() < cards.size() || !GameLogicUtils.check(cards, curTableCars)){
-            logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curTableCars);
-            return;
+        if(!cards.isEmpty() && curPlayer != null){
+            List<Card> curTableCars = curPlayer.getSendCard();
+            if(!GameLogicUtils.check(cards, curTableCars)){
+                logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curTableCars);
+                return;
+            }
         }
-        room.setCurTableCars(new ArrayList<>(cards));
+        room.setCurPlayer(player);
+        player.setSendCard(cards);
         cardList.removeIf(cards::contains);
-
     }
 
     @Override

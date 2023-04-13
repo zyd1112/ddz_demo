@@ -45,8 +45,9 @@ public class Room {
         add(CharacterType.PARTNER);
     }};
     /**
-     * 当前牌面
+     * 当前出牌玩家
      */
-    private List<Card> curTableCars = new ArrayList<>();
+    private Player curPlayer;
+
 
 }
