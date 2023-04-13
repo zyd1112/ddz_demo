@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, Sprite, SpriteAtlas, SpriteFrame } from 'cc';
+import { _decorator, Button, Component, Node, NodeEventType, Prefab, Sprite, SpriteAtlas, SpriteFrame } from 'cc';
 import { PoolManager } from '../framework/PoolManager';
 import { CardLoader } from './CardLoader';
 import { CharacterType } from '../constant/CharacterType';
@@ -20,6 +20,9 @@ export class CardManager extends Component {
     @property
     private role = 1;
 
+    @property
+    private move = 5;
+
     private tx = 0;
     private ty = 0;
     start() {
@@ -32,16 +35,19 @@ export class CardManager extends Component {
             card.setPosition(this.tx, this.ty, 0);
             if(this.role == CharacterType.role.SELF){
                 card.getComponent(CardLoader).setCardName("card_" + (i + 1));
+                this.addButton(card);
             }else{
                 card.getComponent(CardLoader).setCardName("card_55");
-                
             }
         }
     }
-
-    update(deltaTime: number) {
-        
+    addButton(card: Node) {
+        const button = card.addComponent(Button);
+        button.node.on(NodeEventType.TOUCH_END, () => {
+            const pos = card.position;
+            let y = pos.y > this.y ? this.y : pos.y + this.move;
+            card.setPosition(pos.x, y, pos.z);
+        });
     }
 }
-
 
