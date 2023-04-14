@@ -1,5 +1,6 @@
 package com.zyd.ddz.message.room;
 
+import com.zyd.ddz.message.Message;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,9 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class ReqEnterRoomMessage {
+public class ReqEnterRoomMessage implements Message {
+    int opcode = 10;
+
     long uid;
 
     int roomType;

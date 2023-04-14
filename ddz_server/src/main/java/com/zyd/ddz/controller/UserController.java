@@ -30,7 +30,7 @@ public class UserController {
     public void visitorLogin(Session session){
         UserDomain userDomain = loginService.visitorLogin(session);
         SessionManager.bindPlayerIdAndSession(userDomain.getId(), session);
-        session.send(1001, DtoUtils.packUser(userDomain));
+        session.send(1002, DtoUtils.packUser(userDomain));
     }
 
 }
