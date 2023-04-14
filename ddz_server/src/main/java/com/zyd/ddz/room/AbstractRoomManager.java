@@ -2,6 +2,7 @@ package com.zyd.ddz.room;
 
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
+import xyz.noark.core.network.SessionManager;
 import xyz.noark.core.util.RandomUtils;
 
 import java.util.Collection;
@@ -78,7 +79,7 @@ public abstract class AbstractRoomManager {
 
         room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
-        logger.info("{[]:[]} 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
+        logger.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
     };
 
     /**

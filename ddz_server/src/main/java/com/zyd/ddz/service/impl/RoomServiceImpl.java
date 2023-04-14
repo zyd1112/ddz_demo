@@ -7,6 +7,7 @@ import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
+import com.zyd.ddz.message.room.ResPlayerCardMessage;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.utils.GameLogicUtils;
@@ -16,6 +17,7 @@ import xyz.noark.core.network.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static xyz.noark.log.LogHelper.logger;
 /**
@@ -46,6 +48,12 @@ public class RoomServiceImpl implements RoomService {
             player.setSession(session);
             player.setName(userDomain.getNickname());
         }
+        Map<Integer, List<Card>> cards = GameLogicUtils.sendCard();
+        logger.info("{}", cards);
+        player.setCardList(new ArrayList<>(cards.get(1)));
+        ResPlayerCardMessage message = new ResPlayerCardMessage();
+        message.getCardList().addAll(player.getCardList());
+        player.getSession().send(message.getOpcode(), message);
         roomManager.onPlayerEnter(player);
         return true;
     }

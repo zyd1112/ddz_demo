@@ -236,7 +236,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 972.8571428571429,
+    "_orthoHeight": 480,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -932,6 +932,15 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "cardSlef": {
+      "__id__": 8
+    },
+    "cardSide_1": {
+      "__id__": 11
+    },
+    "cardSide_2": {
+      "__id__": 15
+    },
     "_id": "a6VnWjK3pDAJLD6kehS54d"
   },
   {

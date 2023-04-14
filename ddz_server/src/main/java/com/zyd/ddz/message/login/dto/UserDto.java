@@ -19,6 +19,6 @@ public class UserDto {
 
     private String nickname;
 
-    private String joyBeans;
+    private int joyBeans;
 
 }

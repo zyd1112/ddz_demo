@@ -6,27 +6,11 @@ export class GameClientNet {
     private static websocket: WebSocket = null;
 
     public static startClient(ip: string, port: number){
-        this.websocket = new WebSocket("ws://" + ip + ":" + port);
-        this.websocket.onopen = () => {
-            console.log("client connect")
-            this.sendMessge();
-        }
-        this.websocket.onmessage = (event) => {
-            let data = JSON.parse(event.data);
-            let message = MessageFactory.getMessage(data.opcode)
-            message = data.protocol;
-            console.log(message)
-        }
-        let that = this;
-        
+        this.websocket = new WebSocket("ws://" + ip + ":" + port);        
     }
 
-    public static sendMessge(){
-        this.websocket.send(JSON.stringify({
-            opcode: 1001,
-            // uid: 123,
-            // roomType: 1
-        }));
+    public static getConnection() : WebSocket{
+        return this.websocket;
     }
 }
 

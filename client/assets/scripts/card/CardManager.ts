@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 @ccclass('CardManager')
 export class CardManager extends Component {
     @property(Prefab)
-    private cardPrefab: Prefab = null;
+    public cardPrefab: Prefab = null;
     @property
     private x = 0;
     @property
@@ -18,33 +18,33 @@ export class CardManager extends Component {
     private offset_y = 0;
 
     @property
-    private role = 1;
+    public role = 1;
 
     @property
     private move = 5;
 
     private tx = 0;
     private ty = 0;
-    start() {
+
+    public init(cards: Card[]){
         this.tx = this.x;
         this.ty = this.y;
-        for(let i = 0; i < 17; i++){
-            const card = this.addCard(this.tx, this.ty, i + 1);
-            this.tx = card.position.x;
-            this.ty = card.position.y;
+        for(let i = 0; i < cards.length; i++){
+            this.addCard(this.tx, this.ty, cards[i].cardValue, cards[i].shape);
+            this.tx += this.offset_x;
+            this.ty += this.offset_y;
         }
     }
-    public addCard(tx: number, ty: number, id: number){
+    
+    public addCard(tx: number, ty: number, cardValue: number, shape: number){
         const card = PoolManager.getInstance().getNode(this.cardPrefab, this.node);
-        tx += this.offset_x;
-        ty += this.offset_y;
         card.setPosition(tx, ty, 0);
         const cardLoader = card.getComponent(CardLoader);
         if(this.role == CharacterType.role.SELF){
-            cardLoader.setId(id);
+            cardLoader.load("card_" + cardValue + "_" + shape);
             this.addButton(card);
         }else{
-            cardLoader.setId(55);
+            cardLoader.load("card_55");
         }
         cardLoader.setIsSend(false);
         return card;

@@ -16,6 +16,7 @@ public class DtoUtils {
         userDto.setPassword(userDomain.getPassword());
         userDto.setNickname(userDomain.getNickname());
         userDto.setNickname(userDomain.getNickname());
+        userDto.setJoyBeans(userDomain.getJoyBeans());
         return userDto;
     }
 }

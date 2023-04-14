@@ -6,21 +6,12 @@ const { ccclass, property } = _decorator;
 @ccclass('CardLoader')
 export class CardLoader extends Component {
     
-    private id = 0;
     private send = false;
 
-    start() {
+    load(path: string) {
         const sprite = this.getComponent(Sprite);
-        const cards = sprite.spriteAtlas.getSpriteFrame("card_" + this.id);
+        const cards = sprite.spriteAtlas.getSpriteFrame(path);
         sprite.spriteFrame = cards;
-    }
-
-    public setId(id: number){
-        this.id = id;
-    }
-    
-    public getId() : number {
-        return this.id;
     }
 
 

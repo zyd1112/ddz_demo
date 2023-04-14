@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>card_1.png</key>
+            <key>card_12_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{238,646},{116,159}}</string>
@@ -17,7 +17,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_10.png</key>
+            <key>card_8_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{120,646},{116,159}}</string>
@@ -30,7 +30,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_11.png</key>
+            <key>card_9_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,646},{116,159}}</string>
@@ -43,7 +43,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_12.png</key>
+            <key>card_10_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1418,485},{116,159}}</string>
@@ -56,7 +56,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_13.png</key>
+            <key>card_11_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1300,485},{116,159}}</string>
@@ -69,7 +69,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_14.png</key>
+            <key>card_12_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1182,485},{116,159}}</string>
@@ -82,7 +82,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_15.png</key>
+            <key>card_13_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1064,485},{116,159}}</string>
@@ -95,7 +95,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_16.png</key>
+            <key>card_1_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{946,485},{116,159}}</string>
@@ -108,7 +108,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_17.png</key>
+            <key>card_2_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{828,485},{116,159}}</string>
@@ -121,7 +121,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_18.png</key>
+            <key>card_3_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{710,485},{116,159}}</string>
@@ -134,7 +134,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_19.png</key>
+            <key>card_4_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{592,485},{116,159}}</string>
@@ -147,7 +147,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_2.png</key>
+            <key>card_13_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{474,485},{116,159}}</string>
@@ -160,7 +160,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_20.png</key>
+            <key>card_5_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{356,485},{116,159}}</string>
@@ -173,7 +173,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_21.png</key>
+            <key>card_6_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{238,485},{116,159}}</string>
@@ -186,7 +186,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_22.png</key>
+            <key>card_7_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{120,485},{116,159}}</string>
@@ -199,7 +199,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_23.png</key>
+            <key>card_8_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,485},{116,159}}</string>
@@ -212,7 +212,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_24.png</key>
+            <key>card_9_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1418,324},{116,159}}</string>
@@ -225,7 +225,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_25.png</key>
+            <key>card_10_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1300,324},{116,159}}</string>
@@ -238,7 +238,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_26.png</key>
+            <key>card_11_2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1182,324},{116,159}}</string>
@@ -251,7 +251,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_27.png</key>
+            <key>card_12_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1064,324},{116,159}}</string>
@@ -264,7 +264,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_28.png</key>
+            <key>card_13_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{946,324},{116,159}}</string>
@@ -277,7 +277,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_29.png</key>
+            <key>card_1_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{828,324},{116,159}}</string>
@@ -290,7 +290,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_3.png</key>
+            <key>card_1_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{710,324},{116,159}}</string>
@@ -303,7 +303,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_30.png</key>
+            <key>card_2_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{592,324},{116,159}}</string>
@@ -316,7 +316,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_31.png</key>
+            <key>card_3_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{474,324},{116,159}}</string>
@@ -329,7 +329,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_32.png</key>
+            <key>card_4_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{356,324},{116,159}}</string>
@@ -342,7 +342,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_33.png</key>
+            <key>card_5_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{238,324},{116,159}}</string>
@@ -355,7 +355,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_34.png</key>
+            <key>card_6_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{120,324},{116,159}}</string>
@@ -368,7 +368,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_35.png</key>
+            <key>card_7_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,324},{116,159}}</string>
@@ -381,7 +381,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_36.png</key>
+            <key>card_8_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1418,163},{116,159}}</string>
@@ -394,7 +394,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_37.png</key>
+            <key>card_9_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1300,163},{116,159}}</string>
@@ -407,7 +407,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_38.png</key>
+            <key>card_10_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1182,163},{116,159}}</string>
@@ -420,7 +420,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_39.png</key>
+            <key>card_11_3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1064,163},{116,159}}</string>
@@ -433,7 +433,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_4.png</key>
+            <key>card_2_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{946,163},{116,159}}</string>
@@ -446,7 +446,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_40.png</key>
+            <key>card_12_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{828,163},{116,159}}</string>
@@ -459,7 +459,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_41.png</key>
+            <key>card_13_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{710,163},{116,159}}</string>
@@ -472,7 +472,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_42.png</key>
+            <key>card_1_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{592,163},{116,159}}</string>
@@ -485,7 +485,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_43.png</key>
+            <key>card_2_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{474,163},{116,159}}</string>
@@ -498,7 +498,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_44.png</key>
+            <key>card_3_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{356,163},{116,159}}</string>
@@ -511,7 +511,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_45.png</key>
+            <key>card_4_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{238,163},{116,159}}</string>
@@ -524,7 +524,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_46.png</key>
+            <key>card_5_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{120,163},{116,159}}</string>
@@ -537,7 +537,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_47.png</key>
+            <key>card_6_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,163},{116,159}}</string>
@@ -550,7 +550,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_48.png</key>
+            <key>card_7_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1418,2},{116,159}}</string>
@@ -563,7 +563,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_49.png</key>
+            <key>card_8_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1300,2},{116,159}}</string>
@@ -576,7 +576,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_5.png</key>
+            <key>card_3_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1182,2},{116,159}}</string>
@@ -589,7 +589,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_50.png</key>
+            <key>card_9_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1064,2},{116,159}}</string>
@@ -602,7 +602,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_51.png</key>
+            <key>card_10_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{946,2},{116,159}}</string>
@@ -615,7 +615,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_52.png</key>
+            <key>card_11_4.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{828,2},{116,159}}</string>
@@ -628,7 +628,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_53.png</key>
+            <key>card_14_5.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{710,2},{116,159}}</string>
@@ -641,7 +641,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_54.png</key>
+            <key>card_15_5.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{592,2},{116,159}}</string>
@@ -667,7 +667,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_6.png</key>
+            <key>card_4_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{356,2},{116,159}}</string>
@@ -680,7 +680,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_7.png</key>
+            <key>card_5_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{238,2},{116,159}}</string>
@@ -693,7 +693,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_8.png</key>
+            <key>card_6_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{120,2},{116,159}}</string>
@@ -706,7 +706,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_9.png</key>
+            <key>card_7_1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{116,159}}</string>
