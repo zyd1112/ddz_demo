@@ -29,24 +29,44 @@ export class CardManager extends Component {
         this.tx = this.x;
         this.ty = this.y;
         for(let i = 0; i < 17; i++){
-            const card = PoolManager.getInstance().getNode(this.cardPrefab, this.node);
-            this.tx += this.offset_x;
-            this.ty += this.offset_y;
-            card.setPosition(this.tx, this.ty, 0);
-            if(this.role == CharacterType.role.SELF){
-                card.getComponent(CardLoader).setCardName("card_" + (i + 1));
-                this.addButton(card);
-            }else{
-                card.getComponent(CardLoader).setCardName("card_55");
-            }
+            const card = this.addCard(this.tx, this.ty, i + 1);
+            this.tx = card.position.x;
+            this.ty = card.position.y;
         }
     }
-    addButton(card: Node) {
+    public addCard(tx: number, ty: number, id: number){
+        const card = PoolManager.getInstance().getNode(this.cardPrefab, this.node);
+        tx += this.offset_x;
+        ty += this.offset_y;
+        card.setPosition(tx, ty, 0);
+        const cardLoader = card.getComponent(CardLoader);
+        if(this.role == CharacterType.role.SELF){
+            cardLoader.setId(id);
+            this.addButton(card);
+        }else{
+            cardLoader.setId(55);
+        }
+        cardLoader.setIsSend(false);
+        return card;
+    }
+    public refresh(){
+        this.tx = this.x;
+        this.ty = this.y;
+        const children = this.node.children;
+        for(let i = 0; i < children.length; i++){
+            children[i].setPosition(this.tx, this.ty, 0);
+            this.tx += this.offset_x;
+            this.ty += this.offset_y;
+        }
+    }
+
+    public addButton(card: Node) {
         const button = card.addComponent(Button);
         button.node.on(NodeEventType.TOUCH_END, () => {
             const pos = card.position;
-            let y = pos.y > this.y ? this.y : pos.y + this.move;
+            let y = pos.y != this.y ? this.y : pos.y + this.move;
             card.setPosition(pos.x, y, pos.z);
+            card.getComponent(CardLoader).setIsSend(y != this.y);
         });
     }
 }

@@ -10,7 +10,7 @@ export class UIMain extends Component {
     }
 
     update(deltaTime: number) {
-        this.node.on(SystemEvent.EventType.TOUCH_START, this._touchStart, this);
+        
     }
 
     private _touchStart(){
