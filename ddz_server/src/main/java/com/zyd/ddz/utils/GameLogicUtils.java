@@ -20,19 +20,25 @@ public class GameLogicUtils {
      * @return 是否大于目标牌面
      */
     public static boolean check(List<Card> cast, List<Card> target){
-        CardGroupType targetType = CardFactory.getCardType(target);
-        if(targetType == null){
+        if(cast == null){
             return false;
         }
-        return check(cast, targetType);
+        CardGroupType curType = CardFactory.getCardType(cast);
+        if(curType == null){
+            return false;
+        }
+        if(target == null){
+            return true;
+        }
+        return check(cast, CardFactory.getCardType(target));
     }
 
     private static boolean check(List<Card> cast, CardGroupType target){
         CardGroupType curType = CardFactory.getCardType(cast);
-        if(target == null){
+        if(curType == null){
             return false;
         }
-        return curType != null && curType.compare(target);
+        return curType.compare(target);
     }
 
     /**

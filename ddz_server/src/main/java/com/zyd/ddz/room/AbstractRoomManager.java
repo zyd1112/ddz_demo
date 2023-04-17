@@ -80,6 +80,7 @@ public abstract class AbstractRoomManager {
         room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
         logger.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
+
     };
 
     /**

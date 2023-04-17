@@ -1,6 +1,6 @@
 import { _decorator, Button, Component, Node, NodeEventType, Prefab, Sprite, SpriteAtlas, SpriteFrame } from 'cc';
 import { PoolManager } from '../framework/PoolManager';
-import { CardLoader } from './CardLoader';
+import { Card, CardLoader } from './CardLoader';
 import { CharacterType } from '../constant/CharacterType';
 const { ccclass, property } = _decorator;
 
@@ -13,9 +13,9 @@ export class CardManager extends Component {
     @property
     private y = 0;
     @property
-    private offset_x = 70;
+    public offset_x = 70;
     @property
-    private offset_y = 0;
+    public offset_y = 0;
 
     @property
     public role = 1;
@@ -27,25 +27,30 @@ export class CardManager extends Component {
     private ty = 0;
 
     public init(cards: Card[]){
+        if(cards == null){
+            return;
+        }
         this.tx = this.x;
         this.ty = this.y;
         for(let i = 0; i < cards.length; i++){
-            this.addCard(this.tx, this.ty, cards[i].cardValue, cards[i].shape);
+            this.addCard(this.tx, this.ty, cards[i]);
             this.tx += this.offset_x;
             this.ty += this.offset_y;
         }
     }
     
-    public addCard(tx: number, ty: number, cardValue: number, shape: number){
+    public addCard(tx: number, ty: number, c: Card){
         const card = PoolManager.getInstance().getNode(this.cardPrefab, this.node);
         card.setPosition(tx, ty, 0);
         const cardLoader = card.getComponent(CardLoader);
+        
         if(this.role == CharacterType.role.SELF){
-            cardLoader.load("card_" + cardValue + "_" + shape);
+            cardLoader.load("card_" + c.cardValue + "_" + c.shape);
             this.addButton(card);
         }else{
             cardLoader.load("card_55");
         }
+        cardLoader.setCard(c);
         cardLoader.setIsSend(false);
         return card;
     }

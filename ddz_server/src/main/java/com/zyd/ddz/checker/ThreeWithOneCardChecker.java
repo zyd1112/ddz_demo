@@ -4,9 +4,11 @@ package com.zyd.ddz.checker;
 import com.zyd.ddz.constant.CardContext;
 import com.zyd.ddz.entity.Card;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  * @author zyd
@@ -23,25 +25,22 @@ public class ThreeWithOneCardChecker implements Checker{
         if(cardList.size() != 4){
             return false;
         }
-        int threeCnt = 0;
-        int oneCnt = 0;
-        int firstValue = cardList.get(0).getCardValue();
-        if(CardContext.Joker.contains(firstValue)){
-            return false;
-        }
-        for (int i = 1; i < cardList.size(); i++) {
-            int total = cardList.get(i).getCardValue();
-            if(CardContext.Joker.contains(total)){
+
+        int[] cardsNum = new int[20];
+
+        for (Card card : cardList) {
+            int value = card.getCardValue();
+            if(CardContext.Joker.contains(value)){
                 return false;
             }
-            if(total == firstValue){
-                threeCnt++;
-            }else{
-                oneCnt++;
-                firstValue = total;
-            }
+            cardsNum[value]++;
+
         }
-        return (threeCnt == 2 && oneCnt == 1) || (threeCnt == 3 && oneCnt == 0);
+        return match(Arrays.stream(cardsNum));
+    }
+
+    protected boolean match(IntStream stream){
+        return stream.anyMatch(v -> v == 3) && stream.anyMatch(v -> v == 1);
     }
 
     @Override

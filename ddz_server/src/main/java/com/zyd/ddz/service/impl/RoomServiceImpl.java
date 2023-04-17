@@ -51,10 +51,9 @@ public class RoomServiceImpl implements RoomService {
         Map<Integer, List<Card>> cards = GameLogicUtils.sendCard();
         logger.info("{}", cards);
         player.setCardList(new ArrayList<>(cards.get(1)));
-        ResPlayerCardMessage message = new ResPlayerCardMessage();
-        message.getCardList().addAll(player.getCardList());
-        player.getSession().send(message.getOpcode(), message);
+
         roomManager.onPlayerEnter(player);
+        sendCardMessage(roomManager.getRoom(player.getRoomId()).getPlayers(), new ArrayList<>());
         return true;
     }
 
@@ -133,21 +132,21 @@ public class RoomServiceImpl implements RoomService {
         }
         Player player = roomManager.getPlayers().get(uid);
         Room room = roomManager.getRoom(player.getRoomId());
-        if(room == null || !room.isStart()){
-            return;
-        }
+//        if(room == null || !room.isStart()){
+//            return;
+//        }
         Player curPlayer = room.getCurPlayer();
         List<Card> cardList = player.getCardList();
-        if(!cards.isEmpty() && curPlayer != null){
-            List<Card> curTableCars = curPlayer.getSendCard();
-            if(!GameLogicUtils.check(cards, curTableCars)){
-                logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curTableCars);
-                return;
-            }
+        List<Card> curCards = curPlayer == null ? null : curPlayer.getSendCard();
+        if(!GameLogicUtils.check(cards, curCards)){
+            logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curCards);
+            return;
         }
         room.setCurPlayer(player);
         player.setSendCard(cards);
         cardList.removeIf(cards::contains);
+        sendCardMessage(roomManager.getRoom(player.getRoomId()).getPlayers(), cards);
+        logger.info("[{}: {}] 玩家出牌: cards: {}", uid, player.getName(), cards);
     }
 
     @Override
@@ -167,4 +166,12 @@ public class RoomServiceImpl implements RoomService {
         player.setAuto(choose);
     }
 
+
+    private void sendCardMessage(Map<Long, Player> players, List<Card> removes){
+        ResPlayerCardMessage message = new ResPlayerCardMessage();
+        message.setType(1);
+        message.getRemoveCards().addAll(removes);
+        players.forEach((playerId, p) -> message.getCardsMap().computeIfAbsent((p.getCharacter().ordinal() + 1), k -> new ArrayList<>(p.getCardList())));
+        players.forEach((playerId, p) -> p.getSession().send(message.getOpcode(), message));
+    }
 }

@@ -4,7 +4,7 @@ import { MessageFactory } from '../proto/MessageFactory';
 import { UserLoginHandler } from '../proto/messageHandler/user/UserLoginHandler';
 import { MessageUtils } from '../net/MessageUtils';
 import { GameRoomHandler } from '../proto/messageHandler/room/GameRoomHandler';
-import { ReqEnterRoomMessage } from '../proto/message/room/ReqEnterRoomMessage';
+import { Gloabal } from '../Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
@@ -18,17 +18,25 @@ export class GameManager extends Component {
     @property(Node)
     cardSide_2: Node = null;
 
-    uid: number;
+    @property(Node)
+    gabage: Node = null;
+
     start() {
         GameClientNet.startClient("127.0.0.1", 10001);
         MessageFactory.register(1002, new UserLoginHandler());
-        MessageFactory.register(11, new GameRoomHandler());
-        let that = this;
+        MessageFactory.register(1001, new GameRoomHandler());
         GameClientNet.getConnection().onopen = () => {
-            MessageUtils.send(1001, {});
+            MessageUtils.send(11, {});
         }
         GameClientNet.getConnection().onmessage = (event) => {
-            let data = JSON.parse(event.data);
+            let data = event.data;
+            try{
+                data = JSON.parse(data);
+            }catch {
+                let json = data.replace(/(\w+):/g, "\"$1\":");
+                data = JSON.parse(json);
+            }
+            
             let handler = MessageFactory.getHandler(data.opcode)
             if(handler){
                 handler.handler(data.protocol, this);
@@ -36,9 +44,12 @@ export class GameManager extends Component {
         }
         
         setTimeout(() => {
-            let msg = new ReqEnterRoomMessage();
-            msg.roomType = 1;
-            msg.uid = that.uid;
+            let msg = {
+                opcode: 10,
+                roomType: 1,
+                uid: Gloabal.uid
+            };
+            Gloabal.roomType = msg.roomType
             MessageUtils.send(msg.opcode, msg);
         }, 5000);
     }

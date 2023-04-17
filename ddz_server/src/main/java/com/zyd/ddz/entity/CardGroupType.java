@@ -23,8 +23,8 @@ public class CardGroupType {
 
 
     public boolean compare(CardGroupType cardType){
-        if(this.getChecker() == null || cardType.getChecker() == null){
-            return false;
+        if(cardType.getChecker() == null){
+            return true;
         }
         if(cardType.getIndex() != this.getIndex()){
             if(this.getChecker() instanceof JokerBoomChecker){

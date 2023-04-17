@@ -2,6 +2,7 @@ package com.zyd.ddz.controller;
 
 import com.zyd.ddz.message.login.dto.UserDto;
 import com.zyd.ddz.message.room.ReqEnterRoomMessage;
+import com.zyd.ddz.message.room.ReqSendCardsMessage;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.service.UserService;
 import xyz.noark.core.annotation.Autowired;
@@ -39,5 +40,21 @@ public class GameController {
             return;
         }
         roomService.enterRoom(session, uid, message.getRoomType());
+    }
+
+    @PacketMapping(opcode = 12, state = Session.State.CONNECTED)
+    public void sendCard(ReqSendCardsMessage message){
+        long uid = message.getUid();
+        if (!SessionManager.isOnline(uid)){
+            logger.info("[{}] 用户没有在线", uid);
+            return;
+        }
+        Session session = SessionManager.getSessionByPlayerId(uid);
+        UserDto userDto = userService.getById(session, uid);
+        if(userDto == null){
+            logger.info("用户不存在");
+            return;
+        }
+        roomService.sendCard(session, message.getUid(), message.getRoomType(), message.getCardList());
     }
 }

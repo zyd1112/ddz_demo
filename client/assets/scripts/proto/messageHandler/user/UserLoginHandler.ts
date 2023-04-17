@@ -1,14 +1,24 @@
+import { Gloabal } from "../../../Global";
 import { GameManager } from "../../../framework/GameManager";
 import { MessageHander } from "../../MessageHanderl";
-import { ResUserMessage } from "../../message/user/ResUserMessage";
 
+interface ResUserMessage{
+    id: number;
+
+    username: string;
+
+    passwords: number;
+
+    nickname: number;
+
+    joyBeans: number;
+}
 export class UserLoginHandler extends MessageHander{
     
     
-    handler(message: Message, gameManager: GameManager): void {
+    handler(message: ResUserMessage, gameManager: GameManager): void {
         console.log(message);
-        gameManager.uid = (message as ResUserMessage).id;
-        
+        Gloabal.uid = (message as ResUserMessage).id;
     }
     
 }

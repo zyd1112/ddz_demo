@@ -6,7 +6,6 @@ import com.zyd.ddz.service.UserService;
 import com.zyd.ddz.utils.DtoUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Controller;
-import xyz.noark.core.annotation.PlayerId;
 import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
@@ -26,7 +25,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PacketMapping(opcode = 1001, state = Session.State.CONNECTED)
+    @PacketMapping(opcode = 11, state = Session.State.CONNECTED)
     public void visitorLogin(Session session){
         UserDomain userDomain = loginService.visitorLogin(session);
         SessionManager.bindPlayerIdAndSession(userDomain.getId(), session);

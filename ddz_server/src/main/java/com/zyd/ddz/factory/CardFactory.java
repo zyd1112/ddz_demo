@@ -16,12 +16,12 @@ public class CardFactory {
     private static final Map<Integer, Checker> CARD_TYPE = new HashMap<Integer, Checker>(){{
         put(1, new OneCardChecker());
         put(2, new DoubleCardChecker());
-        put(3, new ThreeCardChecker());
-        put(4, new ThreeWithOneCardChecker());
-        put(5, new ThreeWithTwoCardChecker());
-        put(6, new ShunZiChecker());
-        put(7, new ConsecutivePairsChecker());
-        put(8, new BoomChecker());
+        put(3, new BoomChecker());
+        put(4, new ThreeCardChecker());
+        put(5, new ThreeWithOneCardChecker());
+        put(6, new ThreeWithTwoCardChecker());
+        put(7, new ShunZiChecker());
+        put(8, new ConsecutivePairsChecker());
         put(9, new JokerBoomChecker());
     }};
 

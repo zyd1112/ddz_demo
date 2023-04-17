@@ -1,0 +1,7 @@
+request:
+    10: enterRoom
+    11: visitorLogin
+    12: sendCard
+responds:
+    1001: ResPlayerCardMessage
+    1002: userDto

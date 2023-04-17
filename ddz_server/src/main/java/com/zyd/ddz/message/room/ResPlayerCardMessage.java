@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zyd
@@ -15,6 +17,14 @@ import java.util.List;
 @Setter
 @Getter
 public class ResPlayerCardMessage implements Message {
-    int opcode = 11;
-    List<Card> cardList = new ArrayList<>();
+    int opcode = 1001;
+    Map<Integer, List<Card>> cardsMap = new HashMap<>();
+
+    /**
+     * 0: 发牌
+     * 1: 出牌后
+     */
+    int type;
+
+    List<Card> removeCards = new ArrayList<>();
 }

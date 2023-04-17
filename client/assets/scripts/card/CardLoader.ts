@@ -3,9 +3,16 @@ import { Sprite } from 'cc';
 import { _decorator, Component, Node, resources, SpriteAtlas } from 'cc';
 const { ccclass, property } = _decorator;
 
+export interface Card{
+    cardValue: number;
+    shape: number;
+
+    content: string;
+}
+
 @ccclass('CardLoader')
 export class CardLoader extends Component {
-    
+    private card: Card = null;
     private send = false;
 
     load(path: string) {
@@ -21,6 +28,14 @@ export class CardLoader extends Component {
 
     public isSend() : boolean{
         return this.send;
+    }
+
+    public setCard(card: Card){
+        this.card = card;
+    }
+
+    public getCard(){
+        return this.card;
     }
 }
 

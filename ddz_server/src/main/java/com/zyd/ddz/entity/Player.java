@@ -40,7 +40,7 @@ public class Player {
 
     Session session;
 
-    CharacterType character;
+    CharacterType character = CharacterType.LANDOWNER;
 
     long scrambleTime;
 
