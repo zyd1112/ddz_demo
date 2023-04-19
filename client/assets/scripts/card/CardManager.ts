@@ -1,7 +1,7 @@
 import { _decorator, Button, Component, Node, NodeEventType, Prefab, Sprite, SpriteAtlas, SpriteFrame } from 'cc';
 import { PoolManager } from '../framework/PoolManager';
 import { Card, CardLoader } from './CardLoader';
-import { CharacterType } from '../constant/CharacterType';
+import { CharacterType, Role } from '../constant/CharacterType';
 const { ccclass, property } = _decorator;
 
 @ccclass('CardManager')
@@ -26,6 +26,9 @@ export class CardManager extends Component {
     private tx = 0;
     private ty = 0;
 
+    public uid: number = 0;
+
+
     public init(cards: Card[]){
         if(cards == null){
             return;
@@ -44,7 +47,7 @@ export class CardManager extends Component {
         card.setPosition(tx, ty, 0);
         const cardLoader = card.getComponent(CardLoader);
         
-        if(this.role == CharacterType.role.SELF){
+        if(this.role == Role.SELF){
             cardLoader.load("card_" + c.cardValue + "_" + c.shape);
             this.addButton(card);
         }else{

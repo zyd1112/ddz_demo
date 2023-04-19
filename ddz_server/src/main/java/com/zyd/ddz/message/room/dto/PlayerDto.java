@@ -13,4 +13,6 @@ public class PlayerDto {
     long uid;
 
     int roomType;
+
+    int characterType;
 }

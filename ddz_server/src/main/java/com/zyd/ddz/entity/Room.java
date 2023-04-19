@@ -22,6 +22,8 @@ public class Room {
 
     private String name;
 
+    private int type;
+
     private long createTime;
 
     private Map<Long, Player> players = new ConcurrentHashMap<>();

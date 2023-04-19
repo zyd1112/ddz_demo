@@ -27,4 +27,6 @@ public class ResPlayerCardMessage implements Message {
     int type;
 
     List<Card> removeCards = new ArrayList<>();
+
+    long uid;
 }

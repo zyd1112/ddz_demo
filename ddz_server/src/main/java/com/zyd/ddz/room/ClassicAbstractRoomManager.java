@@ -1,5 +1,6 @@
 package com.zyd.ddz.room;
 
+import com.zyd.ddz.constant.RoomType;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
@@ -20,6 +21,11 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     @Override
     public int getSize() {
         return 3;
+    }
+
+    @Override
+    public int getType() {
+        return RoomType.CLASSIC;
     }
 
     @Override

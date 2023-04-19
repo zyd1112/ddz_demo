@@ -48,6 +48,7 @@ public class RoomServiceImpl implements RoomService {
             player.setJoyBeans(userDomain.getJoyBeans());
             player.setUid(uid);
             player.setSession(session);
+            player.setSuggestOffset(-1);
             player.setName(userDomain.getNickname());
         }
         player.setReady(true);
@@ -143,7 +144,7 @@ public class RoomServiceImpl implements RoomService {
         room.setCurPlayer(player);
         player.setSendCard(cards);
         cardList.removeIf(cards::contains);
-        sendCardMessage(roomManager.getRoom(player.getRoomId()).getPlayers(), cards);
+        sendCardMessage(roomManager.getRoom(player.getRoomId()).getPlayers(), cards, uid);
         logger.info("[{}: {}] 玩家出牌: cards: {}", uid, player.getName(), cards);
     }
 
@@ -196,12 +197,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
 
-    private void sendCardMessage(Map<Long, Player> players, List<Card> removes){
+    private void sendCardMessage(Map<Long, Player> players, List<Card> removes, long uid){
         ResPlayerCardMessage message = new ResPlayerCardMessage();
         message.setType(1);
+        message.setUid(uid);
         message.getRemoveCards().addAll(removes);
         players.forEach((playerId, p) -> {
-            p.setSuggestOffset(0);
+            p.setSuggestOffset(-1);
             message.getCardsMap().computeIfAbsent((p.getCharacter().getType()), k -> new ArrayList<>(p.getCardList()));
         });
         players.forEach((playerId, p) -> p.getSession().send(message.getOpcode(), message));

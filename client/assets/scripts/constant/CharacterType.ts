@@ -1,17 +1,19 @@
 import { _decorator, Component, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
-export class CharacterType {
-    public static LANDOWNER = 1;
+export enum CharacterType {
+    LANDOWNER = 1,
 
-    public static FARMER = 2;
+    FARMER = 2,
 
-    public static PARTNER = 3;
+    PARTNER = 3,
 
-    public static role = {
-        SELF: 1,
-        SIDE: 2
-    }
+    
+}
+
+export class Role {
+    public static SELF = 1;
+    public static SIDE = 2;
 }
 
 

@@ -4,13 +4,12 @@ import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
-import com.zyd.ddz.message.room.ResPlayerCharacterMessage;
+import com.zyd.ddz.message.room.ResRoomPlayerInfoMessage;
+import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.utils.GameLogicUtils;
-import xyz.noark.core.network.SessionManager;
 import xyz.noark.core.util.RandomUtils;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +50,8 @@ public abstract class AbstractRoomManager {
      */
     public abstract int getSize();
 
+    public abstract int getType();
+
     /**
      * 创建房间事件
      */
@@ -71,6 +72,7 @@ public abstract class AbstractRoomManager {
         while(room == null){
             if(availableRoom.isEmpty()){
                 room = new Room();
+                room.setType(getType());
                 roomId = ROOM_ID.incrementAndGet();
                 room.setCreateTime(System.currentTimeMillis());
                 room.setId(roomId);
@@ -96,12 +98,15 @@ public abstract class AbstractRoomManager {
 
         logger.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
 
-        ResPlayerCharacterMessage message = new ResPlayerCharacterMessage();
-        message.setUid(player.getUid());
-        message.setCharacterType(player.getCharacter().getType());
+        ResRoomPlayerInfoMessage message = new ResRoomPlayerInfoMessage();
         room.getPlayers().forEach((id, p) -> {
-            p.getSession().send(message.getOpcode(), message);
+            PlayerDto playerDto = new PlayerDto();
+            playerDto.setRoomType(getType());
+            playerDto.setUid(p.getUid());
+            playerDto.setCharacterType(p.getCharacter().getType());
+            message.getPlayerInfos().add(playerDto);
         });
+        room.getPlayers().forEach((id, p) -> p.getSession().send(message.getOpcode(), message));
     };
 
     /**

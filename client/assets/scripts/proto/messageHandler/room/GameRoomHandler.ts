@@ -1,6 +1,7 @@
 import { Gloabal } from "../../../Global";
 import { Card, CardLoader } from "../../../card/CardLoader";
 import { CardManager } from "../../../card/CardManager";
+import { CharacterType, Role } from "../../../constant/CharacterType";
 import { GameManager } from "../../../framework/GameManager";
 import { MessageHander } from "../../MessageHanderl";
 
@@ -9,18 +10,19 @@ interface ResPlayerCardMessage{
     cardsMap: {[characterType: number]: Card[]};
     type: number;
     removeCards: Card[]
+    uid: number;
 }
 export class PlayerCardHandler extends MessageHander{
 
     handler(message: ResPlayerCardMessage, gameManager: GameManager): void {
         console.log(message.cardsMap);
-        let cards = message.cardsMap[Gloabal.charactorType[Gloabal.uid]]
+        const cardNodes = gameManager.cardNodes;
         if(message.type == 0){
-            gameManager.cardSlef.getComponent(CardManager).init(cards);
-            gameManager.cardSide_1.getComponent(CardManager).init(cards);
-            gameManager.cardSide_2.getComponent(CardManager).init(cards);
+            for(let i = 0; i < cardNodes.length; i++){
+                const cardManager = cardNodes[i].getComponent(CardManager)
+                cardManager.init(message.cardsMap[Gloabal.charactorType[cardManager.uid]]);
+            }
         }else{
-            const cardManager = gameManager.cardSlef.getComponent(CardManager);
             const gabageCardManager = gameManager.gabage.getComponent(CardManager)
             const remove = message.removeCards;
             gameManager.gabage.removeAllChildren();
@@ -32,8 +34,13 @@ export class PlayerCardHandler extends MessageHander{
                     lx += offset;
                 }
             }
-            gameManager.cardSlef.removeAllChildren();
-            cardManager.init(cards);
+            for(let i = 0; i < cardNodes.length; i++){
+                const cardManager = cardNodes[i].getComponent(CardManager)
+                if(cardManager.uid == message.uid){
+                    cardNodes[i].removeAllChildren();
+                    cardManager.init(message.cardsMap[Gloabal.charactorType[cardManager.uid]]);
+                }
+            }
         }
     }
     
@@ -48,11 +55,17 @@ export class PlayerSuggestHandler extends MessageHander{
     
     handler(message: ResPlayerSuggestMessage, gameManager: GameManager): void {
         const cards = message.availableCards;
-        const cardManager = gameManager.cardSlef.getComponent(CardManager);
+        let cardSlef = null;
+        for(let i = 0; i < gameManager.cardNodes.length; i++){
+            if(gameManager.cardNodes[i].getComponent(CardManager).role == Role.SELF){
+                cardSlef = gameManager.cardNodes[i];
+            }
+        }
+        const cardManager = cardSlef.getComponent(CardManager);
         cardManager.reset()
         for(let i = 0; i < cards.length; i++){
             console.log(cards[i]);
-            const children = gameManager.cardSlef.children
+            const children = cardSlef.children
             for(let j = 0; j < children.length; j ++){
                 const cardLoader = children[j].getComponent(CardLoader)
                 if(cards[i].content == cardLoader.getCard().content){
@@ -63,15 +76,39 @@ export class PlayerSuggestHandler extends MessageHander{
     }
 }
 
-interface ResPlayerCharacterMessage{
+interface ResRoomPlayerInfoMessage{
     opcode: number;
-    uid: number;
-    characterType: number;
+    playerInfos: PlayerInfo[]
 }
 
+interface PlayerInfo{
+    uid: number;
+
+    roomType: number;
+
+    characterType: number;
+}
 export class PlayerCharacterHandler extends MessageHander{
 
-    handler(message: ResPlayerCharacterMessage, gameManager: GameManager): void {
-        Gloabal.charactorType[message.uid] = message.characterType;
+    handler(message: ResRoomPlayerInfoMessage, gameManager: GameManager): void {
+        for(let i = 0; i < message.playerInfos.length; i++){
+            const playerInfo = message.playerInfos[i];
+            Gloabal.charactorType[playerInfo.uid] = playerInfo.characterType;
+            for(let i = 0; i < gameManager.cardNodes.length; i++){
+                const cardManager = gameManager.cardNodes[i].getComponent(CardManager)
+                if(cardManager.uid == playerInfo.uid){
+                    break;
+                }
+                if(Gloabal.uid == playerInfo.uid && cardManager.role == Role.SELF){
+                    cardManager.uid = playerInfo.uid;
+                    break;
+                }
+                if(cardManager.uid == 0 && cardManager.role != Role.SELF){
+                    cardManager.uid = playerInfo.uid;
+                    break;
+                }
+            }
+        }
+        
     }
 }

@@ -11,15 +11,11 @@ const { ccclass, property } = _decorator;
 export class GameManager extends Component {
 
     @property(Node)
-    cardSlef: Node = null;
-
-    @property(Node)
-    cardSide_1: Node = null;
-    @property(Node)
-    cardSide_2: Node = null;
+    cardNodes: Node[] = [];
 
     @property(Node)
     gabage: Node = null;
+
 
     start() {
         GameClientNet.startClient("127.0.0.1", 10001);
