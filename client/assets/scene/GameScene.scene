@@ -177,15 +177,17 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "cardSlef": {
-      "__id__": 7
-    },
-    "cardSide_1": {
-      "__id__": 43
-    },
-    "cardSide_2": {
-      "__id__": 48
-    },
+    "cardNodes": [
+      {
+        "__id__": 7
+      },
+      {
+        "__id__": 43
+      },
+      {
+        "__id__": 48
+      }
+    ],
     "gabage": {
       "__id__": 53
     },
