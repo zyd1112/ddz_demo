@@ -51,9 +51,101 @@
         "anisotropy": 0,
         "isUuid": true,
         "imageUuidOrDatabaseUri": "df3c42b1-9903-4c9d-a046-23456c2ecd5b",
-        "visible": true
+        "visible": false
       },
       "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "df3c42b1-9903-4c9d-a046-23456c2ecd5b@f9941",
+      "displayName": "btn_tisji",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 0,
+        "trimY": 0,
+        "width": 212,
+        "height": 84,
+        "rawWidth": 212,
+        "rawHeight": 84,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -106,
+            -42,
+            0,
+            106,
+            -42,
+            0,
+            -106,
+            42,
+            0,
+            106,
+            42,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            0,
+            84,
+            212,
+            84,
+            0,
+            0,
+            212,
+            0
+          ],
+          "nuv": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          "minPos": [
+            -106,
+            -42,
+            0
+          ],
+          "maxPos": [
+            106,
+            42,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "df3c42b1-9903-4c9d-a046-23456c2ecd5b@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.11",
       "imported": true,
       "files": [
         ".json"
@@ -62,9 +154,9 @@
     }
   },
   "userData": {
-    "type": "texture",
+    "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "df3c42b1-9903-4c9d-a046-23456c2ecd5b@6c48a"
+    "redirect": "df3c42b1-9903-4c9d-a046-23456c2ecd5b@f9941"
   }
 }

@@ -68,11 +68,27 @@ export class CardManager extends Component {
     public addButton(card: Node) {
         const button = card.addComponent(Button);
         button.node.on(NodeEventType.TOUCH_END, () => {
-            const pos = card.position;
-            let y = pos.y != this.y ? this.y : pos.y + this.move;
-            card.setPosition(pos.x, y, pos.z);
-            card.getComponent(CardLoader).setIsSend(y != this.y);
+            this.popCard(card);
         });
+    }
+
+    public popCard(card: Node){
+        const pos = card.position;
+        let y = pos.y != this.y ? this.y : pos.y + this.move;
+        card.setPosition(pos.x, y, pos.z);
+        card.getComponent(CardLoader).setIsSend(y != this.y);
+    }
+
+    public reset(){
+        const children = this.node.children;
+        for(let i = 0; i < children.length; i++){
+            const cardLoader = children[i].getComponent(CardLoader)
+            if(cardLoader.isSend()){
+                children[i].setPosition(children[i].position.x, this.y, children[i].position.z);
+                cardLoader.setIsSend(false);
+            }
+        }
+        
     }
 }
 

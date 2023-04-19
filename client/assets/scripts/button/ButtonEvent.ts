@@ -1,10 +1,8 @@
-import { _decorator, Button, Component, Node, NodeEventType, UITransform } from 'cc';
-import { CardManager } from '../card/CardManager';
+import { _decorator, Button, Camera, Component, EventHandler, EventTouch, geometry, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
 import { CardLoader } from '../card/CardLoader';
-import { PoolManager } from '../framework/PoolManager';
 import { MessageUtils } from '../net/MessageUtils';
-import { GameManager } from '../framework/GameManager';
 import { Gloabal } from '../Global';
+import { CardManager } from '../card/CardManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -13,41 +11,37 @@ export class ButtonEvent extends Component {
     @property(Node)
     private cardSelf: Node = null;
 
-    @property(Node)
-    private sendBtn: Node = null;
-
-    onEnable() {
-        //出牌
-        this.sendBtn.on(NodeEventType.TOUCH_END, () => {
-            const children = this.cardSelf.children;
-            const remove= [];
-            for(let i = 0; i < children.length; i++){
-                let cardLoader = children[i].getComponent(CardLoader);
-                if(cardLoader.isSend()){
-                    remove.push(cardLoader.getCard());
-                }
+    public sendCard(){
+        console.log("出牌");
+        const children = this.cardSelf.children;
+        const remove= [];
+        for(let i = 0; i < children.length; i++){
+            let cardLoader = children[i].getComponent(CardLoader);
+            if(cardLoader.isSend()){
+                remove.push(cardLoader.getCard());
             }
+        }
+        let message = {
+            opcode: 12,
+            uid: Gloabal.uid,
+            roomType: Gloabal.roomType,
+            cardList: remove
+        }
+        MessageUtils.send(message.opcode, message)
+    }
+
+    public noSendCard(){
+        console.log("不出");
+        this.cardSelf.getComponent(CardManager).reset()
+    }
+
+    public suggest(){
             let message = {
-                opcode: 12,
+                opcode: 13,
                 uid: Gloabal.uid,
                 roomType: Gloabal.roomType,
-                cardList: remove
             }
             MessageUtils.send(message.opcode, message)
-            // if(remove.length > 0){
-            //     this.gabage.removeAllChildren();
-            //     let offset = 40;
-            //     let lx = -(Math.floor(remove.length / 2) * offset);
-            //     for(let i = 0; i < remove.length; i++){
-            //         PoolManager.getInstance().putNode(remove[i]);
-            //         const gabage = PoolManager.getInstance().getNode(cardManager.cardPrefab, this.gabage);
-            //         gabage.setPosition(lx, 0, 0);
-            //         lx += offset;
-            //     }
-                
-            //     cardManager.refresh();
-            // }
-        });
     }
 
 }

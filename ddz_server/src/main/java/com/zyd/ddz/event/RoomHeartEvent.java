@@ -5,13 +5,19 @@ import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.utils.TimeUtils;
+import xyz.noark.core.annotation.Component;
+import xyz.noark.core.network.SessionManager;
+import xyz.noark.game.monitor.AbstractMonitorService;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static xyz.noark.log.LogHelper.logger;
 
-public class RoomHeartEvent extends GameTask {
+
+@Component
+public class RoomHeartEvent extends AbstractMonitorService {
 
 
     long curTime = System.currentTimeMillis();
@@ -21,16 +27,13 @@ public class RoomHeartEvent extends GameTask {
      */
     private final int readyTime = 1000;
 
-    @Override
-    protected void doAction() {
+    public void doAction() {
         long now = System.currentTimeMillis();
         int dt = (int) (now - curTime);
         curTime = now;
         Map<Integer, AbstractRoomManager> rooms = RoomManagerFactory.getRooms();
         rooms.forEach((type, roomManager) -> {
             Collection<Room> roomList = roomManager.getRooms();
-            roomManager.getAvailableRooms()
-                    .removeIf(room -> room.getPlayers().size() == room.getAbstractRoomManager().getSize());
 
             for (Room room : roomList) {
                 if(room.isDestroy()){
@@ -39,15 +42,21 @@ public class RoomHeartEvent extends GameTask {
                 AbstractRoomManager abstractRoomManager = room.getAbstractRoomManager();
 
                 Map<Long, Player> playerList = room.getPlayers();
-                int waitDestroyTime = 0;
+                playerList.forEach((k, p) -> {
+                    if(SessionManager.getSession(p.getSession().getId()) == null){
+                        abstractRoomManager.onPlayerExit(room, p);
+                    }
+
+                });
+                int waitDestroyTime;
                 if (playerList.size() == 0){
                     waitDestroyTime = room.getWaitDestroyTime();
                     waitDestroyTime += dt;
-                    if(waitDestroyTime >= 1000){
+                    if(waitDestroyTime >= 10000){
                         abstractRoomManager.onDestroy(room);
                     }
+                    room.setWaitDestroyTime(waitDestroyTime);
                 }
-                room.setWaitDestroyTime(waitDestroyTime);
                 if(!room.isStart()){
                     checkReady(room, dt);
                 }
@@ -81,5 +90,25 @@ public class RoomHeartEvent extends GameTask {
         room.setGameStartTime(gameStartTime);
         room.setGameReadyTime(gameReadyTime);
 
+    }
+
+    @Override
+    protected long getInitialDelay() {
+        return 0;
+    }
+
+    @Override
+    protected long getDelay() {
+        return 100;
+    }
+
+    @Override
+    protected TimeUnit getUnit() {
+        return TimeUnit.MILLISECONDS;
+    }
+
+    @Override
+    protected void exe() {
+        doAction();
     }
 }

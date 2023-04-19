@@ -46,6 +46,8 @@ public class Player {
 
     int scrambleCount;
 
+    int suggestOffset = -1;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

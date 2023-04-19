@@ -63,17 +63,27 @@ public abstract class AbstractRoomManager {
             return;
         }
         long roomId;
-        Room room;
-        if(availableRoom.isEmpty()){
-            room = new Room();
-            roomId = ROOM_ID.incrementAndGet();
-            room.setCreateTime(System.currentTimeMillis());
-            room.setId(roomId);
-            room.setName("房间-" + ROOM_NUM.incrementAndGet());
-            roomMap.put(roomId, room);
-            availableRoom.add(room);
+        Room room = null;
+        while(room == null){
+            if(availableRoom.isEmpty()){
+                room = new Room();
+                roomId = ROOM_ID.incrementAndGet();
+                room.setCreateTime(System.currentTimeMillis());
+                room.setId(roomId);
+                room.setName("房间-" + ROOM_NUM.incrementAndGet());
+                room.setAbstractRoomManager(this);
+                roomMap.put(roomId, room);
+                availableRoom.add(room);
+            }else {
+                int index = RandomUtils.nextInt(availableRoom.size());
+                Room temp = availableRoom.get(index);
+                if(temp.isDestroy() || temp.getPlayers().size() >= getSize()){
+                    availableRoom.remove(index);
+                }else {
+                    room = temp;
+                }
+            }
         }
-        room = availableRoom.get(RandomUtils.nextInt(availableRoom.size()));
         roomId = room.getId();
         player.setRoomId(roomId);
 
@@ -91,6 +101,8 @@ public abstract class AbstractRoomManager {
 
         if(!room.isStart()){
             playerMap.remove(player.getUid());
+            room.getPlayers().remove(player.getUid());
+            room.setCurPlayer(null);
         }else{
             player.setAuto(true);
         }

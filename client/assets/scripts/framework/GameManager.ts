@@ -1,10 +1,11 @@
-import { _decorator, Button, Component, Node, NodeEventType, SystemEvent } from 'cc';
+import { _decorator, Button, Component, Node, NodeEventType, Prefab, SystemEvent } from 'cc';
 import { GameClientNet } from '../net/GameClientNet';
 import { MessageFactory } from '../proto/MessageFactory';
 import { UserLoginHandler } from '../proto/messageHandler/user/UserLoginHandler';
 import { MessageUtils } from '../net/MessageUtils';
-import { GameRoomHandler } from '../proto/messageHandler/room/GameRoomHandler';
+import { PlayerCardHandler, PlayerSuggestHandler } from '../proto/messageHandler/room/GameRoomHandler';
 import { Gloabal } from '../Global';
+import { PoolManager } from './PoolManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
@@ -24,7 +25,8 @@ export class GameManager extends Component {
     start() {
         GameClientNet.startClient("127.0.0.1", 10001);
         MessageFactory.register(1002, new UserLoginHandler());
-        MessageFactory.register(1001, new GameRoomHandler());
+        MessageFactory.register(1001, new PlayerCardHandler());
+        MessageFactory.register(1003, new PlayerSuggestHandler());
         GameClientNet.getConnection().onopen = () => {
             MessageUtils.send(11, {});
         }

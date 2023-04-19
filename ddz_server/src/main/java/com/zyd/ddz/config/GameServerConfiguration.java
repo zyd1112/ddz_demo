@@ -1,11 +1,14 @@
 package com.zyd.ddz.config;
 
 import com.zyd.ddz.dao.UserDao;
+import com.zyd.ddz.event.RoomHeartEvent;
 import com.zyd.ddz.utils.IdUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Configuration;
 import xyz.noark.core.annotation.Value;
 import xyz.noark.core.annotation.configuration.Bean;
+import xyz.noark.core.event.EventManager;
+import xyz.noark.game.event.DefaultEventManager;
 import xyz.noark.game.monitor.MonitorManager;
 import xyz.noark.game.monitor.impl.MemoryMonitorService;
 
@@ -27,6 +30,7 @@ public class GameServerConfiguration {
     public MonitorManager monitorManager() {
         MonitorManager manager = new MonitorManager();
         manager.addMonitorService(new MemoryMonitorService());
+        manager.addMonitorService(new RoomHeartEvent());
         return manager;
     }
 
@@ -36,6 +40,12 @@ public class GameServerConfiguration {
         idUtils.setSid(sid);
         return idUtils;
     }
+
+    @Bean
+    public EventManager eventManager(){
+        return new DefaultEventManager();
+    }
+
 
 
 }

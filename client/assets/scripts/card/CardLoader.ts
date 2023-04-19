@@ -8,6 +8,7 @@ export interface Card{
     shape: number;
 
     content: string;
+
 }
 
 @ccclass('CardLoader')

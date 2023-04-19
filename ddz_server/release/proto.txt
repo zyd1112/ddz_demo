@@ -2,6 +2,8 @@ request:
     10: enterRoom
     11: visitorLogin
     12: sendCard
+    13: suggest
 responds:
     1001: ResPlayerCardMessage
     1002: userDto
+    1003: ResPlayerSuggestMessage

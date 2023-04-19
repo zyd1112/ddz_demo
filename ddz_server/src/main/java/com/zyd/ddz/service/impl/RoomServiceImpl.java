@@ -8,6 +8,7 @@ import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
+import com.zyd.ddz.message.room.ResPlayerSuggestMessage;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.utils.GameLogicUtils;
@@ -16,6 +17,7 @@ import xyz.noark.core.annotation.Service;
 import xyz.noark.core.network.Session;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -150,6 +152,37 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public void suggest(Session session, long uid, int roomType) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
+        if(roomManager == null){
+            return;
+        }
+        if (!roomManager.getPlayers().containsKey(uid)) {
+            return;
+        }
+        Player player = roomManager.getPlayers().get(uid);
+        Room room = roomManager.getRoom(player.getRoomId());
+//        if(room == null || !room.isStart()){
+//            return;
+//        }
+        Player curPlayer = room.getCurPlayer();
+        if(curPlayer == null){
+            return;
+        }
+        ResPlayerSuggestMessage message = new ResPlayerSuggestMessage();
+        List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
+        int suggestOffset = player.getSuggestOffset();
+        if(suggestOffset < availableCards.size() - 1){
+            suggestOffset++;
+        }else {
+            suggestOffset = 0;
+        }
+        player.setSuggestOffset(suggestOffset);
+        message.setAvailableCards(availableCards.isEmpty() ? Collections.emptyList() : availableCards.get(suggestOffset));
+        session.send(message.getOpcode(), message);
+    }
+
+    @Override
     public void autoRobot(Session session, long uid, int roomType, boolean choose) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
@@ -171,7 +204,10 @@ public class RoomServiceImpl implements RoomService {
         ResPlayerCardMessage message = new ResPlayerCardMessage();
         message.setType(1);
         message.getRemoveCards().addAll(removes);
-        players.forEach((playerId, p) -> message.getCardsMap().computeIfAbsent((p.getCharacter().ordinal() + 1), k -> new ArrayList<>(p.getCardList())));
+        players.forEach((playerId, p) -> {
+            p.setSuggestOffset(0);
+            message.getCardsMap().computeIfAbsent((p.getCharacter().ordinal() + 1), k -> new ArrayList<>(p.getCardList()));
+        });
         players.forEach((playerId, p) -> p.getSession().send(message.getOpcode(), message));
     }
 }

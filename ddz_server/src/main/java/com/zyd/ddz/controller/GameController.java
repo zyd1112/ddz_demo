@@ -1,8 +1,8 @@
 package com.zyd.ddz.controller;
 
 import com.zyd.ddz.message.login.dto.UserDto;
-import com.zyd.ddz.message.room.ReqEnterRoomMessage;
 import com.zyd.ddz.message.room.ReqSendCardsMessage;
+import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.service.UserService;
 import xyz.noark.core.annotation.Autowired;
@@ -27,8 +27,8 @@ public class GameController {
     UserService userService;
 
     @PacketMapping(opcode = 10, state = Session.State.CONNECTED)
-    public void enterRoom(ReqEnterRoomMessage message){
-        long uid = message.getUid();
+    public void enterRoom(PlayerDto playerDto){
+        long uid = playerDto.getUid();
         if (!SessionManager.isOnline(uid)){
             logger.info("[{}] 用户没有在线", uid);
             return;
@@ -39,7 +39,7 @@ public class GameController {
             logger.info("用户不存在");
             return;
         }
-        roomService.enterRoom(session, uid, message.getRoomType());
+        roomService.enterRoom(session, uid, playerDto.getRoomType());
     }
 
     @PacketMapping(opcode = 12, state = Session.State.CONNECTED)
@@ -56,5 +56,23 @@ public class GameController {
             return;
         }
         roomService.sendCard(session, message.getUid(), message.getRoomType(), message.getCardList());
+    }
+
+    @PacketMapping(opcode = 13, state = Session.State.CONNECTED)
+    public void suggest(PlayerDto playerDto){
+        long uid = playerDto.getUid();
+        if (!SessionManager.isOnline(uid)){
+            logger.info("[{}] 用户没有在线", uid);
+            return;
+        }
+        Session session = SessionManager.getSessionByPlayerId(uid);
+        UserDto userDto = userService.getById(session, uid);
+        if(userDto == null){
+            logger.info("用户不存在");
+            return;
+        }
+
+        roomService.suggest(session, playerDto.getUid(), playerDto.getRoomType());
+
     }
 }

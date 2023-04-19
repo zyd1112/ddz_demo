@@ -1,8 +1,7 @@
 import { Gloabal } from "../../../Global";
-import { Card } from "../../../card/CardLoader";
+import { Card, CardLoader } from "../../../card/CardLoader";
 import { CardManager } from "../../../card/CardManager";
 import { GameManager } from "../../../framework/GameManager";
-import { PoolManager } from "../../../framework/PoolManager";
 import { MessageHander } from "../../MessageHanderl";
 
 interface ResPlayerCardMessage{
@@ -11,7 +10,7 @@ interface ResPlayerCardMessage{
     type: number;
     removeCards: Card[]
 }
-export class GameRoomHandler extends MessageHander{
+export class PlayerCardHandler extends MessageHander{
 
     handler(message: ResPlayerCardMessage, gameManager: GameManager): void {
         console.log(message.cardsMap);
@@ -38,4 +37,28 @@ export class GameRoomHandler extends MessageHander{
         }
     }
     
+}
+
+
+interface ResPlayerSuggestMessage{
+    opcode: number;
+    availableCards: Card[];
+}
+export class PlayerSuggestHandler extends MessageHander{
+    
+    handler(message: ResPlayerSuggestMessage, gameManager: GameManager): void {
+        const cards = message.availableCards;
+        const cardManager = gameManager.cardSlef.getComponent(CardManager);
+        cardManager.reset()
+        for(let i = 0; i < cards.length; i++){
+            console.log(cards[i]);
+            const children = gameManager.cardSlef.children
+            for(let j = 0; j < children.length; j ++){
+                const cardLoader = children[j].getComponent(CardLoader)
+                if(cards[i].content == cardLoader.getCard().content){
+                    cardManager.popCard(children[j]);
+                }
+            }
+        }
+    }
 }
