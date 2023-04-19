@@ -1,7 +1,11 @@
 package com.zyd.ddz.room;
 
+import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
+import com.zyd.ddz.message.room.ResPlayerCardMessage;
+import com.zyd.ddz.message.room.ResPlayerCharacterMessage;
+import com.zyd.ddz.utils.GameLogicUtils;
 import xyz.noark.core.network.SessionManager;
 import xyz.noark.core.util.RandomUtils;
 
@@ -86,11 +90,18 @@ public abstract class AbstractRoomManager {
         }
         roomId = room.getId();
         player.setRoomId(roomId);
-
+        player.setCharacter(room.getCharacterTypeList().remove(0));
         room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
+
         logger.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
 
+        ResPlayerCharacterMessage message = new ResPlayerCharacterMessage();
+        message.setUid(player.getUid());
+        message.setCharacterType(player.getCharacter().getType());
+        room.getPlayers().forEach((id, p) -> {
+            p.getSession().send(message.getOpcode(), message);
+        });
     };
 
     /**
@@ -125,6 +136,21 @@ public abstract class AbstractRoomManager {
      * 玩家准备事件
      */
     public void onPlayerReady(Room room, Player player, boolean ready){};
+
+    /**
+     * 游戏开始事件
+     */
+    public void onGameStart(Room room){
+        Map<Long, Player> players = room.getPlayers();
+        Map<Integer, List<Card>> cards = GameLogicUtils.sendCard();
+        ResPlayerCardMessage message = new ResPlayerCardMessage();
+        message.setType(0);
+        message.setCardsMap(cards);
+        players.forEach((id, p) -> {
+            p.setCardList(cards.get(p.getCharacter().ordinal() + 1));
+            p.getSession().send(message.getOpcode(), message);
+        });
+    }
 
     /**
      * 房间心跳事件

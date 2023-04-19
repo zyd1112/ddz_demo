@@ -44,12 +44,15 @@ public class RoomHeartEvent extends AbstractMonitorService {
                 Map<Long, Player> playerList = room.getPlayers();
                 playerList.forEach((k, p) -> {
                     if(SessionManager.getSession(p.getSession().getId()) == null){
-                        abstractRoomManager.onPlayerExit(room, p);
+                        if(!p.isLeave()){
+                            abstractRoomManager.onPlayerExit(room, p);
+                        }
+                        p.setLeave(true);
                     }
 
                 });
                 int waitDestroyTime;
-                if (playerList.size() == 0){
+                if (playerList.size() == 0 || checkAllLeave(playerList)){
                     waitDestroyTime = room.getWaitDestroyTime();
                     waitDestroyTime += dt;
                     if(waitDestroyTime >= 10000){
@@ -64,6 +67,15 @@ public class RoomHeartEvent extends AbstractMonitorService {
             }
         });
 
+    }
+
+    private boolean checkAllLeave(Map<Long, Player> playerList) {
+        for (Player player : playerList.values()) {
+            if(!player.isLeave()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void checkReady(Room room, int dt) {
@@ -86,6 +98,7 @@ public class RoomHeartEvent extends AbstractMonitorService {
             logger.info("{} 游戏开始", room.getName());
             room.setStart(true);
             gameReadyTime = 0;
+            room.getAbstractRoomManager().onGameStart(room);
         }
         room.setGameStartTime(gameStartTime);
         room.setGameReadyTime(gameReadyTime);

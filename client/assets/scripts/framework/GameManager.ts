@@ -3,9 +3,8 @@ import { GameClientNet } from '../net/GameClientNet';
 import { MessageFactory } from '../proto/MessageFactory';
 import { UserLoginHandler } from '../proto/messageHandler/user/UserLoginHandler';
 import { MessageUtils } from '../net/MessageUtils';
-import { PlayerCardHandler, PlayerSuggestHandler } from '../proto/messageHandler/room/GameRoomHandler';
+import { PlayerCardHandler, PlayerCharacterHandler, PlayerSuggestHandler } from '../proto/messageHandler/room/GameRoomHandler';
 import { Gloabal } from '../Global';
-import { PoolManager } from './PoolManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
@@ -27,6 +26,7 @@ export class GameManager extends Component {
         MessageFactory.register(1002, new UserLoginHandler());
         MessageFactory.register(1001, new PlayerCardHandler());
         MessageFactory.register(1003, new PlayerSuggestHandler());
+        MessageFactory.register(1004, new PlayerCharacterHandler());
         GameClientNet.getConnection().onopen = () => {
             MessageUtils.send(11, {});
         }

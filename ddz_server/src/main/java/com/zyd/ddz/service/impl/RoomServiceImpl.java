@@ -50,12 +50,8 @@ public class RoomServiceImpl implements RoomService {
             player.setSession(session);
             player.setName(userDomain.getNickname());
         }
-        Map<Integer, List<Card>> cards = GameLogicUtils.sendCard();
-        logger.info("{}", cards);
-        player.setCardList(new ArrayList<>(cards.get(1)));
-
+        player.setReady(true);
         roomManager.onPlayerEnter(player);
-        sendCardMessage(roomManager.getRoom(player.getRoomId()).getPlayers(), new ArrayList<>());
         return true;
     }
 
@@ -206,7 +202,7 @@ public class RoomServiceImpl implements RoomService {
         message.getRemoveCards().addAll(removes);
         players.forEach((playerId, p) -> {
             p.setSuggestOffset(0);
-            message.getCardsMap().computeIfAbsent((p.getCharacter().ordinal() + 1), k -> new ArrayList<>(p.getCardList()));
+            message.getCardsMap().computeIfAbsent((p.getCharacter().getType()), k -> new ArrayList<>(p.getCardList()));
         });
         players.forEach((playerId, p) -> p.getSession().send(message.getOpcode(), message));
     }

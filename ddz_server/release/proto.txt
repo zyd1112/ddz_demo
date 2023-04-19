@@ -7,3 +7,4 @@ responds:
     1001: ResPlayerCardMessage
     1002: userDto
     1003: ResPlayerSuggestMessage
+    1004: ResPlayerCharacterMessage

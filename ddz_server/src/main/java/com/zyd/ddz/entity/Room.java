@@ -43,6 +43,7 @@ public class Room {
     private List<CharacterType> characterTypeList = new ArrayList<CharacterType>(){{
         add(CharacterType.FARMER);
         add(CharacterType.PARTNER);
+        add(CharacterType.LANDOWNER);
     }};
     /**
      * 当前出牌玩家

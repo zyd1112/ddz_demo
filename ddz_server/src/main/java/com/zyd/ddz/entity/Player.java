@@ -48,6 +48,8 @@ public class Player {
 
     int suggestOffset = -1;
 
+    boolean leave = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
