@@ -42,6 +42,12 @@ export class PoolManager {
         this._dictPoll[name].put(node);
     }
 
+    public clearNodes(nodes: readonly Node[]){
+        for(let i = 0; i < nodes.length; i++){
+            this.putNode(nodes[i]);
+        }
+    }
+
     public static getInstance(){
         return this.INSTANCE;
     }

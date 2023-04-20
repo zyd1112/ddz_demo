@@ -47,6 +47,11 @@ public class Room {
         add(CharacterType.PARTNER);
         add(CharacterType.LANDOWNER);
     }};
+
+    /**
+     * 底牌
+     */
+    private List<Card> downCards = new ArrayList<>();
     /**
      * 当前出牌玩家
      */

@@ -1,7 +1,6 @@
-import { Button, sp, SpriteFrame } from 'cc';
 import { Sprite } from 'cc';
-import { _decorator, Component, Node, resources, SpriteAtlas } from 'cc';
-const { ccclass, property } = _decorator;
+import { _decorator, Component } from 'cc';
+const { ccclass } = _decorator;
 
 export interface Card{
     cardValue: number;

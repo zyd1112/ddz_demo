@@ -24,7 +24,12 @@ public interface RoomService {
     /**
      * 玩家准备
      */
-    void playerReady(Session session, long uid, int roomType, boolean ready);
+    void playerReady(Session session, long uid, int roomType);
+
+    /**
+     * 玩家开始
+     */
+    void playerStart(Session session, long uid, int roomType);
 
 
     /**

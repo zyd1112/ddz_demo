@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ReqScrambleMessage implements Message {
-    int opcode = 16;
+    int opcode = 18;
 
     /**
      * false 不抢

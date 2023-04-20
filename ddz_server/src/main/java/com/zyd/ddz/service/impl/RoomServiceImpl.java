@@ -7,9 +7,12 @@ import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
+import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
+import com.zyd.ddz.message.room.ResPlayerReadyMessage;
 import com.zyd.ddz.message.room.ResPlayerSuggestMessage;
 import com.zyd.ddz.message.room.ResRoomTimeMessage;
+import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.utils.GameLogicUtils;
@@ -52,7 +55,6 @@ public class RoomServiceImpl implements RoomService {
             player.setSuggestOffset(-1);
             player.setName(userDomain.getNickname());
         }
-        player.setReady(true);
         roomManager.onPlayerEnter(player);
         return true;
     }
@@ -76,7 +78,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void playerReady(Session session, long uid, int roomType, boolean ready) {
+    public void playerReady(Session session, long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -89,8 +91,44 @@ public class RoomServiceImpl implements RoomService {
         if(room == null){
             return;
         }
-        player.setReady(ready);
-        roomManager.onPlayerReady(room, player, ready);
+        player.setReady(!player.isReady());
+        ResPlayerReadyMessage message = new ResPlayerReadyMessage();
+        for (Player p : room.getPlayers().values()) {
+            PlayerDto playerDto = new PlayerDto();
+            playerDto.setUid(p.getUid());
+            playerDto.setRoomHost(p.isRoomHost());
+            playerDto.setReady(p.isReady());
+            message.getPlayerDtoList().add(playerDto);
+        }
+        MessageUtils.sendMessageForRoom(room, message);
+        roomManager.onPlayerReady(room, player, player.isReady());
+    }
+
+    @Override
+    public void playerStart(Session session, long uid, int roomType) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
+        if(roomManager == null){
+            return;
+        }
+        if (!roomManager.getPlayers().containsKey(uid)) {
+            return;
+        }
+        Player player = roomManager.getPlayers().get(uid);
+        Room room = roomManager.getRoom(player.getRoomId());
+        if(room == null || room.isStart()){
+            return;
+        }
+        Map<Long, Player> players = room.getPlayers();
+        if(players.size() < roomManager.getSize()){
+            return;
+        }
+        for (Player p : players.values()) {
+            if(!p.isReady()){
+                return;
+            }
+        }
+
+        roomManager.onGameStart(room);
     }
 
     @Override
@@ -256,7 +294,7 @@ public class RoomServiceImpl implements RoomService {
         message.setNextId(room.getNextPlayer().getUid());
         players.forEach((playerId, p) -> {
             p.setSuggestOffset(-1);
-            message.getCardsMap().computeIfAbsent((p.getCharacter().getType()), k -> new ArrayList<>(p.getCardList()));
+            message.getCardsMap().computeIfAbsent(p.getUid(), k -> new ArrayList<>(p.getCardList()));
         });
         MessageUtils.sendMessageForRoom(room, message);
     }

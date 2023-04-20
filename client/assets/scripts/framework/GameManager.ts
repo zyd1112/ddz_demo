@@ -1,28 +1,29 @@
 import { _decorator, Button, Component, Node, NodeEventType, Prefab, SystemEvent } from 'cc';
 import { GameClientNet } from '../net/GameClientNet';
 import { MessageFactory } from '../proto/MessageFactory';
-import { UserLoginHandler } from '../proto/messageHandler/user/UserLoginHandler';
 import { MessageUtils } from '../net/MessageUtils';
-import { PlayerCardHandler, PlayerCharacterHandler, PlayerSuggestHandler } from '../proto/messageHandler/room/GameRoomHandler';
 import { Gloabal } from '../Global';
 const { ccclass, property } = _decorator;
+
 
 @ccclass('GameManager')
 export class GameManager extends Component {
 
     @property(Node)
-    cardNodes: Node[] = [];
+    playerNodes: Node[] = [];
+
+    @property(Node)
+    playerSelf: Node = null;
 
     @property(Node)
     gabage: Node = null;
 
+    @property(Prefab)
+    images: Prefab[] = [];
+
 
     start() {
         GameClientNet.startClient("127.0.0.1", 10001);
-        MessageFactory.register(1002, new UserLoginHandler());
-        MessageFactory.register(1001, new PlayerCardHandler());
-        MessageFactory.register(1003, new PlayerSuggestHandler());
-        MessageFactory.register(1004, new PlayerCharacterHandler());
         GameClientNet.getConnection().onopen = () => {
             MessageUtils.send(11, {});
         }
@@ -49,7 +50,7 @@ export class GameManager extends Component {
             };
             Gloabal.roomType = msg.roomType
             MessageUtils.send(msg.opcode, msg);
-        }, 5000);
+        }, 3000);
     }
     
 }

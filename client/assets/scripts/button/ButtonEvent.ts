@@ -1,8 +1,8 @@
 import { _decorator, Button, Camera, Component, EventHandler, EventTouch, geometry, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
-import { CardLoader } from '../card/CardLoader';
 import { MessageUtils } from '../net/MessageUtils';
 import { Gloabal } from '../Global';
-import { CardManager } from '../card/CardManager';
+import { CardLoader } from '../player/CardLoader';
+import { CardManager } from '../player/CardManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -33,6 +33,12 @@ export class ButtonEvent extends Component {
     public noSendCard(){
         console.log("不出");
         this.cardSelf.getComponent(CardManager).reset()
+        let message = {
+            opcode: 15,
+            uid: Gloabal.uid,
+            roomType: Gloabal.roomType,
+        }
+        MessageUtils.send(message.opcode, message)
     }
 
     public suggest(){
@@ -42,6 +48,26 @@ export class ButtonEvent extends Component {
                 roomType: Gloabal.roomType,
             }
             MessageUtils.send(message.opcode, message)
+    }
+
+    public ready(){
+        let message = {
+            opcode: 16,
+            uid: Gloabal.uid,
+            roomType: Gloabal.roomType,
+            
+        }
+        MessageUtils.send(message.opcode, message)
+    }
+
+    public gameStart(){
+        let message = {
+            opcode: 17,
+            uid: Gloabal.uid,
+            roomType: Gloabal.roomType,
+        }
+
+        MessageUtils.send(message.opcode, message)
     }
 
 }

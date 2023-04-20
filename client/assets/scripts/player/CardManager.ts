@@ -1,53 +1,44 @@
 import { _decorator, Button, Component, Node, NodeEventType, Prefab, Sprite, SpriteAtlas, SpriteFrame } from 'cc';
 import { PoolManager } from '../framework/PoolManager';
 import { Card, CardLoader } from './CardLoader';
-import { CharacterType, Role } from '../constant/CharacterType';
+import { Role } from '../constant/CharacterType';
 const { ccclass, property } = _decorator;
 
 @ccclass('CardManager')
 export class CardManager extends Component {
     @property(Prefab)
     public cardPrefab: Prefab = null;
-    @property
-    private x = 0;
-    @property
-    private y = 0;
+
     @property
     public offset_x = 70;
     @property
     public offset_y = 0;
 
     @property
-    public role = 1;
-
-    @property
     private move = 5;
-
-    private tx = 0;
-    private ty = 0;
 
     public uid: number = 0;
 
 
-    public init(cards: Card[]){
+    public init(cards: Card[], role: number){
         if(cards == null){
             return;
         }
-        this.tx = this.x;
-        this.ty = this.y;
+        let tx = 0;
+        let ty = 0;
         for(let i = 0; i < cards.length; i++){
-            this.addCard(this.tx, this.ty, cards[i]);
-            this.tx += this.offset_x;
-            this.ty += this.offset_y;
+            this.addCard(tx, ty, cards[i], role);
+            tx += this.offset_x;
+            ty += this.offset_y;
         }
     }
     
-    public addCard(tx: number, ty: number, c: Card){
+    public addCard(tx: number, ty: number, c: Card, role: number){
         const card = PoolManager.getInstance().getNode(this.cardPrefab, this.node);
         card.setPosition(tx, ty, 0);
         const cardLoader = card.getComponent(CardLoader);
         
-        if(this.role == Role.SELF){
+        if(role == Role.SELF){
             cardLoader.load("card_" + c.cardValue + "_" + c.shape);
             this.addButton(card);
         }else{
@@ -56,16 +47,6 @@ export class CardManager extends Component {
         cardLoader.setCard(c);
         cardLoader.setIsSend(false);
         return card;
-    }
-    public refresh(){
-        this.tx = this.x;
-        this.ty = this.y;
-        const children = this.node.children;
-        for(let i = 0; i < children.length; i++){
-            children[i].setPosition(this.tx, this.ty, 0);
-            this.tx += this.offset_x;
-            this.ty += this.offset_y;
-        }
     }
 
     public addButton(card: Node) {
@@ -77,9 +58,9 @@ export class CardManager extends Component {
 
     public popCard(card: Node){
         const pos = card.position;
-        let y = pos.y != this.y ? this.y : pos.y + this.move;
+        let y = pos.y != 0 ? 0 : pos.y + this.move;
         card.setPosition(pos.x, y, pos.z);
-        card.getComponent(CardLoader).setIsSend(y != this.y);
+        card.getComponent(CardLoader).setIsSend(y != 0);
     }
 
     public reset(){
@@ -87,7 +68,7 @@ export class CardManager extends Component {
         for(let i = 0; i < children.length; i++){
             const cardLoader = children[i].getComponent(CardLoader)
             if(cardLoader.isSend()){
-                children[i].setPosition(children[i].position.x, this.y, children[i].position.z);
+                children[i].setPosition(children[i].position.x, 0, children[i].position.z);
                 cardLoader.setIsSend(false);
             }
         }

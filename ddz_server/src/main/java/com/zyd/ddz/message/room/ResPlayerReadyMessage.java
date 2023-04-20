@@ -7,16 +7,15 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author zyd
- * @date 2023/4/19 14:15
+ * @date 2023/4/20 20:18
  */
 @Setter
 @Getter
-public class ResRoomPlayerInfoMessage implements Message {
-    int opcode = 1004;
+public class ResPlayerReadyMessage implements Message {
+    int opcode = 1006;
 
-    List<PlayerDto> playerInfos = new ArrayList<>();
+    List<PlayerDto> playerDtoList = new ArrayList<>();
 }

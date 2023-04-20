@@ -1,6 +1,5 @@
 package com.zyd.ddz.controller;
 
-import com.zyd.ddz.message.login.dto.UserDto;
 import com.zyd.ddz.message.room.ReqScrambleMessage;
 import com.zyd.ddz.message.room.ReqSendCardsMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
@@ -84,6 +83,30 @@ public class GameController {
     }
 
     @PacketMapping(opcode = 16, state = Session.State.CONNECTED)
+    public void ready(PlayerDto playerDto){
+        long uid = playerDto.getUid();
+        if (!SessionManager.isOnline(uid)){
+            logger.info("[{}] 用户没有在线", uid);
+            return;
+        }
+        Session session = SessionManager.getSessionByPlayerId(uid);
+
+        roomService.playerReady(session, uid, playerDto.getRoomType());
+    }
+
+    @PacketMapping(opcode = 17, state = Session.State.CONNECTED)
+    public void start(PlayerDto playerDto){
+        long uid = playerDto.getUid();
+        if (!SessionManager.isOnline(uid)){
+            logger.info("[{}] 用户没有在线", uid);
+            return;
+        }
+        Session session = SessionManager.getSessionByPlayerId(uid);
+
+        roomService.playerStart(session, uid, playerDto.getRoomType());
+    }
+
+    @PacketMapping(opcode = 18, state = Session.State.CONNECTED)
     public void scramble(@PlayerId long uid, ReqScrambleMessage message){
         if (!SessionManager.isOnline(uid)){
             logger.info("[{}] 用户没有在线", uid);

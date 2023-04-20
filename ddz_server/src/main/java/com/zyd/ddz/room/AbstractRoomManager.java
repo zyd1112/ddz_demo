@@ -1,11 +1,10 @@
 package com.zyd.ddz.room;
 
-import com.zyd.ddz.constant.CharacterType;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
-import com.zyd.ddz.message.room.ResRoomPlayerInfoMessage;
+import com.zyd.ddz.message.room.ResPlayerEnterRoomMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.utils.GameLogicUtils;
 import com.zyd.ddz.utils.MessageUtils;
@@ -96,18 +95,20 @@ public abstract class AbstractRoomManager {
         }
         roomId = room.getId();
         player.setRoomId(roomId);
-        player.setCharacter(room.getCharacterTypeList().remove(0));
+        player.setRoomHost(room.getPlayers().isEmpty());
+        player.setReady(player.isRoomHost());
         room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
 
         logger.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
 
-        ResRoomPlayerInfoMessage message = new ResRoomPlayerInfoMessage();
+        ResPlayerEnterRoomMessage message = new ResPlayerEnterRoomMessage();
         room.getPlayers().forEach((id, p) -> {
             PlayerDto playerDto = new PlayerDto();
             playerDto.setRoomType(getType());
             playerDto.setUid(p.getUid());
             playerDto.setCharacterType(p.getCharacter().getType());
+            playerDto.setRoomHost(p.isRoomHost());
             message.getPlayerInfos().add(playerDto);
         });
 
@@ -152,18 +153,23 @@ public abstract class AbstractRoomManager {
      */
     public void onGameStart(Room room){
         Map<Long, Player> players = room.getPlayers();
-        Map<Integer, List<Card>> cards = GameLogicUtils.sendCard();
+        List<List<Card>> cards = GameLogicUtils.sendCard();
         ResPlayerCardMessage message = new ResPlayerCardMessage();
         List<Player> playerList = players.values().stream().sorted(Comparator.comparing(Player::getCharacter))
                 .collect(Collectors.toList());
+        room.getDownCards().addAll(cards.get(3));
         for (Player player : playerList) {
-            if (player.getCharacter() == CharacterType.LANDOWNER){
+            if (player.isRoomHost()){
                 message.setNextId(player.getUid());
+                break;
             }
         }
+        message.getDownCards().addAll(room.getDownCards());
         message.setType(0);
-        message.setCardsMap(cards);
-        players.forEach((id, p) -> p.setCardList(cards.get(p.getCharacter().getType())));
+        players.forEach((id, p) -> {
+            p.setCardList(cards.remove(0));
+            message.getCardsMap().put(p.getUid(), p.getCardList());
+        });
         MessageUtils.sendMessageForRoom(room, message);
     }
 

@@ -18,7 +18,7 @@ import java.util.Map;
 @Getter
 public class ResPlayerCardMessage implements Message {
     int opcode = 1001;
-    Map<Integer, List<Card>> cardsMap = new HashMap<>();
+    Map<Long, List<Card>> cardsMap = new HashMap<>();
 
     /**
      * 0: 发牌
@@ -27,6 +27,11 @@ public class ResPlayerCardMessage implements Message {
     int type;
 
     List<Card> removeCards = new ArrayList<>();
+
+    /**
+     * 底牌
+     */
+    List<Card> downCards = new ArrayList<>();
 
     /**
      * 当前出牌

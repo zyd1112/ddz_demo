@@ -50,6 +50,8 @@ public class Player {
 
     boolean leave = false;
 
+    boolean roomHost = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

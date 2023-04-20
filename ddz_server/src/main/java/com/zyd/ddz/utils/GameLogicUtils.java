@@ -62,7 +62,7 @@ public class GameLogicUtils {
      * @return (1 - 3) -> 玩家手牌
      *            4    -> 底牌
      */
-    public static Map<Integer, List<Card>> sendCard() {
+    public static List<List<Card>> sendCard() {
         //洗牌
         List<Card> cardList = createCard();
         //发牌
@@ -85,8 +85,8 @@ public class GameLogicUtils {
         return cardList;
     }
 
-    private static Map<Integer, List<Card>> sendCard(List<Card> cardList){
-        Map<Integer, List<Card>> cardGroup = new HashMap<>();
+    private static List<List<Card>> sendCard(List<Card> cardList){
+        List<List<Card>> cardGroup = new ArrayList<>();
         if(cardList.size() % 3 != 0){
             return cardGroup;
         }
@@ -95,15 +95,16 @@ public class GameLogicUtils {
         for (int i = 0; i < 3; i++) {
             hideCard.add(cardList.remove(cardList.size() - 1));
         }
-        cardGroup.put(4, hideCard);
-        int group = 1;
-        for (int i = 1; i <= cardList.size(); i++) {
-            cardGroup.computeIfAbsent(group, k -> new ArrayList<>()).add(cardList.get(i - 1));
-            if(i % 17 == 0){
-                group++;
+        List<Card> tempList = new ArrayList<>();
+        for (Card card : cardList) {
+            tempList.add(card);
+            if (tempList.size() == 17) {
+                cardGroup.add(new ArrayList<>(tempList));
+                tempList.clear();
             }
         }
-        for (List<Card> cards : cardGroup.values()) {
+        cardGroup.add(hideCard);
+        for (List<Card> cards : cardGroup) {
             cards.sort((o1, o2) -> {
                 if(o1.getCardValue() == o2.getCardValue()){
                     return o1.getShape() - o2.getShape();

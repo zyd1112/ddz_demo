@@ -15,4 +15,8 @@ public class PlayerDto {
     int roomType;
 
     int characterType;
+
+    boolean roomHost;
+
+    boolean ready;
 }
