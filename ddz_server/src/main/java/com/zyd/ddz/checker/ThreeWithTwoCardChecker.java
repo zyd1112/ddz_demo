@@ -17,7 +17,7 @@ public class ThreeWithTwoCardChecker extends ThreeWithOneCardChecker{
     }
 
     @Override
-    protected boolean match(IntStream stream) {
-        return stream.anyMatch(v -> v == 3) && stream.anyMatch(v -> v == 2);
+    protected boolean match(IntStream stream1, IntStream stream2) {
+        return stream1.anyMatch(v -> v == 3) && stream2.anyMatch(v -> v == 2);
     }
 }

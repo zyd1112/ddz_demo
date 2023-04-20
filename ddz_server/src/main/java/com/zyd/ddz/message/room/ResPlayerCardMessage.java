@@ -28,5 +28,13 @@ public class ResPlayerCardMessage implements Message {
 
     List<Card> removeCards = new ArrayList<>();
 
+    /**
+     * 当前出牌
+     */
     long uid;
+
+    /**
+     * 下一个出牌
+     */
+    long nextId;
 }

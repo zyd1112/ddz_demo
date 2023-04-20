@@ -52,5 +52,10 @@ public class Room {
      */
     private Player curPlayer;
 
+    /**
+     * 下一个出牌玩家
+     */
+    private Player nextPlayer;
+
 
 }

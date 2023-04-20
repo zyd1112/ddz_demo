@@ -36,11 +36,11 @@ public class ThreeWithOneCardChecker implements Checker{
             cardsNum[value]++;
 
         }
-        return match(Arrays.stream(cardsNum));
+        return match(Arrays.stream(cardsNum), Arrays.stream(cardsNum));
     }
 
-    protected boolean match(IntStream stream){
-        return stream.anyMatch(v -> v == 3) && stream.anyMatch(v -> v == 1);
+    protected boolean match(IntStream stream1, IntStream stream2){
+        return stream1.anyMatch(v -> v == 3) && stream2.anyMatch(v -> v == 1);
     }
 
     @Override

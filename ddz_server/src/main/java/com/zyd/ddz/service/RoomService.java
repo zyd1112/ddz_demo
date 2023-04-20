@@ -39,9 +39,16 @@ public interface RoomService {
     void sendCard(Session session, long uid, int roomType, List<Card> cards);
 
     /**
+     * 不出
+     */
+    void noSend(Session session, long uid, int roomType);
+
+    /**
      * 提示
      */
     void suggest(Session session, long uid, int roomType);
+
+    void reqCountdown(Session session, long uid, int roomType);
 
     /**
      * 托管

@@ -3,8 +3,12 @@ request:
     11: visitorLogin
     12: sendCard
     13: suggest
+    14: reqCountdown
+    15: noSend
+    16: scramble
 responds:
     1001: ResPlayerCardMessage
     1002: userDto
     1003: ResPlayerSuggestMessage
     1004: ResRoomPlayerInfoMessage
+    1005: ResRoomTimeMessage

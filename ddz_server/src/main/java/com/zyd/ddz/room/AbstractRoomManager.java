@@ -1,5 +1,6 @@
 package com.zyd.ddz.room;
 
+import com.zyd.ddz.constant.CharacterType;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
@@ -7,15 +8,18 @@ import com.zyd.ddz.message.room.ResPlayerCardMessage;
 import com.zyd.ddz.message.room.ResRoomPlayerInfoMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.utils.GameLogicUtils;
+import com.zyd.ddz.utils.MessageUtils;
 import xyz.noark.core.util.RandomUtils;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static xyz.noark.log.LogHelper.logger;
 
@@ -106,7 +110,8 @@ public abstract class AbstractRoomManager {
             playerDto.setCharacterType(p.getCharacter().getType());
             message.getPlayerInfos().add(playerDto);
         });
-        room.getPlayers().forEach((id, p) -> p.getSession().send(message.getOpcode(), message));
+
+        MessageUtils.sendMessageForRoom(room, message);
     };
 
     /**
@@ -149,12 +154,17 @@ public abstract class AbstractRoomManager {
         Map<Long, Player> players = room.getPlayers();
         Map<Integer, List<Card>> cards = GameLogicUtils.sendCard();
         ResPlayerCardMessage message = new ResPlayerCardMessage();
+        List<Player> playerList = players.values().stream().sorted(Comparator.comparing(Player::getCharacter))
+                .collect(Collectors.toList());
+        for (Player player : playerList) {
+            if (player.getCharacter() == CharacterType.LANDOWNER){
+                message.setNextId(player.getUid());
+            }
+        }
         message.setType(0);
         message.setCardsMap(cards);
-        players.forEach((id, p) -> {
-            p.setCardList(cards.get(p.getCharacter().ordinal() + 1));
-            p.getSession().send(message.getOpcode(), message);
-        });
+        players.forEach((id, p) -> p.setCardList(cards.get(p.getCharacter().getType())));
+        MessageUtils.sendMessageForRoom(room, message);
     }
 
     /**

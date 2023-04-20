@@ -9,17 +9,18 @@ import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
 import com.zyd.ddz.message.room.ResPlayerSuggestMessage;
+import com.zyd.ddz.message.room.ResRoomTimeMessage;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.utils.GameLogicUtils;
+import com.zyd.ddz.utils.MessageUtils;
+import com.zyd.ddz.utils.TimeUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Service;
 import xyz.noark.core.network.Session;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static xyz.noark.log.LogHelper.logger;
 /**
@@ -131,9 +132,13 @@ public class RoomServiceImpl implements RoomService {
         }
         Player player = roomManager.getPlayers().get(uid);
         Room room = roomManager.getRoom(player.getRoomId());
-//        if(room == null || !room.isStart()){
-//            return;
-//        }
+        if(room == null || !room.isStart()){
+            return;
+        }
+        Player nextPlayer = room.getNextPlayer();
+        if(nextPlayer != null && player.getUid() != nextPlayer.getUid()){
+            return;
+        }
         Player curPlayer = room.getCurPlayer();
         List<Card> cardList = player.getCardList();
         List<Card> curCards = curPlayer == null ? null : curPlayer.getSendCard();
@@ -142,10 +147,39 @@ public class RoomServiceImpl implements RoomService {
             return;
         }
         room.setCurPlayer(player);
+        room.setNextPlayer(getNext(room, player));
         player.setSendCard(cards);
         cardList.removeIf(cards::contains);
-        sendCardMessage(roomManager.getRoom(player.getRoomId()).getPlayers(), cards, uid);
+        sendCardMessage(roomManager.getRoom(player.getRoomId()), cards, uid);
         logger.info("[{}: {}] 玩家出牌: cards: {}", uid, player.getName(), cards);
+    }
+
+    @Override
+    public void noSend(Session session, long uid, int roomType) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
+        if(roomManager == null){
+            return;
+        }
+        if (!roomManager.getPlayers().containsKey(uid)) {
+            return;
+        }
+        Player player = roomManager.getPlayers().get(uid);
+        Room room = roomManager.getRoom(player.getRoomId());
+        if(room == null || !room.isStart()){
+            return;
+        }
+        Player nextPlayer = room.getNextPlayer();
+        if(nextPlayer != null && player.getUid() != nextPlayer.getUid()){
+            return;
+        }
+        room.setNextPlayer(getNext(room, player));
+        sendCardMessage(room, new ArrayList<>(), uid);
+    }
+
+    private Player getNext(Room room, Player player) {
+        List<Player> players = room.getPlayers().values().stream().sorted(Comparator.comparing(Player::getCharacter)).collect(Collectors.toList());
+        int index = players.indexOf(player);
+        return  players.get(index < players.size() - 1 ? index + 1 : 0);
     }
 
     @Override
@@ -176,7 +210,23 @@ public class RoomServiceImpl implements RoomService {
         }
         player.setSuggestOffset(suggestOffset);
         message.setAvailableCards(availableCards.isEmpty() ? Collections.emptyList() : availableCards.get(suggestOffset));
-        session.send(message.getOpcode(), message);
+        MessageUtils.sendMessage(session, message);
+    }
+
+    @Override
+    public void reqCountdown(Session session, long uid, int roomType) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
+        if(roomManager == null){
+            return;
+        }
+        if (!roomManager.getPlayers().containsKey(uid)) {
+            return;
+        }
+        Player player = roomManager.getPlayers().get(uid);
+        Room room = roomManager.getRoom(player.getRoomId());
+        ResRoomTimeMessage message = new ResRoomTimeMessage();
+        message.setTime(TimeUtils.getNowTimeMillis());
+        MessageUtils.sendMessageForRoom(room, message);
     }
 
     @Override
@@ -197,15 +247,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
 
-    private void sendCardMessage(Map<Long, Player> players, List<Card> removes, long uid){
+    private void sendCardMessage(Room room, List<Card> removes, long uid){
+        Map<Long, Player> players = room.getPlayers();
         ResPlayerCardMessage message = new ResPlayerCardMessage();
         message.setType(1);
         message.setUid(uid);
         message.getRemoveCards().addAll(removes);
+        message.setNextId(room.getNextPlayer().getUid());
         players.forEach((playerId, p) -> {
             p.setSuggestOffset(-1);
             message.getCardsMap().computeIfAbsent((p.getCharacter().getType()), k -> new ArrayList<>(p.getCardList()));
         });
-        players.forEach((playerId, p) -> p.getSession().send(message.getOpcode(), message));
+        MessageUtils.sendMessageForRoom(room, message);
     }
 }
