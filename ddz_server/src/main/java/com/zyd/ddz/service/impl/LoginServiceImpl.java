@@ -18,17 +18,15 @@ import java.util.Date;
 public class LoginServiceImpl implements LoginService {
 
     @Autowired
-    IdUtils idUtils;
-    @Autowired
     UserDao userDao;
 
     @Override
     public UserDomain visitorLogin(Session session) {
         UserDomain userDomain = new UserDomain();
-        String name = "visitor-" + idUtils.getVisitorId();
+        String name = "visitor-" + IdUtils.getVisitorId();
         userDomain.setUsername(name);
         userDomain.setNickname(name);
-        userDomain.setId(idUtils.generator());
+        userDomain.setId(IdUtils.generator());
         userDomain.setCreateTime(new Date());
         userDomain.setIp(session.getIp());
         userDomain.setPassword("111");

@@ -34,15 +34,10 @@ public class GameServerConfiguration {
         return manager;
     }
 
-    @Bean
-    public IdUtils idUtils(){
-        IdUtils idUtils = new IdUtils();
-        idUtils.setSid(sid);
-        return idUtils;
-    }
 
     @Bean
     public EventManager eventManager(){
+        IdUtils.setSid(sid);
         return new DefaultEventManager();
     }
 

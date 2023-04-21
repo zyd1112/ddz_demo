@@ -3,10 +3,13 @@ package com.zyd.ddz.room;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
+import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
 import com.zyd.ddz.message.room.ResPlayerEnterRoomMessage;
+import com.zyd.ddz.message.room.ResPlayerLeaveRoomMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.utils.GameLogicUtils;
+import com.zyd.ddz.utils.IdUtils;
 import com.zyd.ddz.utils.MessageUtils;
 import xyz.noark.core.util.RandomUtils;
 
@@ -104,11 +107,8 @@ public abstract class AbstractRoomManager {
 
         ResPlayerEnterRoomMessage message = new ResPlayerEnterRoomMessage();
         room.getPlayers().forEach((id, p) -> {
-            PlayerDto playerDto = new PlayerDto();
+            PlayerDto playerDto = p.packPlayerDto();
             playerDto.setRoomType(getType());
-            playerDto.setUid(p.getUid());
-            playerDto.setCharacterType(p.getCharacter().getType());
-            playerDto.setRoomHost(p.isRoomHost());
             message.getPlayerInfos().add(playerDto);
         });
 
@@ -121,13 +121,29 @@ public abstract class AbstractRoomManager {
     public void onPlayerExit(Room room, Player player){
         logger.info("{} 玩家 离开: {}", player.getUid(), room.getName());
 
+
         if(!room.isStart()){
             playerMap.remove(player.getUid());
             room.getPlayers().remove(player.getUid());
+            if(player.isRoomHost()){
+                for (Player value : playerMap.values()) {
+                    value.setRoomHost(true);
+                    value.setReady(true);
+                    break;
+                }
+            }
             room.setCurPlayer(null);
         }else{
             player.setAuto(true);
         }
+
+        ResPlayerLeaveRoomMessage message = new ResPlayerLeaveRoomMessage();
+        message.setUid(player.getUid());
+        room.getPlayers().forEach((id, p) -> {
+            PlayerDto playerDto = p.packPlayerDto();
+            message.getPlayerList().add(playerDto);
+        });
+        MessageUtils.sendMessageForRoom(room, message);
     };
 
     /**
@@ -166,11 +182,19 @@ public abstract class AbstractRoomManager {
         }
         message.getDownCards().addAll(room.getDownCards());
         message.setType(0);
+        message.setFirstId(room.getCurPlayer() == null ? message.getNextId() : room.getCurPlayer().getUid());
         players.forEach((id, p) -> {
             p.setCardList(cards.remove(0));
             message.getCardsMap().put(p.getUid(), p.getCardList());
         });
         MessageUtils.sendMessageForRoom(room, message);
+    }
+
+    public void onGameOver(Room room){
+        room.getPlayers().forEach((uid, p) -> {
+            onPlayerExit(room, p);
+        });
+        logger.info("[{}:{}] 游戏结束", room.getId(), room.getName());
     }
 
     /**

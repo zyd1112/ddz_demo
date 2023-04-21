@@ -15,3 +15,5 @@ responds:
     1004: ResPlayerEnterRoomMessage
     1005: ResRoomTimeMessage
     1006: ResPlayerReadyMessage
+    1007: ResRoomReadyTimeMessage
+    1008: ResPlayerLeaveRoomMessage

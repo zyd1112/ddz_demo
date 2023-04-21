@@ -1,6 +1,7 @@
 package com.zyd.ddz.entity;
 
 import com.zyd.ddz.constant.CharacterType;
+import com.zyd.ddz.message.room.dto.PlayerDto;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.noark.core.network.Session;
@@ -67,5 +68,14 @@ public class Player {
     @Override
     public int hashCode() {
         return Objects.hash(uid);
+    }
+
+    public PlayerDto packPlayerDto(){
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setUid(this.getUid());
+        playerDto.setCharacterType(this.getCharacter().getType());
+        playerDto.setRoomHost(this.isRoomHost());
+        playerDto.setReady(this.isReady());
+        return playerDto;
     }
 }

@@ -3,7 +3,11 @@ package com.zyd.ddz.event;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
+import com.zyd.ddz.message.Message;
+import com.zyd.ddz.message.room.ResRoomReadyTimeMessage;
+import com.zyd.ddz.message.room.ResRoomTimeMessage;
 import com.zyd.ddz.room.AbstractRoomManager;
+import com.zyd.ddz.utils.MessageUtils;
 import com.zyd.ddz.utils.TimeUtils;
 import xyz.noark.core.annotation.Component;
 import xyz.noark.core.network.SessionManager;
@@ -25,7 +29,7 @@ public class RoomHeartEvent extends AbstractMonitorService {
     /**
      * 准备时间
      */
-    private final int readyTime = 1000;
+    private final int readyTime = 10000;
 
     public void doAction() {
         long now = System.currentTimeMillis();
@@ -82,7 +86,6 @@ public class RoomHeartEvent extends AbstractMonitorService {
         Collection<Player> playerList = room.getPlayers().values();
         boolean ready = false;
         int gameReadyTime = room.getGameReadyTime();
-        long gameStartTime = room.getGameStartTime();
         if(playerList.size() == room.getAbstractRoomManager().getSize()){
             ready = true;
             for (Player player : playerList) {
@@ -93,14 +96,21 @@ public class RoomHeartEvent extends AbstractMonitorService {
             }
         }
         gameReadyTime = ready ? gameReadyTime + dt : 0;
+
+        ResRoomReadyTimeMessage message = new ResRoomReadyTimeMessage();
+        int time = (readyTime - gameReadyTime) / 1000;
+        message.setCountDown(time);
+        message.setStart(ready);
+        MessageUtils.sendMessageForRoom(room, message);
+
+
         if(gameReadyTime >= readyTime){
-            gameStartTime = TimeUtils.getNowTimeMillis();
             logger.info("{} 游戏开始", room.getName());
             room.setStart(true);
             gameReadyTime = 0;
             room.getAbstractRoomManager().onGameStart(room);
+            room.setGameStartTime(TimeUtils.getNowTimeMillis());
         }
-        room.setGameStartTime(gameStartTime);
         room.setGameReadyTime(gameReadyTime);
 
     }

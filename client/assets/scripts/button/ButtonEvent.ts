@@ -3,6 +3,7 @@ import { MessageUtils } from '../net/MessageUtils';
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
+import { reqNoSend, reqReady, reqSendCard, reqSuggest } from '../request/request';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -21,43 +22,21 @@ export class ButtonEvent extends Component {
                 remove.push(cardLoader.getCard());
             }
         }
-        let message = {
-            opcode: 12,
-            uid: Gloabal.uid,
-            roomType: Gloabal.roomType,
-            cardList: remove
-        }
-        MessageUtils.send(message.opcode, message)
+        reqSendCard(remove);
     }
 
     public noSendCard(){
         console.log("不出");
         this.cardSelf.getComponent(CardManager).reset()
-        let message = {
-            opcode: 15,
-            uid: Gloabal.uid,
-            roomType: Gloabal.roomType,
-        }
-        MessageUtils.send(message.opcode, message)
+        reqNoSend(Gloabal.uid);
     }
 
     public suggest(){
-            let message = {
-                opcode: 13,
-                uid: Gloabal.uid,
-                roomType: Gloabal.roomType,
-            }
-            MessageUtils.send(message.opcode, message)
+        reqSuggest(false, Gloabal.uid);
     }
 
     public ready(){
-        let message = {
-            opcode: 16,
-            uid: Gloabal.uid,
-            roomType: Gloabal.roomType,
-            
-        }
-        MessageUtils.send(message.opcode, message)
+        reqReady()
     }
 
     public gameStart(){
@@ -71,5 +50,7 @@ export class ButtonEvent extends Component {
     }
 
 }
+
+
 
 

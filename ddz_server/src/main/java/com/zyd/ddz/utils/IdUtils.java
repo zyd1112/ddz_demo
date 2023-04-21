@@ -26,9 +26,9 @@ public class IdUtils {
      */
     @Setter
     @Getter
-    private long sid = 1;
+    private static long sid = 1;
 
-    private final AtomicInteger VISITOR_ID = new AtomicInteger(0);
+    private static final AtomicInteger VISITOR_ID = new AtomicInteger(0);
 
     /**
      * 自选因子: 每次 +1
@@ -36,18 +36,18 @@ public class IdUtils {
     private static final AtomicInteger sequence = new AtomicInteger(0);
 
 
-    public int getVisitorId(){
+    public static int getVisitorId(){
         return VISITOR_ID.incrementAndGet();
     }
     /**
      * 区服编号（16位）+ 时间（28位）+ 自旋因子（15位）+ 类型（1位）
      *
      */
-    public long generator(){
+    public static long generator(){
         return sid << 44 | (System.currentTimeMillis() / 1000L) << 16 | nextSequence() << 1 | 1;
     }
 
-    private  long nextSequence() {
+    private static long nextSequence() {
         long result = sequence.incrementAndGet();
         if(result > MAX_SEQUENCE){
             throw new RuntimeException("自增因子已达最大值,包装生成器要自增启动次数啦... sequence=" + result);

@@ -1,3 +1,4 @@
+import { Label, random } from "cc";
 import { Gloabal } from "../../../Global";
 import { CharacterType, Role } from "../../../constant/CharacterType";
 import { GameManager } from "../../../framework/GameManager";
@@ -6,6 +7,20 @@ import { Card, CardLoader } from "../../../player/CardLoader";
 import { CardManager } from "../../../player/CardManager";
 import { ClockManager } from "../../../player/ClockManager";
 import { MessageHander } from "../../MessageHanderl";
+import { reqSuggest } from "../../../request/request";
+
+
+ export interface PlayerInfo{
+    uid: number;
+
+    roomType: number;
+
+    characterType: number;
+
+    roomHost: boolean
+
+    ready: boolean;
+}
 
 interface ResPlayerCardMessage{
     opcode: number;
@@ -14,12 +29,15 @@ interface ResPlayerCardMessage{
     removeCards: Card[]
     uid: number;
     nextId: number;
+    firstId: number;
 }
 export class PlayerCardHandler extends MessageHander{
 
     handler(message: ResPlayerCardMessage, gameManager: GameManager): void {
         console.log(message.cardsMap);
         const playerNodes = gameManager.playerNodes;
+        Gloabal.firstId = message.firstId;
+        gameManager.countDown.active = false;
         if(message.type == 0){
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
@@ -28,7 +46,7 @@ export class PlayerCardHandler extends MessageHander{
                     playerManager.startBtn.destroy();
                     playerManager.readyBtn.destroy();
                 }
-                playerManager.initCards(message.cardsMap[playerManager.uid]);
+                playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
             }
         }else{
             const gabageCardManager = gameManager.gabage.getComponent(CardManager)
@@ -44,21 +62,23 @@ export class PlayerCardHandler extends MessageHander{
             }
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
-                if(playerManager.uid == message.uid){
+                if(playerManager.playerInfo.uid == message.uid){
                     playerManager.cardNode.removeAllChildren();
-                    playerManager.initCards(message.cardsMap[playerManager.characterType]);
+                    playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
                 }
             } 
         }
         for(let i = 0; i < playerNodes.length; i++){
             const playerManager = playerNodes[i].getComponent(PlayerManager)
+            const player = playerManager.playerInfo;
             if(playerManager.role == Role.SELF){
-                playerManager.button.active = playerManager.uid == message.nextId;
+                playerManager.sendBtn.active = player.uid == message.nextId;
+                playerManager.button.active = player.uid == message.nextId && !(message.firstId == player.uid);
             }
-            if(playerManager.uid == message.nextId){
+            if(player.uid == message.nextId){
                 playerManager.startClock();
             }
-            if(playerManager.uid == message.uid){
+            if(player.uid == message.uid){
                 playerManager.closeClock();
             }
         }
@@ -102,48 +122,54 @@ interface ResRoomPlayerInfoMessage{
     playerInfos: PlayerInfo[]
 }
 
-interface PlayerInfo{
-    uid: number;
-
-    roomType: number;
-
-    characterType: number;
-
-    roomHost: boolean
-
-    ready: boolean;
-}
 export class PlayerEnterRoomHandler extends MessageHander{
 
     handler(message: ResRoomPlayerInfoMessage, gameManager: GameManager): void {
         for(let i = 0; i < message.playerInfos.length; i++){
             const playerInfo = message.playerInfos[i];
+            
             for(let i = 0; i < gameManager.playerNodes.length; i++){
                 const playerManager = gameManager.playerNodes[i].getComponent(PlayerManager)
-                if(playerManager.uid == playerInfo.uid){
+                const headImage = gameManager.headImages[playerInfo.roomHost ? 0 : 1];
+                const player = playerManager.playerInfo;
+                if(player.uid == playerInfo.uid){
                     break;
                 }
+                
                 if(Gloabal.uid == playerInfo.uid && playerManager.role == Role.SELF){
-                    playerManager.uid = playerInfo.uid;
-                    playerManager.roomHost = playerInfo.roomHost;
-                    playerManager.initImage(gameManager.images[playerInfo.characterType - 1])
-                    this.initBtn(playerManager);
+                    player.uid = playerInfo.uid;
+                    player.roomHost = playerInfo.roomHost;
+                    playerManager.initImage(headImage)
+                    if(player.roomHost){
+                        playerManager.initRoomHost(gameManager.roomHostImage);
+                    }
+                    initBtn(playerManager);
                     break;
                 }
-                if(playerManager.uid == 0 && playerManager.role != Role.SELF){
-                    playerManager.uid = playerInfo.uid;
-                    playerManager.initImage(gameManager.images[playerInfo.characterType - 1])
+                if(player.uid == 0 && playerManager.role != Role.SELF){
+                    player.uid = playerInfo.uid;
+                    playerManager.initImage(headImage)
+                    player.roomHost = playerInfo.roomHost;
+                    if(player.roomHost){
+                        playerManager.initRoomHost(gameManager.roomHostImage);
+                    }else{
+                        playerManager.mark.active = playerInfo.ready;
+                    }
+                    
                     break;
                 }
             }
         }
     }
-    initBtn(playerManager: PlayerManager){
-        if(playerManager.roomHost){
-            playerManager.startBtn.active = true;
-        }else{
-            playerManager.readyBtn.active = true;
-        }
+    
+}
+
+function initBtn(playerManager: PlayerManager){
+    if(playerManager.startBtn != null){
+        playerManager.startBtn.active = playerManager.playerInfo.roomHost;
+    }
+    if(playerManager.startBtn != null){
+        playerManager.readyBtn.active = !playerManager.playerInfo.roomHost;
     }
 }
 
@@ -157,7 +183,10 @@ export class CountDownHandler extends MessageHander{
         for(let i = 0; i < playerNodes.length; i++){
             const playerManager = playerNodes[i].getComponent(PlayerManager);
             if(playerManager.clock.active){
-                playerManager.clock.getComponent(ClockManager).updateTime(message.time, playerManager.uid)
+                const time = playerManager.clock.getComponent(ClockManager).updateTime(message.time)
+                if(time <= 0){
+                    reqSuggest(true, playerManager.playerInfo.uid);
+                }
             }
         }
     }
@@ -175,11 +204,63 @@ export class PlayerReadyHandler extends MessageHander{
             const playerInfo = message.playerDtoList[i];
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager);
-                if(playerManager.roomHost){
+                if(playerManager.playerInfo.roomHost){
                     continue;
                 }
-                if(playerManager.uid == playerInfo.uid){
+                if(playerManager.playerInfo.uid == playerInfo.uid){
                     playerManager.mark.active = playerInfo.ready;
+                }
+            }
+        }
+    }
+}
+
+interface ResRoomReadyTimeMessage{
+    opcode: number;
+    countDown: number;
+    start: boolean;
+}
+
+export class RoomReadyCountDownHandler extends MessageHander{
+
+    handler(message: ResRoomReadyTimeMessage, gameManager: GameManager): void {
+        const countDown = gameManager.countDown;
+        gameManager.countDown.active = message.start;
+        
+        const time = message.countDown
+        countDown.getComponent(Label).string = time + "";
+    }
+}
+
+interface ResPlayerLeaveRoomMessage{
+    opcode: number;
+    uid: number;
+    playerList: PlayerInfo[];
+}
+
+
+export class PlayerLeaveRoomHandler extends MessageHander{
+
+    handler(message: ResPlayerLeaveRoomMessage, gameManager: GameManager): void {
+        const playerNodes = gameManager.playerNodes;
+        for(let i = 0; i < playerNodes.length; i++){
+            const playerManager = playerNodes[i].getComponent(PlayerManager);
+            const player = playerManager.playerInfo
+            if(player.uid == message.uid){
+                playerManager.clear();
+            }
+            for(let j = 0; j < message.playerList.length; j++){
+                const playerInfo = message.playerList[j];
+                if(playerInfo.uid == player.uid){
+                    player.roomHost = playerInfo.roomHost;
+                    if(playerManager.role == Role.SELF){
+                        initBtn(playerManager);
+                    }
+                    if(player.roomHost){
+                        playerManager.initRoomHost(gameManager.roomHostImage);
+                    }else{
+                        playerManager.mark.active = playerInfo.ready;
+                    }
                 }
             }
         }

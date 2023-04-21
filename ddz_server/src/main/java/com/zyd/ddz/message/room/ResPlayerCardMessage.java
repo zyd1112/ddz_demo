@@ -42,4 +42,9 @@ public class ResPlayerCardMessage implements Message {
      * 下一个出牌
      */
     long nextId;
+
+    /**
+     * 谁是上游
+     */
+    long firstId;
 }

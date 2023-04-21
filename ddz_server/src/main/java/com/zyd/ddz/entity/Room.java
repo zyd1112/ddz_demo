@@ -62,5 +62,9 @@ public class Room {
      */
     private Player nextPlayer;
 
+    private boolean gameOver;
+
+    private long gameOverTime;
+
 
 }

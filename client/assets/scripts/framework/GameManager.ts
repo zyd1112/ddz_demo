@@ -19,11 +19,19 @@ export class GameManager extends Component {
     gabage: Node = null;
 
     @property(Prefab)
-    images: Prefab[] = [];
+    headImages: Prefab[] = [];
+
+    @property(Node)
+    countDown: Node = null;
+
+    @property(Prefab)
+    roomHostImage: Prefab = null;
+
+    public gameStart: boolean = false;
 
 
     start() {
-        GameClientNet.startClient("127.0.0.1", 10001);
+        GameClientNet.startClient("10.40.4.208", 10001);
         GameClientNet.getConnection().onopen = () => {
             MessageUtils.send(11, {});
         }

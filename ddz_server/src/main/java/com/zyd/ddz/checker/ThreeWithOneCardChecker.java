@@ -22,7 +22,7 @@ public class ThreeWithOneCardChecker implements Checker{
 
     @Override
     public boolean test(List<Card> cardList) {
-        if(cardList.size() != 4){
+        if(cardList.size() < 4){
             return false;
         }
 

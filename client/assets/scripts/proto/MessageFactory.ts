@@ -1,7 +1,7 @@
 import { _decorator, Component, Node } from 'cc';
 import { MessageHander } from './MessageHanderl';
 import { UserLoginHandler } from './messageHandler/user/UserLoginHandler';
-import { CountDownHandler, PlayerCardHandler, PlayerEnterRoomHandler, PlayerReadyHandler, PlayerSuggestHandler } from './messageHandler/room/GameRoomHandler';
+import { CountDownHandler, PlayerCardHandler, PlayerEnterRoomHandler, PlayerLeaveRoomHandler, PlayerReadyHandler, PlayerSuggestHandler, RoomReadyCountDownHandler } from './messageHandler/room/GameRoomHandler';
 const { ccclass, property } = _decorator;
 
 export class MessageFactory {
@@ -14,6 +14,8 @@ export class MessageFactory {
         MessageFactory.register(1004, new PlayerEnterRoomHandler());
         MessageFactory.register(1005, new CountDownHandler());
         MessageFactory.register(1006, new PlayerReadyHandler());
+        MessageFactory.register(1007, new RoomReadyCountDownHandler());
+        MessageFactory.register(1008, new PlayerLeaveRoomHandler())
     }
 
     public static register(opcode: number, message: MessageHander){

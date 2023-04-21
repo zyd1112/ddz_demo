@@ -127,6 +127,7 @@ public class RoomServiceImpl implements RoomService {
                 return;
             }
         }
+        room.setStart(true);
 
         roomManager.onGameStart(room);
     }
@@ -173,10 +174,7 @@ public class RoomServiceImpl implements RoomService {
         if(room == null || !room.isStart()){
             return;
         }
-        Player nextPlayer = room.getNextPlayer();
-        if(nextPlayer != null && player.getUid() != nextPlayer.getUid()){
-            return;
-        }
+
         Player curPlayer = room.getCurPlayer();
         List<Card> cardList = player.getCardList();
         List<Card> curCards = curPlayer == null ? null : curPlayer.getSendCard();
@@ -188,7 +186,13 @@ public class RoomServiceImpl implements RoomService {
         room.setNextPlayer(getNext(room, player));
         player.setSendCard(cards);
         cardList.removeIf(cards::contains);
-        sendCardMessage(roomManager.getRoom(player.getRoomId()), cards, uid);
+        if(cardList.size() == 0){
+            room.setGameOver(true);
+            room.setGameOverTime(TimeUtils.getNowTimeMillis());
+
+            roomManager.onGameOver(room);
+        }
+        sendCardMessage(room, cards, uid);
         logger.info("[{}: {}] 玩家出牌: cards: {}", uid, player.getName(), cards);
     }
 
@@ -210,7 +214,12 @@ public class RoomServiceImpl implements RoomService {
         if(nextPlayer != null && player.getUid() != nextPlayer.getUid()){
             return;
         }
-        room.setNextPlayer(getNext(room, player));
+        Player next = getNext(room, player);
+        room.setNextPlayer(next);
+        Player curPlayer = room.getCurPlayer();
+        if(curPlayer != null && next.getUid() == curPlayer.getUid()){
+            room.setCurPlayer(null);
+        }
         sendCardMessage(room, new ArrayList<>(), uid);
     }
 
@@ -221,7 +230,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void suggest(Session session, long uid, int roomType) {
+    public void suggest(Session session, long uid, int roomType, boolean send) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -236,18 +245,33 @@ public class RoomServiceImpl implements RoomService {
 //        }
         Player curPlayer = room.getCurPlayer();
         if(curPlayer == null){
+            if(send){
+                List<Card> list = new ArrayList<>();
+                list.add(player.getCardList().get(0));
+                sendCard(session, uid, roomType, list);
+            }
             return;
         }
         ResPlayerSuggestMessage message = new ResPlayerSuggestMessage();
         List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
+
         int suggestOffset = player.getSuggestOffset();
         if(suggestOffset < availableCards.size() - 1){
             suggestOffset++;
         }else {
             suggestOffset = 0;
         }
+        List<Card> list = availableCards.isEmpty() ? Collections.emptyList() : availableCards.get(suggestOffset);
+        if(send){
+            if(list.isEmpty()){
+                noSend(session, uid, roomType);
+            }else {
+                sendCard(session, uid, roomType, list);
+            }
+            return;
+        }
         player.setSuggestOffset(suggestOffset);
-        message.setAvailableCards(availableCards.isEmpty() ? Collections.emptyList() : availableCards.get(suggestOffset));
+        message.setAvailableCards(list);
         MessageUtils.sendMessage(session, message);
     }
 
@@ -292,6 +316,8 @@ public class RoomServiceImpl implements RoomService {
         message.setUid(uid);
         message.getRemoveCards().addAll(removes);
         message.setNextId(room.getNextPlayer().getUid());
+        message.setFirstId(room.getCurPlayer() == null ? message.getNextId() : room.getCurPlayer().getUid());
+
         players.forEach((playerId, p) -> {
             p.setSuggestOffset(-1);
             message.getCardsMap().computeIfAbsent(p.getUid(), k -> new ArrayList<>(p.getCardList()));

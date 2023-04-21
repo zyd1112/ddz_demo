@@ -61,11 +61,11 @@ public class GameController {
         Session session = SessionManager.getSessionByPlayerId(uid);
 
 
-        roomService.suggest(session, playerDto.getUid(), playerDto.getRoomType());
+        roomService.suggest(session, playerDto.getUid(), playerDto.getRoomType(), playerDto.isSend());
 
     }
 
-    @PacketMapping(opcode = 14, state = Session.State.CONNECTED)
+    @PacketMapping(opcode = 14, state = Session.State.CONNECTED, printLog = false)
     public void reqCountdown(Session session, PlayerDto playerDto){
         roomService.reqCountdown(session, playerDto.getUid(), playerDto.getRoomType());
     }

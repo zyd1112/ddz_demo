@@ -51,7 +51,7 @@ public interface RoomService {
     /**
      * 提示
      */
-    void suggest(Session session, long uid, int roomType);
+    void suggest(Session session, long uid, int roomType, boolean send);
 
     void reqCountdown(Session session, long uid, int roomType);
 

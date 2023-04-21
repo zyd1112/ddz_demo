@@ -19,4 +19,6 @@ public class PlayerDto {
     boolean roomHost;
 
     boolean ready;
+
+    boolean send;
 }
