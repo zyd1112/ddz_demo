@@ -4,6 +4,7 @@ import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.message.Message;
 import xyz.noark.core.network.Session;
+import xyz.noark.core.network.SessionManager;
 
 /**
  * @author zyd
@@ -21,7 +22,9 @@ public class MessageUtils {
 
     public static void sendMessageForRoom(Room room, Message message){
         for (Player player : room.getPlayers().values()) {
-            sendMessage(player, message);
+            if(!player.isLeave()){
+                sendMessage(player, message);
+            }
         }
     }
 }

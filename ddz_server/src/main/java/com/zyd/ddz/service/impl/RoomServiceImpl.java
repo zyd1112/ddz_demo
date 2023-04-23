@@ -7,11 +7,10 @@ import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
-import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
 import com.zyd.ddz.message.room.ResPlayerReadyMessage;
 import com.zyd.ddz.message.room.ResPlayerSuggestMessage;
-import com.zyd.ddz.message.room.ResRoomTimeMessage;
+import com.zyd.ddz.message.room.ResRoomTimeHeartMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.RoomService;
@@ -182,6 +181,7 @@ public class RoomServiceImpl implements RoomService {
             logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curCards);
             return;
         }
+        room.setTimeout(0);
         room.setCurPlayer(player);
         room.setNextPlayer(getNext(room, player));
         player.setSendCard(cards);
@@ -214,13 +214,15 @@ public class RoomServiceImpl implements RoomService {
         if(nextPlayer != null && player.getUid() != nextPlayer.getUid()){
             return;
         }
+        room.setTimeout(0);
         Player next = getNext(room, player);
         room.setNextPlayer(next);
         Player curPlayer = room.getCurPlayer();
         if(curPlayer != null && next.getUid() == curPlayer.getUid()){
+            curPlayer = null;
             room.setCurPlayer(null);
         }
-        sendCardMessage(room, new ArrayList<>(), uid);
+        sendCardMessage(room, curPlayer == null ? new ArrayList<>() : curPlayer.getSendCard() , uid);
     }
 
     private Player getNext(Room room, Player player) {
@@ -230,7 +232,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void suggest(Session session, long uid, int roomType, boolean send) {
+    public void suggest(Session session, long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -240,16 +242,11 @@ public class RoomServiceImpl implements RoomService {
         }
         Player player = roomManager.getPlayers().get(uid);
         Room room = roomManager.getRoom(player.getRoomId());
-//        if(room == null || !room.isStart()){
-//            return;
-//        }
+        if(room == null || !room.isStart()){
+            return;
+        }
         Player curPlayer = room.getCurPlayer();
         if(curPlayer == null){
-            if(send){
-                List<Card> list = new ArrayList<>();
-                list.add(player.getCardList().get(0));
-                sendCard(session, uid, roomType, list);
-            }
             return;
         }
         ResPlayerSuggestMessage message = new ResPlayerSuggestMessage();
@@ -262,14 +259,6 @@ public class RoomServiceImpl implements RoomService {
             suggestOffset = 0;
         }
         List<Card> list = availableCards.isEmpty() ? Collections.emptyList() : availableCards.get(suggestOffset);
-        if(send){
-            if(list.isEmpty()){
-                noSend(session, uid, roomType);
-            }else {
-                sendCard(session, uid, roomType, list);
-            }
-            return;
-        }
         player.setSuggestOffset(suggestOffset);
         message.setAvailableCards(list);
         MessageUtils.sendMessage(session, message);
@@ -286,9 +275,28 @@ public class RoomServiceImpl implements RoomService {
         }
         Player player = roomManager.getPlayers().get(uid);
         Room room = roomManager.getRoom(player.getRoomId());
-        ResRoomTimeMessage message = new ResRoomTimeMessage();
-        message.setTime(TimeUtils.getNowTimeMillis());
+        ResRoomTimeHeartMessage message = new ResRoomTimeHeartMessage();
+//        message.setTime(TimeUtils.getNowTimeMillis());
         MessageUtils.sendMessageForRoom(room, message);
+    }
+
+    @Override
+    public void timeoutSend(Room room) {
+        Player player = room.getNextPlayer();
+        Player curPlayer = room.getCurPlayer();
+
+        if(curPlayer == null){
+            ArrayList<Card> list = new ArrayList<>();
+            list.add(player.getCardList().get(0));
+            sendCard(player.getSession(), player.getUid(), room.getType(), list);
+            return;
+        }
+        List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
+        if(availableCards.isEmpty()){
+            noSend(player.getSession(), player.getUid(), room.getType());
+        }else {
+            sendCard(player.getSession(), player.getUid(), room.getType(), availableCards.get(0));
+        }
     }
 
     @Override

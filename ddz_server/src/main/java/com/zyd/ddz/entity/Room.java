@@ -42,6 +42,10 @@ public class Room {
 
     int multiple = 15;
 
+    int clockCountDown = 0;
+
+    int timeout = 0;
+
     private List<CharacterType> characterTypeList = new ArrayList<CharacterType>(){{
         add(CharacterType.FARMER);
         add(CharacterType.PARTNER);
@@ -66,5 +70,8 @@ public class Room {
 
     private long gameOverTime;
 
+    public void initClock(){
+        timeout = 0;
+    }
 
 }

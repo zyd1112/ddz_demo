@@ -3,7 +3,7 @@ import { MessageUtils } from '../net/MessageUtils';
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
-import { reqNoSend, reqReady, reqSendCard, reqSuggest } from '../request/request';
+import { reqNoSend, reqReady, reqSendCard, reqStart, reqSuggest } from '../request/request';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -32,7 +32,7 @@ export class ButtonEvent extends Component {
     }
 
     public suggest(){
-        reqSuggest(false, Gloabal.uid);
+        reqSuggest(Gloabal.uid);
     }
 
     public ready(){
@@ -40,13 +40,7 @@ export class ButtonEvent extends Component {
     }
 
     public gameStart(){
-        let message = {
-            opcode: 17,
-            uid: Gloabal.uid,
-            roomType: Gloabal.roomType,
-        }
-
-        MessageUtils.send(message.opcode, message)
+        reqStart();
     }
 
 }

@@ -12,12 +12,11 @@ export function reqSendCard(cards: Card[]){
     MessageUtils.send(message.opcode, message)
 }
 
-export function reqSuggest(send: boolean, uid: number){
+export function reqSuggest(uid: number){
     let message = {
         opcode: 13,
         uid: uid,
         roomType: Gloabal.roomType,
-        send: send,
     }
     MessageUtils.send(message.opcode, message)
 }
@@ -45,5 +44,15 @@ export function reqReady(){
         roomType: Gloabal.roomType,
         
     }
+    MessageUtils.send(message.opcode, message)
+}
+
+export function reqStart(){
+    let message = {
+        opcode: 17,
+        uid: Gloabal.uid,
+        roomType: Gloabal.roomType,
+    }
+
     MessageUtils.send(message.opcode, message)
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ResRoomTimeMessage implements Message {
+public class ResRoomTimeHeartMessage implements Message {
     int opcode = 1005;
-    long time;
+    int time;
 }

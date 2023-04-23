@@ -61,7 +61,7 @@ public class GameController {
         Session session = SessionManager.getSessionByPlayerId(uid);
 
 
-        roomService.suggest(session, playerDto.getUid(), playerDto.getRoomType(), playerDto.isSend());
+        roomService.suggest(session, playerDto.getUid(), playerDto.getRoomType());
 
     }
 

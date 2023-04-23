@@ -18,6 +18,9 @@ export class GameManager extends Component {
     @property(Node)
     gabage: Node = null;
 
+    @property(Node)
+    clock: Node = null;
+
     @property(Prefab)
     headImages: Prefab[] = [];
 
@@ -26,6 +29,8 @@ export class GameManager extends Component {
 
     @property(Prefab)
     roomHostImage: Prefab = null;
+
+    public curId: number = 0;
 
     public gameStart: boolean = false;
 

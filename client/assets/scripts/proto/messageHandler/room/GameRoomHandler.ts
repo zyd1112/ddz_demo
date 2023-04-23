@@ -1,13 +1,12 @@
 import { Label, random } from "cc";
 import { Gloabal } from "../../../Global";
-import { CharacterType, Role } from "../../../constant/CharacterType";
+import { Role } from "../../../constant/CharacterType";
 import { GameManager } from "../../../framework/GameManager";
 import { PlayerManager } from "../../../framework/PlayerManager";
 import { Card, CardLoader } from "../../../player/CardLoader";
 import { CardManager } from "../../../player/CardManager";
 import { ClockManager } from "../../../player/ClockManager";
 import { MessageHander } from "../../MessageHanderl";
-import { reqSuggest } from "../../../request/request";
 
 
  export interface PlayerInfo{
@@ -36,8 +35,9 @@ export class PlayerCardHandler extends MessageHander{
     handler(message: ResPlayerCardMessage, gameManager: GameManager): void {
         console.log(message.cardsMap);
         const playerNodes = gameManager.playerNodes;
-        Gloabal.firstId = message.firstId;
         gameManager.countDown.active = false;
+        gameManager.clock.active = true;
+        gameManager.curId = message.nextId;
         if(message.type == 0){
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
@@ -66,7 +66,7 @@ export class PlayerCardHandler extends MessageHander{
                     playerManager.cardNode.removeAllChildren();
                     playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
                 }
-            } 
+            }
         }
         for(let i = 0; i < playerNodes.length; i++){
             const playerManager = playerNodes[i].getComponent(PlayerManager)
@@ -76,10 +76,9 @@ export class PlayerCardHandler extends MessageHander{
                 playerManager.button.active = player.uid == message.nextId && !(message.firstId == player.uid);
             }
             if(player.uid == message.nextId){
-                playerManager.startClock();
-            }
-            if(player.uid == message.uid){
-                playerManager.closeClock();
+                const pos = playerNodes[i].position;
+                gameManager.clock.getComponent(ClockManager).init();
+                gameManager.clock.setPosition(pos.x + playerManager.clock_offsetX, pos.y + playerManager.clock_offsetY, pos.z);
             }
         }
     }
@@ -173,22 +172,14 @@ function initBtn(playerManager: PlayerManager){
     }
 }
 
-interface ResRoomTimeMessage{
+interface ResRoomTimeHeartMessage{
+    opcode: number;
     time: number;
 }
 export class CountDownHandler extends MessageHander{
 
-    handler(message: ResRoomTimeMessage, gameManager: GameManager): void {
-        const playerNodes = gameManager.playerNodes;
-        for(let i = 0; i < playerNodes.length; i++){
-            const playerManager = playerNodes[i].getComponent(PlayerManager);
-            if(playerManager.clock.active){
-                const time = playerManager.clock.getComponent(ClockManager).updateTime(message.time)
-                if(time <= 0){
-                    reqSuggest(true, playerManager.playerInfo.uid);
-                }
-            }
-        }
+    handler(message: ResRoomTimeHeartMessage, gameManager: GameManager): void {
+        gameManager.clock.getComponent(ClockManager).updateTime(message.time)
     }
 }
 
@@ -243,6 +234,7 @@ export class PlayerLeaveRoomHandler extends MessageHander{
 
     handler(message: ResPlayerLeaveRoomMessage, gameManager: GameManager): void {
         const playerNodes = gameManager.playerNodes;
+        gameManager.clock.active = false;
         for(let i = 0; i < playerNodes.length; i++){
             const playerManager = playerNodes[i].getComponent(PlayerManager);
             const player = playerManager.playerInfo

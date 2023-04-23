@@ -11,10 +11,6 @@ const { ccclass, property } = _decorator;
 export class PlayerManager extends Component {
     @property(Node)
     public cardNode: Node = null;
-
-    @property(Node)
-    public clock: Node = null;
-
     @property(Node)
     public sendBtn: Node = null;
     @property(Node)
@@ -32,6 +28,11 @@ export class PlayerManager extends Component {
     public image_offsetX = 0;
     @property
     public image_offsetY = 0;
+
+    @property
+    public clock_offsetX = 0;
+    @property
+    public clock_offsetY = 0;
 
     @property
     public roomHost_offsetX = 0;
@@ -76,16 +77,7 @@ export class PlayerManager extends Component {
         this.cardNode.getComponent(CardManager).init(cards, this.role);
     }
 
-    startClock(){
-        this.clock.active = true;
-    }
-
-    closeClock(){
-        this.clock.active = false;
-    }
-
     clear(){
-        this.closeClock();
         this.playerInfo.uid = 0;
         this.playerInfo.roomHost = false;
         this.mark.active = false;

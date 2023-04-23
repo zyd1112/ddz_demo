@@ -3,13 +3,11 @@ package com.zyd.ddz.room;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
-import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.ResPlayerCardMessage;
 import com.zyd.ddz.message.room.ResPlayerEnterRoomMessage;
 import com.zyd.ddz.message.room.ResPlayerLeaveRoomMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.utils.GameLogicUtils;
-import com.zyd.ddz.utils.IdUtils;
 import com.zyd.ddz.utils.MessageUtils;
 import xyz.noark.core.util.RandomUtils;
 
@@ -57,6 +55,8 @@ public abstract class AbstractRoomManager {
     public abstract int getSize();
 
     public abstract int getType();
+
+    public abstract int getTimeout();
 
     /**
      * 创建房间事件
@@ -177,6 +177,7 @@ public abstract class AbstractRoomManager {
         for (Player player : playerList) {
             if (player.isRoomHost()){
                 message.setNextId(player.getUid());
+                room.setNextPlayer(player);
                 break;
             }
         }

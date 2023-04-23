@@ -1,6 +1,7 @@
 package com.zyd.ddz;
 
 import com.zyd.ddz.proto.JsonCodec;
+import xyz.noark.core.ioc.IocHolder;
 import xyz.noark.core.network.PacketCodec;
 import xyz.noark.game.bootstrap.BaseServerBootstrap;
 

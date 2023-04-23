@@ -1,6 +1,7 @@
 package com.zyd.ddz.service;
 
 import com.zyd.ddz.entity.Card;
+import com.zyd.ddz.entity.Room;
 import xyz.noark.core.network.Session;
 
 import java.util.List;
@@ -51,9 +52,14 @@ public interface RoomService {
     /**
      * 提示
      */
-    void suggest(Session session, long uid, int roomType, boolean send);
+    void suggest(Session session, long uid, int roomType);
 
     void reqCountdown(Session session, long uid, int roomType);
+
+    /**
+     * 超时出牌
+     */
+    void timeoutSend(Room room);
 
     /**
      * 托管

@@ -20,5 +20,4 @@ public class PlayerDto {
 
     boolean ready;
 
-    boolean send;
 }

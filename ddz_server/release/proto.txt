@@ -13,7 +13,7 @@ responds:
     1002: userDto
     1003: ResPlayerSuggestMessage
     1004: ResPlayerEnterRoomMessage
-    1005: ResRoomTimeMessage
+    1005: ResRoomTimeHeartMessage
     1006: ResPlayerReadyMessage
     1007: ResRoomReadyTimeMessage
     1008: ResPlayerLeaveRoomMessage

@@ -29,6 +29,11 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     }
 
     @Override
+    public int getTimeout() {
+        return 20;
+    }
+
+    @Override
     public void onHeart(Room room, int dt) {
         if (!room.isStart()){
             return;
