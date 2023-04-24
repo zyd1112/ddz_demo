@@ -2,7 +2,7 @@ import { _decorator, Button, Camera, Component, EventHandler, EventTouch, geomet
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
-import { reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest } from '../api/request';
+import { reqEnterRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -10,6 +10,14 @@ export class ButtonEvent extends Component {
 
     @property(Node)
     private cardSelf: Node = null;
+
+    public visitorLogin(){
+        reqVisitorLogin();
+    }
+
+    public enterRoom(){
+        reqEnterRoom();
+    }
 
     public sendCard(){
         console.log("出牌");

@@ -2,6 +2,20 @@ import { Gloabal } from "../Global"
 import { MessageUtils } from "../net/MessageUtils"
 import { Card } from "../player/CardLoader"
 
+export function reqVisitorLogin(){
+    MessageUtils.send(11, {});
+}
+
+export function reqEnterRoom(){
+    let msg = {
+        opcode: 10,
+        roomType: 1,
+        uid: Gloabal.uid
+    };
+    Gloabal.roomType = msg.roomType
+    MessageUtils.send(msg.opcode, msg);
+}
+
 export function reqSendCard(cards: Card[]){
     let message = {
         opcode: 12,

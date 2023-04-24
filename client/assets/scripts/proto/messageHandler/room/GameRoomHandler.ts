@@ -1,4 +1,4 @@
-import { Label, game, random } from "cc";
+import { Label, director, game, random } from "cc";
 import { Gloabal } from "../../../Global";
 import { CharacterType, Role } from "../../../constant/CharacterType";
 import { GameManager } from "../../../framework/GameManager";
@@ -178,6 +178,7 @@ interface ResRoomPlayerInfoMessage{
 export class PlayerEnterRoomHandler extends MessageHander{
 
     handler(message: ResRoomPlayerInfoMessage, gameManager: GameManager): void {
+        director.runSceneImmediate(gameManager.gameScene)
         for(let i = 0; i < message.playerInfos.length; i++){
             const playerInfo = message.playerInfos[i];
             

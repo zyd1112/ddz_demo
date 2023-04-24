@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Node, NodeEventType, Prefab, SystemEvent } from 'cc';
+import { _decorator, Button, Component, Node, NodeEventType, Prefab, Scene, SceneAsset, SystemEvent } from 'cc';
 import { GameClientNet } from '../net/GameClientNet';
 import { MessageFactory } from '../proto/MessageFactory';
 import { MessageUtils } from '../net/MessageUtils';
@@ -36,6 +36,12 @@ export class GameManager extends Component {
     @property(Node)
     scrambleBtn: Node = null;
 
+    @property(SceneAsset)
+    gameScene: SceneAsset = null;
+
+    @property(SceneAsset)
+    homeScene: SceneAsset = null;
+
     public nextId: number = 0;
 
     public gameStart: boolean = false;
@@ -43,9 +49,10 @@ export class GameManager extends Component {
     public multiple: number = 15;
 
     start() {
+        
         GameClientNet.startClient("10.40.4.208", 10001);
         GameClientNet.getConnection().onopen = () => {
-            MessageUtils.send(11, {});
+            console.log("已连接")
         }
         GameClientNet.getConnection().onmessage = (event) => {
             let data = event.data;
@@ -61,16 +68,11 @@ export class GameManager extends Component {
                 handler.handler(data.protocol, this);
             }
         }
-        
-        setTimeout(() => {
-            let msg = {
-                opcode: 10,
-                roomType: 1,
-                uid: Gloabal.uid
-            };
-            Gloabal.roomType = msg.roomType
-            MessageUtils.send(msg.opcode, msg);
-        }, 3000);
+
+        GameClientNet.getConnection().onclose = () => {
+            alert("服务器断开");
+        }
+
     }
 
     
