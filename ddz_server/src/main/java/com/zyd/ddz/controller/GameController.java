@@ -1,13 +1,12 @@
 package com.zyd.ddz.controller;
 
-import com.zyd.ddz.message.room.ReqScrambleMessage;
-import com.zyd.ddz.message.room.ReqSendCardsMessage;
+import com.zyd.ddz.message.room.request.ReqScrambleMessage;
+import com.zyd.ddz.message.room.request.ReqSendCardsMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.service.UserService;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Controller;
-import xyz.noark.core.annotation.PlayerId;
 import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
@@ -107,7 +106,8 @@ public class GameController {
     }
 
     @PacketMapping(opcode = 18, state = Session.State.CONNECTED)
-    public void scramble(@PlayerId long uid, ReqScrambleMessage message){
+    public void scramble(ReqScrambleMessage message){
+        long uid = message.getPlayerDto().getUid();
         if (!SessionManager.isOnline(uid)){
             logger.info("[{}] 用户没有在线", uid);
             return;

@@ -56,3 +56,15 @@ export function reqStart(){
 
     MessageUtils.send(message.opcode, message)
 }
+
+export function reqScramble(status: boolean){
+    let message = {
+        opcode: 18,
+        status: status,
+        playerDto: {
+            uid: Gloabal.uid,
+            roomType: Gloabal.roomType
+        }
+    }
+    MessageUtils.send(message.opcode, message);
+}

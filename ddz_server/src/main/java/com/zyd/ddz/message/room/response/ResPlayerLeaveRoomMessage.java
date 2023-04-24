@@ -1,4 +1,4 @@
-package com.zyd.ddz.message.room;
+package com.zyd.ddz.message.room.response;
 
 import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.dto.PlayerDto;

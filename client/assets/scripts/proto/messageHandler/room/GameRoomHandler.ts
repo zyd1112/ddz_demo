@@ -1,12 +1,14 @@
-import { Label, random } from "cc";
+import { Label, game, random } from "cc";
 import { Gloabal } from "../../../Global";
-import { Role } from "../../../constant/CharacterType";
+import { CharacterType, Role } from "../../../constant/CharacterType";
 import { GameManager } from "../../../framework/GameManager";
 import { PlayerManager } from "../../../framework/PlayerManager";
 import { Card, CardLoader } from "../../../player/CardLoader";
 import { CardManager } from "../../../player/CardManager";
 import { ClockManager } from "../../../player/ClockManager";
 import { MessageHander } from "../../MessageHanderl";
+import { updateClockPos } from "../../../api/button";
+import { getNextPlayer } from "../../../api/game";
 
 
  export interface PlayerInfo{
@@ -19,15 +21,66 @@ import { MessageHander } from "../../MessageHanderl";
     roomHost: boolean
 
     ready: boolean;
+
+    enterTime: number;
+}
+
+interface ResPlayerCharacterMessage{
+    opcode: number;
+    cardsMap: {[uid: number]: Card[]};
+    character: {[uid: number]: number};
+    multiple: number;
+    uid: number;
+    status: boolean;
+    success: boolean;
+}
+export class PlayerCharacterHandler extends MessageHander{
+    
+    handler(message: ResPlayerCharacterMessage, gameManager: GameManager): void {
+        const playerNodes = gameManager.playerNodes;
+        let nextId = getNextPlayer(playerNodes, message.uid).uid
+        gameManager.multiple = message.multiple;
+        if(message.success){
+            gameManager.scrambleBtn.active = false;
+            for(let i = 0; i < playerNodes.length; i++){
+                const playerManager = playerNodes[i].getComponent(PlayerManager)
+                const player = playerManager.playerInfo;
+                playerManager.scrambleText.active = false;
+                player.characterType = message.character[playerManager.playerInfo.uid];
+                if(player.characterType == CharacterType.LANDOWNER){
+                    nextId = player.uid;
+                    playerManager.initLandowner(gameManager.landowner);
+                }
+                if(playerManager.role == Role.SELF){
+                    playerManager.sendBtn.active = player.characterType == CharacterType.LANDOWNER;
+                }
+                playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
+            }
+        }else{
+            for(let i = 0; i < playerNodes.length; i++){
+                const playerManager = playerNodes[i].getComponent(PlayerManager)
+                const player = playerManager.playerInfo;
+                const text = playerManager.scrambleText
+                if(playerManager.role == Role.SELF){
+                    gameManager.scrambleBtn.active = nextId == Gloabal.uid;
+                }
+                if(player.uid == message.uid){
+                    text.getComponent(Label).string = message.status ? "抢" : "不抢";
+                    text.active = true;
+                }
+            }
+        }
+        updateClockPos(gameManager, nextId);
+    }
+    
 }
 
 interface ResPlayerCardMessage{
     opcode: number;
-    cardsMap: {[characterType: number]: Card[]};
+    cardsMap: {[uid: number]: Card[]};
     type: number;
     removeCards: Card[]
     uid: number;
-    nextId: number;
     firstId: number;
 }
 export class PlayerCardHandler extends MessageHander{
@@ -37,7 +90,8 @@ export class PlayerCardHandler extends MessageHander{
         const playerNodes = gameManager.playerNodes;
         gameManager.countDown.active = false;
         gameManager.clock.active = true;
-        gameManager.curId = message.nextId;
+        const nextId = getNextPlayer(playerNodes, message.uid).uid;
+        gameManager.nextId = nextId;
         if(message.type == 0){
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
@@ -45,9 +99,12 @@ export class PlayerCardHandler extends MessageHander{
                 if(playerManager.role == Role.SELF){
                     playerManager.startBtn.destroy();
                     playerManager.readyBtn.destroy();
+    
+                    gameManager.scrambleBtn.active = playerManager.playerInfo.roomHost;
                 }
                 playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
             }
+            updateClockPos(gameManager, message.firstId);
         }else{
             const gabageCardManager = gameManager.gabage.getComponent(CardManager)
             const remove = message.removeCards;
@@ -63,24 +120,21 @@ export class PlayerCardHandler extends MessageHander{
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
                 if(playerManager.playerInfo.uid == message.uid){
-                    playerManager.cardNode.removeAllChildren();
                     playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
+                    playerManager.cardNode.getComponent(CardManager).reset();
                 }
             }
-        }
-        for(let i = 0; i < playerNodes.length; i++){
-            const playerManager = playerNodes[i].getComponent(PlayerManager)
-            const player = playerManager.playerInfo;
-            if(playerManager.role == Role.SELF){
-                playerManager.sendBtn.active = player.uid == message.nextId;
-                playerManager.button.active = player.uid == message.nextId && !(message.firstId == player.uid);
+            for(let i = 0; i < playerNodes.length; i++){
+                const playerManager = playerNodes[i].getComponent(PlayerManager)
+                const player = playerManager.playerInfo;
+                if(playerManager.role == Role.SELF){
+                    playerManager.sendBtn.active = player.uid == nextId;
+                    playerManager.button.active = player.uid == nextId && !(message.firstId == player.uid);
+                }
             }
-            if(player.uid == message.nextId){
-                const pos = playerNodes[i].position;
-                gameManager.clock.getComponent(ClockManager).init();
-                gameManager.clock.setPosition(pos.x + playerManager.clock_offsetX, pos.y + playerManager.clock_offsetY, pos.z);
-            }
+            updateClockPos(gameManager, nextId);
         }
+        
     }
     
 }
@@ -139,6 +193,7 @@ export class PlayerEnterRoomHandler extends MessageHander{
                     player.uid = playerInfo.uid;
                     player.roomHost = playerInfo.roomHost;
                     playerManager.initImage(headImage)
+                    player.enterTime = playerInfo.enterTime;
                     if(player.roomHost){
                         playerManager.initRoomHost(gameManager.roomHostImage);
                     }
@@ -149,6 +204,7 @@ export class PlayerEnterRoomHandler extends MessageHander{
                     player.uid = playerInfo.uid;
                     playerManager.initImage(headImage)
                     player.roomHost = playerInfo.roomHost;
+                    player.enterTime = playerInfo.enterTime;
                     if(player.roomHost){
                         playerManager.initRoomHost(gameManager.roomHostImage);
                     }else{

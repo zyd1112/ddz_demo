@@ -1,4 +1,4 @@
-package com.zyd.ddz.message.room;
+package com.zyd.ddz.message.room.response;
 
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.message.Message;
@@ -38,10 +38,6 @@ public class ResPlayerCardMessage implements Message {
      */
     long uid;
 
-    /**
-     * 下一个出牌
-     */
-    long nextId;
 
     /**
      * 谁是上游

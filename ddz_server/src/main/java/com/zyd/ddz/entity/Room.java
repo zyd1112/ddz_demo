@@ -46,6 +46,8 @@ public class Room {
 
     int timeout = 0;
 
+    int scrambleCount = 0;
+
     private List<CharacterType> characterTypeList = new ArrayList<CharacterType>(){{
         add(CharacterType.FARMER);
         add(CharacterType.PARTNER);
@@ -69,6 +71,8 @@ public class Room {
     private boolean gameOver;
 
     private long gameOverTime;
+
+    private boolean characterInit;
 
     public void initClock(){
         timeout = 0;

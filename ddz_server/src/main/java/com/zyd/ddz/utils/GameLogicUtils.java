@@ -73,11 +73,11 @@ public class GameLogicUtils {
         List<Card> cardList = new ArrayList<>();
         for (CardContext.Value value : CardContext.Value.values()) {
             for (CardContext.Shape shape : CardContext.Shape.values()) {
-                cardList.add(new Card(value.getValue(), shape.getValue(), shape.getContent() + value.getContent()));
+                cardList.add(new Card(value.getValue(), shape.getValue(), shape.getContent() + value.getContent(), false));
             }
         }
         for (CardContext.Joker value : CardContext.Joker.values()) {
-            cardList.add(new Card(value.getValue(), 5, value.getContent()));
+            cardList.add(new Card(value.getValue(), 5, value.getContent(), false));
         }
 
         Collections.shuffle(cardList);

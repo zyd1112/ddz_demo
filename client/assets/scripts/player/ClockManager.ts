@@ -1,7 +1,7 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { MessageUtils } from '../net/MessageUtils';
 import { Gloabal } from '../Global';
-import { reqNoSend, reqCountdown, reqSuggest, reqSendCard } from '../request/request';
+import { reqNoSend, reqCountdown, reqSuggest, reqSendCard } from '../api/request';
 const { ccclass, property } = _decorator;
 
 @ccclass('ClockManager')
@@ -29,8 +29,6 @@ export class ClockManager extends Component {
         this.updateLabel(this.time);
     }
 
-    
-    
 }
 
 

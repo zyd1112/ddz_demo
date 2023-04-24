@@ -7,11 +7,8 @@ import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
-import com.zyd.ddz.message.room.ResPlayerCardMessage;
-import com.zyd.ddz.message.room.ResPlayerReadyMessage;
-import com.zyd.ddz.message.room.ResPlayerSuggestMessage;
-import com.zyd.ddz.message.room.ResRoomTimeHeartMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
+import com.zyd.ddz.message.room.response.*;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.RoomService;
 import com.zyd.ddz.utils.GameLogicUtils;
@@ -146,17 +143,50 @@ public class RoomServiceImpl implements RoomService {
             return;
         }
         int multiple = room.getMultiple();
-        int scrambleCount = player.getScrambleCount();
         if(scramble){
             multiple <<= 1;
+            player.setScrambleCount(player.getScrambleCount() + 1);
         }
-        if(scrambleCount == 2){
-            player.setCharacter(scramble ? CharacterType.LANDOWNER : room.getCharacterTypeList().remove(0));
+        int scrambleCount = room.getScrambleCount();
+        scrambleCount++;
+        boolean success = scrambleCount / roomManager.getSize() == 2;
+        if(success){
+            List<Player> players = new ArrayList<>(room.getPlayers().values());
+            players.sort((p1, p2) -> p2.getScrambleCount() - p1.getScrambleCount());
+            for (int i = 0; i < players.size(); i++) {
+                Player curPlayer = players.get(i);
+                if (i == 0) {
+                    curPlayer.setCharacter(CharacterType.LANDOWNER);
+                    for (Card downCard : room.getDownCards()) {
+                        downCard.setSend(true);
+                    }
+                    List<Card> cardList = curPlayer.getCardList();
+                    cardList.addAll(room.getDownCards());
+                    cardList.sort((o1, o2) -> {
+                        if (o1.getCardValue() == o2.getCardValue()) {
+                            return o1.getShape() - o2.getShape();
+                        }
+                        return o1.getCardValue() - o2.getCardValue();
+                    });
+                } else {
+                    curPlayer.setCharacter(room.getCharacterTypeList().remove(0));
+                }
+            }
+            room.setCharacterInit(true);
         }
-
+        room.initClock();
+        room.setScrambleCount(scrambleCount);
         room.setMultiple(multiple);
-        player.setScrambleCount(scrambleCount + 1);
-
+        ResPlayerCharacterMessage message = new ResPlayerCharacterMessage();
+        room.getPlayers().forEach((id, p) -> {
+            message.getCharacter().put(id, p.getCharacter().getType());
+            message.getCardsMap().put(id, p.getCardList());
+        });
+        message.setMultiple(multiple);
+        message.setUid(uid);
+        message.setSuccess(success);
+        message.setStatus(scramble);
+        MessageUtils.sendMessageForRoom(room, message);
     }
 
     @Override
@@ -181,7 +211,7 @@ public class RoomServiceImpl implements RoomService {
             logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curCards);
             return;
         }
-        room.setTimeout(0);
+        room.initClock();
         room.setCurPlayer(player);
         room.setNextPlayer(getNext(room, player));
         player.setSendCard(cards);
@@ -214,7 +244,7 @@ public class RoomServiceImpl implements RoomService {
         if(nextPlayer != null && player.getUid() != nextPlayer.getUid()){
             return;
         }
-        room.setTimeout(0);
+        room.initClock();
         Player next = getNext(room, player);
         room.setNextPlayer(next);
         Player curPlayer = room.getCurPlayer();
@@ -226,7 +256,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     private Player getNext(Room room, Player player) {
-        List<Player> players = room.getPlayers().values().stream().sorted(Comparator.comparing(Player::getCharacter)).collect(Collectors.toList());
+        List<Player> players = room.getPlayers().values().stream()
+                .sorted(Comparator.comparing(Player::getEnterTime)).collect(Collectors.toList());
         int index = players.indexOf(player);
         return  players.get(index < players.size() - 1 ? index + 1 : 0);
     }
@@ -283,20 +314,26 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void timeoutSend(Room room) {
         Player player = room.getNextPlayer();
-        Player curPlayer = room.getCurPlayer();
 
-        if(curPlayer == null){
-            ArrayList<Card> list = new ArrayList<>();
-            list.add(player.getCardList().get(0));
-            sendCard(player.getSession(), player.getUid(), room.getType(), list);
-            return;
-        }
-        List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
-        if(availableCards.isEmpty()){
-            noSend(player.getSession(), player.getUid(), room.getType());
+        if (room.isCharacterInit()){
+            Player curPlayer = room.getCurPlayer();
+
+            if(curPlayer == null){
+                ArrayList<Card> list = new ArrayList<>();
+                list.add(player.getCardList().get(0));
+                sendCard(player.getSession(), player.getUid(), room.getType(), list);
+                return;
+            }
+            List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
+            if(availableCards.isEmpty()){
+                noSend(player.getSession(), player.getUid(), room.getType());
+            }else {
+                sendCard(player.getSession(), player.getUid(), room.getType(), availableCards.get(0));
+            }
         }else {
-            sendCard(player.getSession(), player.getUid(), room.getType(), availableCards.get(0));
+            scramble(player.getSession(), player.getUid(), room.getType(), false);
         }
+
     }
 
     @Override
@@ -323,8 +360,7 @@ public class RoomServiceImpl implements RoomService {
         message.setType(1);
         message.setUid(uid);
         message.getRemoveCards().addAll(removes);
-        message.setNextId(room.getNextPlayer().getUid());
-        message.setFirstId(room.getCurPlayer() == null ? message.getNextId() : room.getCurPlayer().getUid());
+        message.setFirstId(room.getCurPlayer() == null ? room.getNextPlayer().getUid() : room.getCurPlayer().getUid());
 
         players.forEach((playerId, p) -> {
             p.setSuggestOffset(-1);

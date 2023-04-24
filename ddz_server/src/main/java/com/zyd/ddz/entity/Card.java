@@ -15,6 +15,8 @@ public class Card {
     private int shape;
     private String content;
 
+    private boolean send;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

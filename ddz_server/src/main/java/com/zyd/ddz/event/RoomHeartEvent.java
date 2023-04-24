@@ -3,8 +3,8 @@ package com.zyd.ddz.event;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import com.zyd.ddz.factory.RoomManagerFactory;
-import com.zyd.ddz.message.room.ResRoomReadyTimeMessage;
-import com.zyd.ddz.message.room.ResRoomTimeHeartMessage;
+import com.zyd.ddz.message.room.response.ResRoomReadyTimeMessage;
+import com.zyd.ddz.message.room.response.ResRoomTimeHeartMessage;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.impl.RoomServiceImpl;
 import com.zyd.ddz.utils.MessageUtils;
@@ -67,15 +67,16 @@ public class RoomHeartEvent extends AbstractMonitorService {
                 }
                 if(!room.isStart()){
                     checkReady(room, dt);
+                }else {
+                    updateHeart(room, dt, roomManager.getTimeout());
                 }
-                checkTimeout(room, dt, roomManager.getTimeout());
                 abstractRoomManager.onHeart(room, dt);
             }
         });
 
     }
 
-    private void checkTimeout(Room room, int dt, int timeoutLimit) {
+    private void updateHeart(Room room, int dt, int timeoutLimit) {
         int clockCountDown = room.getClockCountDown();
         clockCountDown += dt;
         if(clockCountDown >= 1000){
@@ -83,15 +84,19 @@ public class RoomHeartEvent extends AbstractMonitorService {
             ResRoomTimeHeartMessage message = new ResRoomTimeHeartMessage();
             message.setTime(1);
             MessageUtils.sendMessageForRoom(room, message);
-            int timeout = room.getTimeout();
-            timeout++;
-            if(timeout >= timeoutLimit){
-                IocHolder.getIoc().get(RoomServiceImpl.class).timeoutSend(room);
-            }else {
-                room.setTimeout(timeout);
-            }
+            checkTimeout(room, timeoutLimit);
         }
         room.setClockCountDown(clockCountDown);
+    }
+
+    private void checkTimeout(Room room, int timeoutLimit) {
+        int timeout = room.getTimeout();
+        timeout++;
+        if(timeout >= timeoutLimit){
+            IocHolder.getIoc().get(RoomServiceImpl.class).timeoutSend(room);
+        }else {
+            room.setTimeout(timeout);
+        }
     }
 
     private boolean checkAllLeave(Map<Long, Player> playerList) {

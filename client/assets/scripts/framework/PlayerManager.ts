@@ -24,6 +24,10 @@ export class PlayerManager extends Component {
     @property(Node)
     public mark: Node = null;
 
+    @property(Node)
+    public scrambleText: Node = null;
+
+
     @property
     public image_offsetX = 0;
     @property
@@ -40,6 +44,12 @@ export class PlayerManager extends Component {
     public roomHost_offsetY = 0;
 
     @property
+    public landowner_offsetX = 0;
+    @property
+    public landowner_offsetY = 0;
+
+    
+    @property
     public role = 1;
 
     public playerInfo: PlayerInfo = {
@@ -52,10 +62,13 @@ export class PlayerManager extends Component {
         roomHost: false,
 
         ready: false,
+
+        enterTime: 0,
     }
 
     public image: Node = null;
     public roomHostImage: Node = null;
+    public landowner: Node = null;
 
     initImage(image: Prefab){
         const i = PoolManager.getInstance().getNode(image, this.node);
@@ -74,7 +87,14 @@ export class PlayerManager extends Component {
     }
 
     initCards(cards: Card[]){
+        this.cardNode.removeAllChildren()
         this.cardNode.getComponent(CardManager).init(cards, this.role);
+    }
+
+    initLandowner(landowner: Prefab){
+        const image = PoolManager.getInstance().getNode(landowner, this.node);
+        image.setPosition(this.landowner_offsetX, this.landowner_offsetY, 0);
+        this.landowner = image;
     }
 
     clear(){

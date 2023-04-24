@@ -1,4 +1,4 @@
-package com.zyd.ddz.message.room;
+package com.zyd.ddz.message.room.response;
 
 import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.dto.PlayerDto;
@@ -10,12 +10,12 @@ import java.util.List;
 
 /**
  * @author zyd
- * @date 2023/4/20 20:18
+ * @date 2023/4/19 14:15
  */
 @Setter
 @Getter
-public class ResPlayerReadyMessage implements Message {
-    int opcode = 1006;
+public class ResPlayerEnterRoomMessage implements Message {
+    int opcode = 1004;
 
-    List<PlayerDto> playerDtoList = new ArrayList<>();
+    List<PlayerDto> playerInfos = new ArrayList<>();
 }

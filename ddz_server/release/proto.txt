@@ -9,6 +9,7 @@ request:
     17: start
     18: scramble
 responds:
+    1000: ResPlayerCharacterMessage
     1001: ResPlayerCardMessage
     1002: userDto
     1003: ResPlayerSuggestMessage

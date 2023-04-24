@@ -1,9 +1,8 @@
-import { _decorator, Button, Camera, Component, EventHandler, EventTouch, geometry, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
-import { MessageUtils } from '../net/MessageUtils';
+import { _decorator, Button, Camera, Component, EventHandler, EventTouch, geometry, Label, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
-import { reqNoSend, reqReady, reqSendCard, reqStart, reqSuggest } from '../request/request';
+import { reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest } from '../api/request';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -18,7 +17,7 @@ export class ButtonEvent extends Component {
         const remove= [];
         for(let i = 0; i < children.length; i++){
             let cardLoader = children[i].getComponent(CardLoader);
-            if(cardLoader.isSend()){
+            if(cardLoader.getCard().send){
                 remove.push(cardLoader.getCard());
             }
         }
@@ -41,6 +40,15 @@ export class ButtonEvent extends Component {
 
     public gameStart(){
         reqStart();
+    }
+
+    public scramble(event: Event,customEventData: string){
+        console.log(customEventData);
+        let flag = false;
+        if(customEventData == "0"){
+            flag = true;
+        }
+        reqScramble(flag);
     }
 
 }

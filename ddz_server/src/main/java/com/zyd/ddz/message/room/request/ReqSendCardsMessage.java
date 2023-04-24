@@ -1,4 +1,4 @@
-package com.zyd.ddz.message.room;
+package com.zyd.ddz.message.room.request;
 
 import com.zyd.ddz.entity.Card;
 import lombok.Getter;

@@ -30,10 +30,17 @@ export class GameManager extends Component {
     @property(Prefab)
     roomHostImage: Prefab = null;
 
-    public curId: number = 0;
+    @property(Prefab)
+    landowner: Prefab = null;
+
+    @property(Node)
+    scrambleBtn: Node = null;
+
+    public nextId: number = 0;
 
     public gameStart: boolean = false;
 
+    public multiple: number = 15;
 
     start() {
         GameClientNet.startClient("10.40.4.208", 10001);
@@ -65,6 +72,8 @@ export class GameManager extends Component {
             MessageUtils.send(msg.opcode, msg);
         }, 3000);
     }
+
+    
     
 }
 

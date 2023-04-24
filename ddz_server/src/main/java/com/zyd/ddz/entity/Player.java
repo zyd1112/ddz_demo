@@ -41,6 +41,8 @@ public class Player {
 
     Session session;
 
+    long enterTime;
+
     CharacterType character = CharacterType.LANDOWNER;
 
     long scrambleTime;
@@ -76,6 +78,7 @@ public class Player {
         playerDto.setCharacterType(this.getCharacter().getType());
         playerDto.setRoomHost(this.isRoomHost());
         playerDto.setReady(this.isReady());
+        playerDto.setEnterTime(this.getEnterTime());
         return playerDto;
     }
 }

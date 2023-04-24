@@ -15,7 +15,7 @@ export class CardManager extends Component {
     public offset_y = 0;
 
     @property
-    private move = 5;
+    private pop = 5;
 
     public uid: number = 0;
 
@@ -37,15 +37,17 @@ export class CardManager extends Component {
         const card = PoolManager.getInstance().getNode(this.cardPrefab, this.node);
         card.setPosition(tx, ty, 0);
         const cardLoader = card.getComponent(CardLoader);
-        
+        cardLoader.setCard(c);
         if(role == Role.SELF){
             cardLoader.load("card_" + c.cardValue + "_" + c.shape);
             this.addButton(card);
+            if(c.send){
+                this.popCard(card);
+            }
         }else{
             cardLoader.load("card_55");
+            c.send = false;
         }
-        cardLoader.setCard(c);
-        cardLoader.setIsSend(false);
         return card;
     }
 
@@ -58,18 +60,18 @@ export class CardManager extends Component {
 
     public popCard(card: Node){
         const pos = card.position;
-        let y = pos.y != 0 ? 0 : pos.y + this.move;
+        let y = pos.y != 0 ? 0 : pos.y + this.pop;
         card.setPosition(pos.x, y, pos.z);
-        card.getComponent(CardLoader).setIsSend(y != 0);
+        card.getComponent(CardLoader).getCard().send = y != 0;
     }
 
     public reset(){
         const children = this.node.children;
         for(let i = 0; i < children.length; i++){
             const cardLoader = children[i].getComponent(CardLoader)
-            if(cardLoader.isSend()){
+            if(cardLoader.getCard().send){
                 children[i].setPosition(children[i].position.x, 0, children[i].position.z);
-                cardLoader.setIsSend(false);
+                cardLoader.getCard().send = false;
             }
         }
         

@@ -18,7 +18,7 @@ export class UserLoginHandler extends MessageHander{
     
     handler(message: ResUserMessage, gameManager: GameManager): void {
         console.log(message);
-        Gloabal.uid = (message as ResUserMessage).id;
+        Gloabal.uid = message.id;
     }
     
 }
