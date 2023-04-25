@@ -11,6 +11,7 @@ export function resourceLoad(){
     resources.load(Path.ROOMHOST, Prefab, (err, prefab) => {
         GameManager.getInstance().roomHostImage = prefab;
     })
+    GameManager.getInstance().headImages = [];
     resources.load(Path.HEAD_IMAGE_1, Prefab, (err, prefab) => {
         GameManager.getInstance().headImages.push(prefab);
         resources.load(Path.HEAD_IMAGE_2, Prefab, (err, prefab) => {
@@ -39,6 +40,8 @@ export function userInit(){
                     name.getComponent(Label).string = Gloabal.username;
                     const image = PoolManager.getInstance().getNode(Gloabal.image, node);
                     image.setPosition(name.position.x + 130, name.position.y, 0);
+                    const joyBeans = node.getChildByName("joyBeans");
+                    joyBeans.getChildByName("value").getComponent(Label).string = Gloabal.joyBeans + "";
                     node.active = true; 
                 }
                 break;

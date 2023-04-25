@@ -2,6 +2,7 @@ import { _decorator, Component, Node } from 'cc';
 import { MessageHander } from './MessageHanderl';
 import { UserLoginHandler } from './messageHandler/user/UserLoginHandler';
 import { CountDownHandler, 
+    GameOverRewardsHandler, 
     PlayerCardHandler, 
     PlayerCharacterHandler, 
     PlayerEnterRoomHandler, 
@@ -23,6 +24,7 @@ export class MessageFactory {
         MessageFactory.register(1006, new PlayerReadyHandler());
         MessageFactory.register(1007, new RoomReadyCountDownHandler());
         MessageFactory.register(1008, new PlayerLeaveRoomHandler())
+        MessageFactory.register(1009, new GameOverRewardsHandler())
     }
 
     public static register(opcode: number, message: MessageHander){

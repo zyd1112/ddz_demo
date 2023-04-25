@@ -3,7 +3,7 @@ import { GameClientNet } from '../net/GameClientNet';
 import { MessageFactory } from '../proto/MessageFactory';
 import { GameManager } from './GameManager';
 import { resourceLoad } from '../api/home';
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 @ccclass('GameClientService')
 export class GameClientService extends Component {

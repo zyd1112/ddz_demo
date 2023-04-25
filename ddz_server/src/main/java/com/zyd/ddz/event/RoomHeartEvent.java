@@ -67,7 +67,7 @@ public class RoomHeartEvent extends AbstractMonitorService {
                 }
                 if(!room.isStart()){
                     checkReady(room, dt);
-                }else {
+                }else if(!room.isGameOver()){
                     updateHeart(room, dt, roomManager.getTimeout());
                 }
                 abstractRoomManager.onHeart(room, dt);

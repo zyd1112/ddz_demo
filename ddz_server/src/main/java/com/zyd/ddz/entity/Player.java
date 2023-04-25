@@ -77,11 +77,13 @@ public class Player {
     public PlayerDto packPlayerDto(){
         PlayerDto playerDto = new PlayerDto();
         playerDto.setUid(this.getUid());
+        playerDto.setName(this.getName());
         playerDto.setCharacterType(this.getCharacter().getType());
         playerDto.setRoomHost(this.isRoomHost());
         playerDto.setReady(this.isReady());
         playerDto.setEnterTime(this.getEnterTime());
         playerDto.setImageIndex(this.getImageIndex());
+        playerDto.setJoyBeans(this.getJoyBeans());
         return playerDto;
     }
 }

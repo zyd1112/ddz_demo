@@ -12,6 +12,8 @@ import lombok.Setter;
 public class PlayerDto {
     long uid;
 
+    String name;
+
     int roomType;
 
     int characterType;
@@ -23,5 +25,7 @@ public class PlayerDto {
     long enterTime;
 
     int imageIndex;
+
+    int joyBeans;
 
 }

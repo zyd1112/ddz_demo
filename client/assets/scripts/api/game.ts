@@ -22,6 +22,7 @@ export function resource_load(url:string,type:any,callback?: { (value: any): voi
 export function resourceInit(gameManager: GameManager){
     const canvas = director.getScene().getChildByName("Canvas")
     console.log(canvas);
+    gameManager.playerNodes = [];
     for(let i = 0; i < canvas.children.length; i++){
         const node = canvas.children[i];
         switch(node.name){
@@ -43,6 +44,9 @@ export function resourceInit(gameManager: GameManager){
                         gameManager.playerNodes.push(cardNode);
                     }
                 }
+                break;
+            case "rewardTable":
+                gameManager.rewardTable = node;
                 break;
         }
     }

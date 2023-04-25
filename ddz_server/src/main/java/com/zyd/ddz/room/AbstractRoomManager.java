@@ -1,15 +1,19 @@
 package com.zyd.ddz.room;
 
+import com.zyd.ddz.constant.CharacterType;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
+import com.zyd.ddz.message.room.response.ResGameOverRewardMessage;
 import com.zyd.ddz.message.room.response.ResPlayerCardMessage;
 import com.zyd.ddz.message.room.response.ResPlayerEnterRoomMessage;
 import com.zyd.ddz.message.room.response.ResPlayerLeaveRoomMessage;
 import com.zyd.ddz.message.room.dto.PlayerDto;
+import com.zyd.ddz.service.impl.RoomServiceImpl;
 import com.zyd.ddz.utils.GameLogicUtils;
 import com.zyd.ddz.utils.MessageUtils;
 import com.zyd.ddz.utils.TimeUtils;
+import xyz.noark.core.ioc.IocHolder;
 import xyz.noark.core.util.RandomUtils;
 
 import java.util.Collection;
@@ -58,6 +62,8 @@ public abstract class AbstractRoomManager {
     public abstract int getType();
 
     public abstract int getTimeout();
+
+    public abstract int getReward();
 
     /**
      * 创建房间事件
@@ -123,7 +129,7 @@ public abstract class AbstractRoomManager {
     public void onPlayerExit(Room room, Player player){
         logger.info("{} 玩家 离开: {}", player.getUid(), room.getName());
 
-        if(!room.isStart()){
+        if(!room.isStart() || room.isGameOver()){
             playerMap.remove(player.getUid());
             room.getPlayers().remove(player.getUid());
             if(player.isRoomHost()){
@@ -191,8 +197,25 @@ public abstract class AbstractRoomManager {
     }
 
     public void onGameOver(Room room){
-        room.getPlayers().forEach((uid, p) -> onPlayerExit(room, p));
-        logger.info("[{}:{}] 游戏结束", room.getId(), room.getName());
+        logger.info("[{}:{}] 游戏结束, 正在结算奖励", room.getId(), room.getName());
+        ResGameOverRewardMessage message = new ResGameOverRewardMessage();
+        int value = room.getMultiple() * getReward();
+        for (Player player : room.getPlayers().values()) {
+            int increase;
+            if(player.getCardList().size() == 0){
+                increase = player.getCharacter().equals(CharacterType.LANDOWNER) ? value : value / 2;
+            }else {
+                increase = player.getCharacter().equals(CharacterType.LANDOWNER) ? -value : -value / 2;
+            }
+
+            player.setJoyBeans(player.getJoyBeans() + increase);
+            message.getPlayerRewards().put(player.getUid(), increase);
+        }
+        RoomServiceImpl roomService = IocHolder.getIoc().get(RoomServiceImpl.class);
+        roomService.sendRewards(room);
+
+        MessageUtils.sendMessageForRoom(room, message);
+        logger.info("[{}:{}] 游戏结束, 结算奖励成功", room.getId(), room.getName());
     }
 
     /**

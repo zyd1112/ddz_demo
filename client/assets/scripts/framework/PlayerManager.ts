@@ -24,9 +24,6 @@ export class PlayerManager extends Component {
     @property(Node)
     public mark: Node = null;
 
-    @property(Node)
-    public scrambleText: Node = null;
-
     @property
     public image_offsetX = 0;
     @property
@@ -54,6 +51,8 @@ export class PlayerManager extends Component {
     public playerInfo: PlayerInfo = {
         uid: 0,
 
+        name: "",
+
         roomType: 0,
 
         characterType: 0,
@@ -65,6 +64,8 @@ export class PlayerManager extends Component {
         enterTime: 0,
         
         imageIndex: 0,
+
+        joyBeans: 0,
     }
 
     public image: Node = null;
@@ -107,6 +108,12 @@ export class PlayerManager extends Component {
         }
         if(this.startBtn != null){
             this.startBtn.active = false;
+        }
+        if(this.sendBtn != null){
+            this.sendBtn.active = false;
+        }
+        if(this.button != null){
+            this.button.active = false;
         }
         this.clearImage(this.image);
         if(this.roomHostImage != null){

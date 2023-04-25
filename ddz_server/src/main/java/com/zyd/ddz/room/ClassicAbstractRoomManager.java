@@ -34,6 +34,11 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
     }
 
     @Override
+    public int getReward() {
+        return 1000;
+    }
+
+    @Override
     public void onHeart(Room room, int dt) {
         if (!room.isStart()){
             return;

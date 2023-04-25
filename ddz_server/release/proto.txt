@@ -18,3 +18,4 @@ responds:
     1006: ResPlayerReadyMessage
     1007: ResRoomReadyTimeMessage
     1008: ResPlayerLeaveRoomMessage
+    1009: ResGameOverRewardMessage

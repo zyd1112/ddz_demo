@@ -2,7 +2,7 @@ import { _decorator, Button, Camera, Component, director, EventHandler, EventTou
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
-import { reqEnterRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
+import { reqEnterRoom, reqLeaveRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
 import { GameManager } from '../framework/GameManager';
 import { resourceInit } from '../api/game';
 const { ccclass, property } = _decorator;
@@ -24,7 +24,7 @@ export class ButtonEvent extends Component {
         }else{
             const gameManager = GameManager.getInstance();
             director.loadScene("GameScene", () => {
-                resourceInit(gameManager);
+                resourceInit(gameManager);                
                 reqEnterRoom();
             })
         }
@@ -68,6 +68,15 @@ export class ButtonEvent extends Component {
             flag = true;
         }
         reqScramble(flag);
+    }
+
+    public closeReward(){
+        GameManager.getInstance().rewardTable.active = false;
+    }
+
+    public leave(){
+        reqLeaveRoom();
+        director.loadScene("HomeScene")
     }
 
 }

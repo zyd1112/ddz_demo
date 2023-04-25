@@ -14,6 +14,8 @@ import { getNextPlayer } from "../../../api/game";
  export interface PlayerInfo{
     uid: number;
 
+    name: string;
+
     roomType: number;
 
     characterType: number;
@@ -25,6 +27,8 @@ import { getNextPlayer } from "../../../api/game";
     enterTime: number;
 
     imageIndex: number;
+
+    joyBeans: number;
 }
 
 interface ResPlayerCharacterMessage{
@@ -47,7 +51,8 @@ export class PlayerCharacterHandler extends MessageHander{
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
                 const player = playerManager.playerInfo;
-                playerManager.scrambleText.active = false;
+                playerNodes[i].getChildByName("scramble").active = false;
+                playerNodes[i].getChildByName("noScramble").active = false;
                 player.characterType = message.character[playerManager.playerInfo.uid];
                 if(player.characterType == CharacterType.LANDOWNER){
                     nextId = player.uid;
@@ -62,13 +67,12 @@ export class PlayerCharacterHandler extends MessageHander{
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
                 const player = playerManager.playerInfo;
-                const text = playerManager.scrambleText
                 if(playerManager.role == Role.SELF){
                     gameManager.scrambleBtn.active = nextId == Gloabal.uid;
                 }
                 if(player.uid == message.uid){
-                    text.getComponent(Label).string = message.status ? "抢" : "不抢";
-                    text.active = true;
+                    playerNodes[i].getChildByName("scramble").active = message.status;
+                    playerNodes[i].getChildByName("noScramble").active = !message.status;
                 }
             }
         }
@@ -192,8 +196,10 @@ export class PlayerEnterRoomHandler extends MessageHander{
                 if(Gloabal.uid == playerInfo.uid && playerManager.role == Role.SELF){
                     player.uid = playerInfo.uid;
                     player.roomHost = playerInfo.roomHost;
+                    player.name = playerInfo.name;
                     playerManager.initImage(Gloabal.image)
                     player.enterTime = playerInfo.enterTime;
+                    player.joyBeans = playerInfo.joyBeans;
                     if(player.roomHost){
                         playerManager.initRoomHost(gameManager.roomHostImage);
                     }
@@ -204,7 +210,9 @@ export class PlayerEnterRoomHandler extends MessageHander{
                     player.uid = playerInfo.uid;
                     playerManager.initImage(gameManager.headImages[playerInfo.imageIndex])
                     player.roomHost = playerInfo.roomHost;
+                    player.name = playerInfo.name;
                     player.enterTime = playerInfo.enterTime;
+                    player.joyBeans = playerInfo.joyBeans;
                     if(player.roomHost){
                         playerManager.initRoomHost(gameManager.roomHostImage);
                     }else{
@@ -312,5 +320,30 @@ export class PlayerLeaveRoomHandler extends MessageHander{
                 }
             }
         }
+    }
+}
+
+interface ResGameOverRewardMessage{
+    opcode: number;
+    playerRewards: {[uid: number]: number};
+}
+
+export class GameOverRewardsHandler extends MessageHander{
+
+    handler(message: ResGameOverRewardMessage, gameManager: GameManager): void {
+        const playerNodes = gameManager.playerNodes;
+        for(let i = 0; i < playerNodes.length; i++){
+            const playerManager = playerNodes[i].getComponent(PlayerManager);
+            const player = playerManager.playerInfo
+            const node = gameManager.rewardTable.getChildByName("player_" + (i + 1));
+            node.getChildByName("name").getComponent(Label).string = player.name;
+            node.getChildByName("value").getComponent(Label).string = message.playerRewards[player.uid] + "";
+            Gloabal.joyBeans = Math.max(0, Gloabal.joyBeans + message.playerRewards[Gloabal.uid]);
+            if(playerManager.role == Role.SELF){
+                playerManager.sendBtn.active = false;
+                playerManager.button.active = false;
+            }
+        }
+        gameManager.rewardTable.active = true;
     }
 }

@@ -116,4 +116,16 @@ public class GameController {
 
         roomService.scramble(session, uid, message.getPlayerDto().getRoomType(), message.isStatus());
     }
+
+    @PacketMapping(opcode = 19, state = Session.State.CONNECTED)
+    public void reqLeaveRoom(PlayerDto playerDto){
+        long uid = playerDto.getUid();
+        if (!SessionManager.isOnline(uid)){
+            logger.info("[{}] 用户没有在线", uid);
+            return;
+        }
+        Session session = SessionManager.getSessionByPlayerId(uid);
+
+        roomService.playerLeave(session, uid, playerDto.getRoomType());
+    }
 }

@@ -62,6 +62,16 @@ public interface RoomService {
     void timeoutSend(Room room);
 
     /**
+     * 结算奖励
+     */
+    void sendRewards(Room room);
+
+    /**
+     * 玩家离开
+     */
+    void playerLeave(Session session, long uid, int roomType);
+
+    /**
      * 托管
      */
     void autoRobot(Session session, long uid, int roomType, boolean choose);

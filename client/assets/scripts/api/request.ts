@@ -82,3 +82,13 @@ export function reqScramble(status: boolean){
     }
     MessageUtils.send(message.opcode, message);
 }
+
+export function reqLeaveRoom(){
+    let message = {
+        opcode: 19,
+        uid: Gloabal.uid,
+        roomType: Gloabal.roomType,
+    }
+    MessageUtils.send(message.opcode, message);
+
+}

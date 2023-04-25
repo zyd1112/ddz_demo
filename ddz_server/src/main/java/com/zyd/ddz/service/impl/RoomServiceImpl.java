@@ -338,6 +338,32 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public void sendRewards(Room room) {
+        room.getPlayers().forEach((uid, p) -> {
+            UserDomain userDomain = userDao.cacheGet(uid);
+            if(userDomain == null){
+                return;
+            }
+            userDomain.setJoyBeans(p.getJoyBeans());
+            userDao.update(userDomain);
+        });
+    }
+
+    @Override
+    public void playerLeave(Session session, long uid, int roomType) {
+        AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
+        if(roomManager == null){
+            return;
+        }
+        if (!roomManager.getPlayers().containsKey(uid)) {
+            return;
+        }
+        Player player = roomManager.getPlayers().get(uid);
+        Room room = roomManager.getRoom(player.getRoomId());
+        roomManager.onPlayerExit(room, player);
+    }
+
+    @Override
     public void autoRobot(Session session, long uid, int roomType, boolean choose) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
