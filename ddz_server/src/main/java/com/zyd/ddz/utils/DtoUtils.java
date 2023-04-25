@@ -2,7 +2,6 @@ package com.zyd.ddz.utils;
 
 import com.zyd.ddz.domain.UserDomain;
 import com.zyd.ddz.message.login.dto.UserDto;
-import xyz.noark.core.util.RandomUtils;
 
 /**
  * @author zyd

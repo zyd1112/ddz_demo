@@ -2,28 +2,14 @@ import { _decorator, Component, Node, Prefab, resources, Scene, SceneAsset } fro
 import { GameClientNet } from '../net/GameClientNet';
 import { MessageFactory } from '../proto/MessageFactory';
 import { GameManager } from './GameManager';
-import { Path } from '../constant/path';
+import { resourceLoad } from '../api/home';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameClientService')
 export class GameClientService extends Component {
 
     start() {
-        resources.load(Path.LANDOWNER, Prefab, (err, prefab) => {
-            GameManager.getInstance().landowner = prefab;
-        })
-        resources.load(Path.ROOMHOST, Prefab, (err, prefab) => {
-            GameManager.getInstance().roomHostImage = prefab;
-        })
-        resources.load(Path.HEAD_IMAGE_1, Prefab, (err, prefab) => {
-            GameManager.getInstance().headImages.push(prefab);
-            resources.load(Path.HEAD_IMAGE_2, Prefab, (err, prefab) => {
-                GameManager.getInstance().headImages.push(prefab);
-                resources.load(Path.HEAD_IMAGE_3, Prefab, (err, prefab) => {
-                    GameManager.getInstance().headImages.push(prefab);
-                })
-            })
-        })
+        resourceLoad();
         GameClientNet.startClient("10.40.4.208", 10001);
         GameClientNet.getConnection().onopen = () => {
             console.log("已连接")

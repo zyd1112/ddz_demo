@@ -294,7 +294,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 363.2142857142857,
+    "_orthoHeight": 362.1428571428571,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -512,7 +512,7 @@
     "_enabled": true,
     "__prefab": null,
     "cardPrefab": {
-      "__uuid__": "2319a982-693b-47fe-80f8-5452a80f9344",
+      "__uuid__": "8d862509-9cf0-4a16-a943-f5fab4d5219e",
       "__expectedType__": "cc.Prefab"
     },
     "offset_x": 30,

@@ -1,6 +1,8 @@
 package com.zyd.ddz.controller;
 
+import com.zyd.ddz.constant.ResponseCode;
 import com.zyd.ddz.domain.UserDomain;
+import com.zyd.ddz.message.login.response.ResLoginMessage;
 import com.zyd.ddz.service.LoginService;
 import com.zyd.ddz.service.UserService;
 import com.zyd.ddz.utils.DtoUtils;
@@ -10,6 +12,8 @@ import xyz.noark.core.annotation.controller.ExecThreadGroup;
 import xyz.noark.core.annotation.controller.PacketMapping;
 import xyz.noark.core.network.Session;
 import xyz.noark.core.network.SessionManager;
+import xyz.noark.log.LogHelper;
+import xyz.noark.log.Logger;
 
 
 /**
@@ -27,9 +31,17 @@ public class UserController {
 
     @PacketMapping(opcode = 11, state = Session.State.CONNECTED)
     public void visitorLogin(Session session){
-        UserDomain userDomain = loginService.visitorLogin(session);
-        SessionManager.bindPlayerIdAndSession(userDomain.getId(), session);
-        session.send(1002, DtoUtils.packUser(userDomain));
+        ResLoginMessage loginMessage = new ResLoginMessage();
+        try {
+            UserDomain userDomain = loginService.visitorLogin(session);
+            SessionManager.bindPlayerIdAndSession(userDomain.getId(), session);
+            loginMessage.setCode(ResponseCode.SUCCESS.getCode());
+            loginMessage.setUser(DtoUtils.packUser(userDomain));
+        }catch (Exception e){
+            LogHelper.logger.info("登录失败, {}", e);
+            loginMessage.setCode(ResponseCode.FAIL.getCode());
+        }
+        session.send(loginMessage.getOpcode(), loginMessage);
     }
 
 }

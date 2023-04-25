@@ -25,6 +25,8 @@ export class GameManager extends Component {
 
     scrambleBtn: Node = null;
 
+    visitorloginBtn: Node = null;
+
     public nextId: number = 0;
 
     public gameStart: boolean = false;

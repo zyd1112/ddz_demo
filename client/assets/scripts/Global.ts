@@ -7,4 +7,5 @@ export class Gloabal{
     public static username: string = "";
     public static image: Prefab = null;
     public static joyBeans: number = 0;
+
 }
