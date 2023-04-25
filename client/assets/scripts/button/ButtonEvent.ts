@@ -1,8 +1,10 @@
-import { _decorator, Button, Camera, Component, EventHandler, EventTouch, geometry, Label, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
+import { _decorator, Button, Camera, Component, director, EventHandler, EventTouch, geometry, Label, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
 import { reqEnterRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
+import { GameManager } from '../framework/GameManager';
+import { resourceInit } from '../api/game';
 const { ccclass, property } = _decorator;
 
 @ccclass('ButtonEvent')
@@ -16,7 +18,16 @@ export class ButtonEvent extends Component {
     }
 
     public enterRoom(){
-        reqEnterRoom();
+        console.log(Gloabal.uid)
+        if(Gloabal.uid == 0){
+            alert("请先登录")
+        }else{
+            const gameManager = GameManager.getInstance();
+            director.loadScene("GameScene", () => {
+                resourceInit(gameManager);
+                reqEnterRoom();
+            })
+        }
     }
 
     public sendCard(){

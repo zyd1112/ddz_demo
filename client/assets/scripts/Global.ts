@@ -1,4 +1,4 @@
 export class Gloabal{
-    public static uid: number;
-    public static roomType: number;
+    public static uid: number = 0;
+    public static roomType: number = 0;
 }
