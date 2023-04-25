@@ -50,6 +50,7 @@ public class RoomServiceImpl implements RoomService {
             player.setSession(session);
             player.setSuggestOffset(-1);
             player.setName(userDomain.getNickname());
+            player.setImageIndex(userDomain.getImageIndex());
         }
         roomManager.onPlayerEnter(player);
         return true;

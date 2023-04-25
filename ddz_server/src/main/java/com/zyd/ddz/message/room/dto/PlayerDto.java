@@ -22,4 +22,6 @@ public class PlayerDto {
 
     long enterTime;
 
+    int imageIndex;
+
 }

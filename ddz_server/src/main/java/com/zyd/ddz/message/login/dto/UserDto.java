@@ -21,4 +21,6 @@ public class UserDto {
 
     private int joyBeans;
 
+    private int imageIndex;
+
 }

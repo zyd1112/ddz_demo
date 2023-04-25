@@ -23,6 +23,8 @@ import { getNextPlayer } from "../../../api/game";
     ready: boolean;
 
     enterTime: number;
+
+    imageIndex: number;
 }
 
 interface ResPlayerCharacterMessage{
@@ -180,10 +182,8 @@ export class PlayerEnterRoomHandler extends MessageHander{
     handler(message: ResRoomPlayerInfoMessage, gameManager: GameManager): void {
         for(let i = 0; i < message.playerInfos.length; i++){
             const playerInfo = message.playerInfos[i];
-            
             for(let i = 0; i < gameManager.playerNodes.length; i++){
                 const playerManager = gameManager.playerNodes[i].getComponent(PlayerManager)
-                const headImage = gameManager.headImages[playerInfo.roomHost ? 0 : 1];
                 const player = playerManager.playerInfo;
                 if(player.uid == playerInfo.uid){
                     break;
@@ -192,7 +192,7 @@ export class PlayerEnterRoomHandler extends MessageHander{
                 if(Gloabal.uid == playerInfo.uid && playerManager.role == Role.SELF){
                     player.uid = playerInfo.uid;
                     player.roomHost = playerInfo.roomHost;
-                    playerManager.initImage(headImage)
+                    playerManager.initImage(Gloabal.image)
                     player.enterTime = playerInfo.enterTime;
                     if(player.roomHost){
                         playerManager.initRoomHost(gameManager.roomHostImage);
@@ -202,7 +202,7 @@ export class PlayerEnterRoomHandler extends MessageHander{
                 }
                 if(player.uid == 0 && playerManager.role != Role.SELF){
                     player.uid = playerInfo.uid;
-                    playerManager.initImage(headImage)
+                    playerManager.initImage(gameManager.headImages[playerInfo.imageIndex])
                     player.roomHost = playerInfo.roomHost;
                     player.enterTime = playerInfo.enterTime;
                     if(player.roomHost){

@@ -7,6 +7,7 @@ import com.zyd.ddz.utils.IdUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Service;
 import xyz.noark.core.network.Session;
+import xyz.noark.core.util.RandomUtils;
 
 import java.util.Date;
 
@@ -30,6 +31,7 @@ public class LoginServiceImpl implements LoginService {
         userDomain.setCreateTime(new Date());
         userDomain.setIp(session.getIp());
         userDomain.setPassword("111");
+        userDomain.setImageIndex(RandomUtils.nextInt(3));
         userDao.insert(userDomain);
         return userDomain;
     }

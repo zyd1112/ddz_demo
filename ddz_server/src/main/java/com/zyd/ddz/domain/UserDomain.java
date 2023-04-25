@@ -41,4 +41,7 @@ public class UserDomain {
 
     @Column(name = "joy_beans", nullable = false, comment = "欢乐豆")
     private int joyBeans;
+
+    @Column(name = "image_index", nullable = false, comment = "头像索引")
+    private int imageIndex;
 }

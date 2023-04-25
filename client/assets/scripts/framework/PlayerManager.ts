@@ -63,6 +63,8 @@ export class PlayerManager extends Component {
         ready: false,
 
         enterTime: 0,
+        
+        imageIndex: 0,
     }
 
     public image: Node = null;

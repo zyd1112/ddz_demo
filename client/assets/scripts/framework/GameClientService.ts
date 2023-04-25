@@ -17,12 +17,12 @@ export class GameClientService extends Component {
         })
         resources.load(Path.HEAD_IMAGE_1, Prefab, (err, prefab) => {
             GameManager.getInstance().headImages.push(prefab);
-        })
-        resources.load(Path.HEAD_IMAGE_2, Prefab, (err, prefab) => {
-            GameManager.getInstance().headImages.push(prefab);
-        })
-        resources.load(Path.HEAD_IMAGE_3, Prefab, (err, prefab) => {
-            GameManager.getInstance().headImages.push(prefab);
+            resources.load(Path.HEAD_IMAGE_2, Prefab, (err, prefab) => {
+                GameManager.getInstance().headImages.push(prefab);
+                resources.load(Path.HEAD_IMAGE_3, Prefab, (err, prefab) => {
+                    GameManager.getInstance().headImages.push(prefab);
+                })
+            })
         })
         GameClientNet.startClient("10.40.4.208", 10001);
         GameClientNet.getConnection().onopen = () => {

@@ -19,6 +19,8 @@ public class Player {
 
     int joyBeans;
 
+    int imageIndex;
+
     /**
      * 手牌
      */
@@ -79,6 +81,7 @@ public class Player {
         playerDto.setRoomHost(this.isRoomHost());
         playerDto.setReady(this.isReady());
         playerDto.setEnterTime(this.getEnterTime());
+        playerDto.setImageIndex(this.getImageIndex());
         return playerDto;
     }
 }
