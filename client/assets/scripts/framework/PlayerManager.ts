@@ -27,7 +27,6 @@ export class PlayerManager extends Component {
     @property(Node)
     public scrambleText: Node = null;
 
-
     @property
     public image_offsetX = 0;
     @property

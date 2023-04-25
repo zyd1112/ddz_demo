@@ -178,7 +178,6 @@ interface ResRoomPlayerInfoMessage{
 export class PlayerEnterRoomHandler extends MessageHander{
 
     handler(message: ResRoomPlayerInfoMessage, gameManager: GameManager): void {
-        director.runSceneImmediate(gameManager.gameScene)
         for(let i = 0; i < message.playerInfos.length; i++){
             const playerInfo = message.playerInfos[i];
             
