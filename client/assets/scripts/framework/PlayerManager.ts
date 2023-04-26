@@ -66,6 +66,10 @@ export class PlayerManager extends Component {
         imageIndex: 0,
 
         joyBeans: 0,
+
+        auto: false,
+
+        cards: [],
     }
 
     public image: Node = null;
@@ -100,8 +104,29 @@ export class PlayerManager extends Component {
     }
 
     clear(){
-        this.playerInfo.uid = 0;
-        this.playerInfo.roomHost = false;
+        this.playerInfo = {
+            uid: 0,
+
+            name: "",
+    
+            roomType: 0,
+    
+            characterType: 0,
+    
+            roomHost: false,
+    
+            ready: false,
+    
+            enterTime: 0,
+            
+            imageIndex: 0,
+    
+            joyBeans: 0,
+
+            auto: false,
+
+            cards: [],
+        };
         this.mark.active = false;
         if(this.readyBtn != null){
             this.readyBtn.active = false;

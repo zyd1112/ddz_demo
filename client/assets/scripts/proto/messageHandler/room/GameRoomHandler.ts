@@ -8,7 +8,7 @@ import { CardManager } from "../../../player/CardManager";
 import { ClockManager } from "../../../player/ClockManager";
 import { MessageHander } from "../../MessageHanderl";
 import { updateClockPos } from "../../../api/button";
-import { getNextPlayer } from "../../../api/game";
+import { getNextPlayer, initBtn, initGarbage, initPlayer } from "../../../api/game";
 
 
  export interface PlayerInfo{
@@ -29,6 +29,10 @@ import { getNextPlayer } from "../../../api/game";
     imageIndex: number;
 
     joyBeans: number;
+
+    auto: boolean;
+
+    cards: Card[];
 }
 
 interface ResPlayerCharacterMessage{
@@ -76,7 +80,7 @@ export class PlayerCharacterHandler extends MessageHander{
                 }
             }
         }
-        updateClockPos(gameManager, nextId);
+        updateClockPos(nextId);
     }
     
 }
@@ -95,10 +99,10 @@ export class PlayerCardHandler extends MessageHander{
         console.log(message.cardsMap);
         const playerNodes = gameManager.playerNodes;
         gameManager.countDown.active = false;
-        gameManager.clock.active = true;
         const nextId = getNextPlayer(playerNodes, message.uid).uid;
         gameManager.nextId = nextId;
         if(message.type == 0){
+            gameManager.gameStart = true;
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
                 playerManager.mark.destroy();
@@ -110,18 +114,12 @@ export class PlayerCardHandler extends MessageHander{
                 }
                 playerManager.initCards(message.cardsMap[playerManager.playerInfo.uid]);
             }
-            updateClockPos(gameManager, message.firstId);
+            updateClockPos(message.firstId);
         }else{
-            const gabageCardManager = gameManager.gabage.getComponent(CardManager)
             const remove = message.removeCards;
             gameManager.gabage.removeAllChildren();
             if(remove.length > 0){
-                let offset = gabageCardManager.offset_x;
-                let lx = -(Math.floor(remove.length / 2) * offset);
-                for(let i = 0; i < remove.length; i++){
-                    gabageCardManager.addCard(lx, 0, remove[i], Role.SELF);
-                    lx += offset;
-                }
+                initGarbage(gameManager, remove);
             }
             for(let i = 0; i < playerNodes.length; i++){
                 const playerManager = playerNodes[i].getComponent(PlayerManager)
@@ -138,7 +136,7 @@ export class PlayerCardHandler extends MessageHander{
                     playerManager.button.active = player.uid == nextId && !(message.firstId == player.uid);
                 }
             }
-            updateClockPos(gameManager, nextId);
+            updateClockPos(nextId);
         }
         
     }
@@ -189,36 +187,15 @@ export class PlayerEnterRoomHandler extends MessageHander{
             for(let i = 0; i < gameManager.playerNodes.length; i++){
                 const playerManager = gameManager.playerNodes[i].getComponent(PlayerManager)
                 const player = playerManager.playerInfo;
-                if(player.uid == playerInfo.uid){
+                if(player.uid == playerInfo.uid && !playerInfo.auto){
                     break;
                 }
-                
                 if(Gloabal.uid == playerInfo.uid && playerManager.role == Role.SELF){
-                    player.uid = playerInfo.uid;
-                    player.roomHost = playerInfo.roomHost;
-                    player.name = playerInfo.name;
-                    playerManager.initImage(Gloabal.image)
-                    player.enterTime = playerInfo.enterTime;
-                    player.joyBeans = playerInfo.joyBeans;
-                    if(player.roomHost){
-                        playerManager.initRoomHost(gameManager.roomHostImage);
-                    }
-                    initBtn(playerManager);
+                    initPlayer(gameManager.playerNodes[i], playerInfo)
                     break;
                 }
                 if(player.uid == 0 && playerManager.role != Role.SELF){
-                    player.uid = playerInfo.uid;
-                    playerManager.initImage(gameManager.headImages[playerInfo.imageIndex])
-                    player.roomHost = playerInfo.roomHost;
-                    player.name = playerInfo.name;
-                    player.enterTime = playerInfo.enterTime;
-                    player.joyBeans = playerInfo.joyBeans;
-                    if(player.roomHost){
-                        playerManager.initRoomHost(gameManager.roomHostImage);
-                    }else{
-                        playerManager.mark.active = playerInfo.ready;
-                    }
-                    
+                    initPlayer(gameManager.playerNodes[i], playerInfo)
                     break;
                 }
             }
@@ -227,14 +204,7 @@ export class PlayerEnterRoomHandler extends MessageHander{
     
 }
 
-function initBtn(playerManager: PlayerManager){
-    if(playerManager.startBtn != null){
-        playerManager.startBtn.active = playerManager.playerInfo.roomHost;
-    }
-    if(playerManager.startBtn != null){
-        playerManager.readyBtn.active = !playerManager.playerInfo.roomHost;
-    }
-}
+
 
 interface ResRoomTimeHeartMessage{
     opcode: number;
@@ -289,8 +259,7 @@ export class RoomReadyCountDownHandler extends MessageHander{
 
 interface ResPlayerLeaveRoomMessage{
     opcode: number;
-    uid: number;
-    playerList: PlayerInfo[];
+    playerMap: {[uid: number]: PlayerInfo};
 }
 
 
@@ -298,27 +267,29 @@ export class PlayerLeaveRoomHandler extends MessageHander{
 
     handler(message: ResPlayerLeaveRoomMessage, gameManager: GameManager): void {
         const playerNodes = gameManager.playerNodes;
-        gameManager.clock.active = false;
         for(let i = 0; i < playerNodes.length; i++){
             const playerManager = playerNodes[i].getComponent(PlayerManager);
             const player = playerManager.playerInfo
-            if(player.uid == message.uid){
-                playerManager.clear();
+            if(player.uid == 0){
+                continue;
             }
-            for(let j = 0; j < message.playerList.length; j++){
-                const playerInfo = message.playerList[j];
-                if(playerInfo.uid == player.uid){
-                    player.roomHost = playerInfo.roomHost;
-                    if(playerManager.role == Role.SELF){
-                        initBtn(playerManager);
-                    }
-                    if(player.roomHost){
-                        playerManager.initRoomHost(gameManager.roomHostImage);
-                    }else{
-                        playerManager.mark.active = playerInfo.ready;
-                    }
+            const playerInfo = message.playerMap[player.uid];
+            if(playerInfo == undefined){
+                playerManager.clear();
+            }else{
+                player.roomHost = playerInfo.roomHost;
+                playerNodes[i].getChildByName("offline").active = playerInfo.auto;
+                if(playerManager.role == Role.SELF){
+                    initBtn(playerManager);
+                }
+                if(player.roomHost){
+                    playerManager.initRoomHost(gameManager.roomHostImage);
+                    playerManager.mark.active = false;
+                }else{
+                    playerManager.mark.active = playerInfo.ready;
                 }
             }
+
         }
     }
 }
@@ -346,4 +317,40 @@ export class GameOverRewardsHandler extends MessageHander{
         }
         gameManager.rewardTable.active = true;
     }
+}
+
+interface ResPlayerReconnectMessage{
+    opcode: number;
+    nextId: number;
+
+    garbageList: Card[];
+    playerInfos: PlayerInfo[];
+}
+
+export class PlayerReconnectHandler extends MessageHander{
+
+    handler(message: ResPlayerReconnectMessage, gameManager: GameManager): void {
+        for(let i = 0; i < message.playerInfos.length; i++){
+            const playerInfo = message.playerInfos[i];
+            for(let i = 0; i < gameManager.playerNodes.length; i++){
+                const playerManager = gameManager.playerNodes[i].getComponent(PlayerManager)
+                const player = playerManager.playerInfo;
+                if(player.uid == playerInfo.uid && !playerInfo.auto){
+                    gameManager.playerNodes[i].getChildByName("offline").active = false
+                    break;
+                }
+                initGarbage(gameManager, message.garbageList);
+                if(Gloabal.uid == playerInfo.uid && playerManager.role == Role.SELF){
+                    initPlayer(gameManager.playerNodes[i], playerInfo)
+                    break;
+                }
+                if(player.uid == 0 && playerManager.role != Role.SELF){
+                    initPlayer(gameManager.playerNodes[i], playerInfo)
+                    break;
+                }
+            }
+        }
+        updateClockPos(message.nextId);
+    }
+
 }

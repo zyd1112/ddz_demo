@@ -1,23 +1,26 @@
 package com.zyd.ddz.message.room.response;
 
+import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.message.Message;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author zyd
- * @date 2023/4/21 10:58
+ * @date 2023/4/26 14:20
  */
 @Setter
 @Getter
-public class ResPlayerLeaveRoomMessage implements Message {
-    int opcode = 1008;
+public class ResPlayerReconnectMessage implements Message {
+    int opcode = 1010;
 
-    Map<Long, PlayerDto> playerMap = new HashMap<>();
+    long nextId;
+    List<Card> garbageList = new ArrayList<>();
+
+    List<PlayerDto> playerInfos = new ArrayList<>();
+
 }

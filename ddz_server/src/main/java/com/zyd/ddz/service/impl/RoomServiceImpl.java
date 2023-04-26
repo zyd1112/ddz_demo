@@ -124,7 +124,6 @@ public class RoomServiceImpl implements RoomService {
                 return;
             }
         }
-        room.setStart(true);
 
         roomManager.onGameStart(room);
     }
@@ -158,6 +157,7 @@ public class RoomServiceImpl implements RoomService {
                 Player curPlayer = players.get(i);
                 if (i == 0) {
                     curPlayer.setCharacter(CharacterType.LANDOWNER);
+                    room.setNextPlayer(curPlayer);
                     for (Card downCard : room.getDownCards()) {
                         downCard.setSend(true);
                     }
@@ -178,6 +178,9 @@ public class RoomServiceImpl implements RoomService {
         room.initClock();
         room.setScrambleCount(scrambleCount);
         room.setMultiple(multiple);
+        if(!success){
+            room.setNextPlayer(getNext(room, player));
+        }
         ResPlayerCharacterMessage message = new ResPlayerCharacterMessage();
         room.getPlayers().forEach((id, p) -> {
             message.getCharacter().put(id, p.getCharacter().getType());
@@ -218,9 +221,6 @@ public class RoomServiceImpl implements RoomService {
         player.setSendCard(cards);
         cardList.removeIf(cards::contains);
         if(cardList.size() == 0){
-            room.setGameOver(true);
-            room.setGameOverTime(TimeUtils.getNowTimeMillis());
-
             roomManager.onGameOver(room);
         }
         sendCardMessage(room, cards, uid);
@@ -313,8 +313,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void timeoutSend(Room room) {
-        Player player = room.getNextPlayer();
+    public void autoSend(Room room, Player player) {
 
         if (room.isCharacterInit()){
             Player curPlayer = room.getCurPlayer();

@@ -1,6 +1,7 @@
 package com.zyd.ddz.service;
 
 import com.zyd.ddz.entity.Card;
+import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
 import xyz.noark.core.network.Session;
 
@@ -57,9 +58,9 @@ public interface RoomService {
     void reqCountdown(Session session, long uid, int roomType);
 
     /**
-     * 超时出牌
+     * 自动出牌
      */
-    void timeoutSend(Room room);
+    void autoSend(Room room, Player player);
 
     /**
      * 结算奖励

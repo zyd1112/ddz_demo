@@ -1,7 +1,11 @@
 package com.zyd.ddz.message.room.dto;
 
+import com.zyd.ddz.entity.Card;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zyd
@@ -27,5 +31,9 @@ public class PlayerDto {
     int imageIndex;
 
     int joyBeans;
+
+    boolean auto;
+
+    List<Card> cards = new ArrayList<>();
 
 }

@@ -7,7 +7,7 @@ import { CountDownHandler,
     PlayerCharacterHandler, 
     PlayerEnterRoomHandler, 
     PlayerLeaveRoomHandler, 
-    PlayerReadyHandler, PlayerSuggestHandler, 
+    PlayerReadyHandler, PlayerReconnectHandler, PlayerSuggestHandler, 
     RoomReadyCountDownHandler } from './messageHandler/room/GameRoomHandler';
 const { ccclass, property } = _decorator;
 
@@ -25,6 +25,7 @@ export class MessageFactory {
         MessageFactory.register(1007, new RoomReadyCountDownHandler());
         MessageFactory.register(1008, new PlayerLeaveRoomHandler())
         MessageFactory.register(1009, new GameOverRewardsHandler())
+        MessageFactory.register(1010, new PlayerReconnectHandler())
     }
 
     public static register(opcode: number, message: MessageHander){

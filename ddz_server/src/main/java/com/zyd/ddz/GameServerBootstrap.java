@@ -16,6 +16,11 @@ public class GameServerBootstrap extends BaseServerBootstrap {
     }
 
     @Override
+    protected String bannerFileName() {
+        return "banner.txt";
+    }
+
+    @Override
     protected PacketCodec getPacketCodec() {
         return new JsonCodec();
     }

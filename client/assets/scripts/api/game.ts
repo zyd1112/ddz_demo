@@ -3,6 +3,10 @@ import { PlayerManager } from "../framework/PlayerManager";
 import { Node, Prefab, director, resources } from 'cc';
 import { PlayerInfo } from "../proto/messageHandler/room/GameRoomHandler";
 import { Path } from "../constant/path";
+import { Gloabal } from "../Global";
+import { Role } from "../constant/CharacterType";
+import { CardManager } from "../player/CardManager";
+import { Card } from "../player/CardLoader";
 
 export function resource_load(url:string,type:any,callback?: { (value: any): void; (value: any): void; (arg0: any): void; }): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -66,4 +70,46 @@ export function getNextPlayer(playerNodes: Node[], uid: number): PlayerInfo{
         }
     }
     return index + 1 < playerNodes.length ? playerNodes[index + 1].getComponent(PlayerManager).playerInfo : playerNodes[0].getComponent(PlayerManager).playerInfo;
+}
+
+export function initBtn(playerManager: PlayerManager){
+    if(playerManager.startBtn != null){
+        playerManager.startBtn.active = playerManager.playerInfo.roomHost;
+    }
+    if(playerManager.startBtn != null){
+        playerManager.readyBtn.active = !playerManager.playerInfo.roomHost;
+    }
+}
+
+export function initPlayer(playerNode: Node, playerInfo: PlayerInfo){
+    const playerManager = playerNode.getComponent(PlayerManager)
+    const player = playerManager.playerInfo;
+    const gameManager = GameManager.getInstance();
+    player.uid = playerInfo.uid;
+    player.roomHost = playerInfo.roomHost;
+    player.name = playerInfo.name;
+    player.auto = playerInfo.auto
+    playerManager.initImage(gameManager.headImages[playerInfo.imageIndex])
+    player.enterTime = playerInfo.enterTime;
+    player.joyBeans = playerInfo.joyBeans;
+    if(player.roomHost){
+        playerManager.initRoomHost(gameManager.roomHostImage);
+    }else if(playerManager.role != Role.SELF && !gameManager.gameStart){
+        playerManager.mark.active = playerInfo.ready;
+    }
+    if(playerManager.role == Role.SELF && !gameManager.gameStart){
+        initBtn(playerManager);
+    }
+    playerManager.initCards(playerInfo.cards)
+    playerNode.getChildByName("offline").active = playerManager.playerInfo.auto
+}
+
+export function initGarbage(gameManager: GameManager, cards: Card[]){
+    const gabageCardManager = gameManager.gabage.getComponent(CardManager)
+    let offset = gabageCardManager.offset_x;
+    let lx = -(Math.floor(cards.length / 2) * offset);
+    for(let i = 0; i < cards.length; i++){
+        gabageCardManager.addCard(lx, 0, cards[i], Role.SELF);
+        lx += offset;
+    }
 }

@@ -35,6 +35,7 @@ public class Player {
      * 是否是托管机器人
      */
     boolean auto;
+    int wait;
 
     /**
      * 是否准备
@@ -84,6 +85,8 @@ public class Player {
         playerDto.setEnterTime(this.getEnterTime());
         playerDto.setImageIndex(this.getImageIndex());
         playerDto.setJoyBeans(this.getJoyBeans());
+        playerDto.setAuto(this.isAuto());
+        playerDto.getCards().addAll(this.getCardList());
         return playerDto;
     }
 }

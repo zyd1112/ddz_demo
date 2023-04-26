@@ -4,10 +4,7 @@ import com.zyd.ddz.constant.CharacterType;
 import com.zyd.ddz.entity.Card;
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
-import com.zyd.ddz.message.room.response.ResGameOverRewardMessage;
-import com.zyd.ddz.message.room.response.ResPlayerCardMessage;
-import com.zyd.ddz.message.room.response.ResPlayerEnterRoomMessage;
-import com.zyd.ddz.message.room.response.ResPlayerLeaveRoomMessage;
+import com.zyd.ddz.message.room.response.*;
 import com.zyd.ddz.message.room.dto.PlayerDto;
 import com.zyd.ddz.service.impl.RoomServiceImpl;
 import com.zyd.ddz.utils.GameLogicUtils;
@@ -16,10 +13,7 @@ import com.zyd.ddz.utils.TimeUtils;
 import xyz.noark.core.ioc.IocHolder;
 import xyz.noark.core.util.RandomUtils;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -78,6 +72,17 @@ public abstract class AbstractRoomManager {
         if(playerMap.containsKey(uid)){
             logger.info("{} 玩家, 断线重连", uid);
             player.setAuto(false);
+            player.setLeave(false);
+            ResPlayerReconnectMessage message = new ResPlayerReconnectMessage();
+            Room room = getRoom(player.getRoomId());
+            room.getPlayers().forEach((id, p) -> {
+                PlayerDto playerDto = p.packPlayerDto();
+                playerDto.setRoomType(getType());
+                message.getPlayerInfos().add(playerDto);
+            });
+            message.setNextId(room.getNextPlayer().getUid());
+            message.getGarbageList().addAll(room.getCurPlayer() == null ? Collections.emptyList() : room.getCurPlayer().getSendCard());
+            MessageUtils.sendMessageForRoom(room, message);
             return;
         }
         long roomId;
@@ -128,7 +133,7 @@ public abstract class AbstractRoomManager {
      */
     public void onPlayerExit(Room room, Player player){
         logger.info("{} 玩家 离开: {}", player.getUid(), room.getName());
-
+        player.setLeave(true);
         if(!room.isStart() || room.isGameOver()){
             playerMap.remove(player.getUid());
             room.getPlayers().remove(player.getUid());
@@ -145,10 +150,9 @@ public abstract class AbstractRoomManager {
         }
 
         ResPlayerLeaveRoomMessage message = new ResPlayerLeaveRoomMessage();
-        message.setUid(player.getUid());
         room.getPlayers().forEach((id, p) -> {
             PlayerDto playerDto = p.packPlayerDto();
-            message.getPlayerList().add(playerDto);
+            message.getPlayerMap().put(id, playerDto);
         });
         MessageUtils.sendMessageForRoom(room, message);
     }
@@ -173,6 +177,9 @@ public abstract class AbstractRoomManager {
      * 游戏开始事件
      */
     public void onGameStart(Room room){
+        room.setStart(true);
+        room.setGameStartTime(TimeUtils.getNowTimeMillis());
+        room.setGameOver(false);
         Map<Long, Player> players = room.getPlayers();
         List<List<Card>> cards = GameLogicUtils.sendCard();
         ResPlayerCardMessage message = new ResPlayerCardMessage();
@@ -198,6 +205,9 @@ public abstract class AbstractRoomManager {
 
     public void onGameOver(Room room){
         logger.info("[{}:{}] 游戏结束, 正在结算奖励", room.getId(), room.getName());
+        room.setGameOver(true);
+        room.setGameOverTime(TimeUtils.getNowTimeMillis());
+        room.setStart(false);
         ResGameOverRewardMessage message = new ResGameOverRewardMessage();
         int value = room.getMultiple() * getReward();
         for (Player player : room.getPlayers().values()) {
@@ -207,7 +217,9 @@ public abstract class AbstractRoomManager {
             }else {
                 increase = player.getCharacter().equals(CharacterType.LANDOWNER) ? -value : -value / 2;
             }
-
+            if(player.isLeave()){
+                increase = 0;
+            }
             player.setJoyBeans(player.getJoyBeans() + increase);
             message.getPlayerRewards().put(player.getUid(), increase);
         }

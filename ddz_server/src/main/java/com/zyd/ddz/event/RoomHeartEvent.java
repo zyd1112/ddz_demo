@@ -52,7 +52,6 @@ public class RoomHeartEvent extends AbstractMonitorService {
                         if(!p.isLeave()){
                             abstractRoomManager.onPlayerExit(room, p);
                         }
-                        p.setLeave(true);
                     }
 
                 });
@@ -81,10 +80,10 @@ public class RoomHeartEvent extends AbstractMonitorService {
         clockCountDown += dt;
         if(clockCountDown >= 1000){
             clockCountDown = 0;
-            ResRoomTimeHeartMessage message = new ResRoomTimeHeartMessage();
-            message.setTime(1);
-            MessageUtils.sendMessageForRoom(room, message);
             checkTimeout(room, timeoutLimit);
+            ResRoomTimeHeartMessage message = new ResRoomTimeHeartMessage();
+            message.setTime(room.getTimeout());
+            MessageUtils.sendMessageForRoom(room, message);
         }
         room.setClockCountDown(clockCountDown);
     }
@@ -93,7 +92,7 @@ public class RoomHeartEvent extends AbstractMonitorService {
         int timeout = room.getTimeout();
         timeout++;
         if(timeout >= timeoutLimit){
-            IocHolder.getIoc().get(RoomServiceImpl.class).timeoutSend(room);
+            IocHolder.getIoc().get(RoomServiceImpl.class).autoSend(room, room.getNextPlayer());
         }else {
             room.setTimeout(timeout);
         }
@@ -132,10 +131,8 @@ public class RoomHeartEvent extends AbstractMonitorService {
 
         if(gameReadyTime >= readyTime){
             logger.info("{} 游戏开始", room.getName());
-            room.setStart(true);
             gameReadyTime = 0;
             room.getAbstractRoomManager().onGameStart(room);
-            room.setGameStartTime(TimeUtils.getNowTimeMillis());
         }
         room.setGameReadyTime(gameReadyTime);
 
