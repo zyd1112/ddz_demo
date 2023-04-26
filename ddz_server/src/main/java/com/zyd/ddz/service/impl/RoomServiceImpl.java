@@ -283,7 +283,10 @@ public class RoomServiceImpl implements RoomService {
         }
         ResPlayerSuggestMessage message = new ResPlayerSuggestMessage();
         List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
-
+        if(availableCards.isEmpty()){
+            noSend(session, uid, roomType);
+            return;
+        }
         int suggestOffset = player.getSuggestOffset();
         if(suggestOffset < availableCards.size() - 1){
             suggestOffset++;

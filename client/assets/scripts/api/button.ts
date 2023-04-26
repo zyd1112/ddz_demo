@@ -6,17 +6,15 @@ import { ClockManager } from "../player/ClockManager";
 export function updateClockPos(nextId: number){
     const gameManager = GameManager.getInstance();
     const playerNodes = gameManager.playerNodes;
-    if(gameManager.gameStart){
-        for(let i = 0; i < playerNodes.length; i++){
-            const playerManager = playerNodes[i].getComponent(PlayerManager)
-            const player = playerManager.playerInfo;
-            if(player.uid == nextId){
-                const pos = playerNodes[i].position;
-                gameManager.clock.getComponent(ClockManager).init();
-                gameManager.clock.setPosition(pos.x + playerManager.clock_offsetX, pos.y + playerManager.clock_offsetY, pos.z);
-            }
+    for(let i = 0; i < playerNodes.length; i++){
+        const playerManager = playerNodes[i].getComponent(PlayerManager)
+        const player = playerManager.playerInfo;
+        if(player.uid == nextId){
+            const pos = playerNodes[i].position;
+            gameManager.clock.getComponent(ClockManager).init();
+            gameManager.clock.setPosition(pos.x + playerManager.clock_offsetX, pos.y + playerManager.clock_offsetY, pos.z);
         }
     }
-    gameManager.clock.active = gameManager.gameStart;
+    gameManager.clock.active = true;
 
 }

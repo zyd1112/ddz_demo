@@ -52,6 +52,9 @@ export function resourceInit(gameManager: GameManager){
             case "rewardTable":
                 gameManager.rewardTable = node;
                 break;
+            case "multiple":
+                gameManager.multipleNode = node;
+                break;
         }
     }
     
@@ -81,7 +84,7 @@ export function initBtn(playerManager: PlayerManager){
     }
 }
 
-export function initPlayer(playerNode: Node, playerInfo: PlayerInfo){
+export function initPlayer(playerNode: Node, playerInfo: PlayerInfo, gameStart: boolean){
     const playerManager = playerNode.getComponent(PlayerManager)
     const player = playerManager.playerInfo;
     const gameManager = GameManager.getInstance();
@@ -94,10 +97,10 @@ export function initPlayer(playerNode: Node, playerInfo: PlayerInfo){
     player.joyBeans = playerInfo.joyBeans;
     if(player.roomHost){
         playerManager.initRoomHost(gameManager.roomHostImage);
-    }else if(playerManager.role != Role.SELF && !gameManager.gameStart){
+    }else if(playerManager.role != Role.SELF && !gameStart){
         playerManager.mark.active = playerInfo.ready;
     }
-    if(playerManager.role == Role.SELF && !gameManager.gameStart){
+    if(playerManager.role == Role.SELF && !gameStart){
         initBtn(playerManager);
     }
     playerManager.initCards(playerInfo.cards)

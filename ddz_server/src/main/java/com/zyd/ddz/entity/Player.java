@@ -48,8 +48,6 @@ public class Player {
 
     CharacterType character = CharacterType.LANDOWNER;
 
-    long scrambleTime;
-
     int scrambleCount;
 
     int suggestOffset = -1;
@@ -88,5 +86,15 @@ public class Player {
         playerDto.setAuto(this.isAuto());
         playerDto.getCards().addAll(this.getCardList());
         return playerDto;
+    }
+
+    public void init(){
+        this.cardList.clear();
+        this.sendCard.clear();
+        this.ready = this.isRoomHost();
+        this.setScrambleCount(0);
+        this.setCharacter(CharacterType.LANDOWNER);
+        this.setSuggestOffset(-1);
+        this.setWait(0);
     }
 }

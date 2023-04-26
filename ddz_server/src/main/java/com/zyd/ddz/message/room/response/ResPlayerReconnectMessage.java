@@ -19,6 +19,8 @@ public class ResPlayerReconnectMessage implements Message {
     int opcode = 1010;
 
     long nextId;
+    long firstId;
+    int multiple;
     List<Card> garbageList = new ArrayList<>();
 
     List<PlayerDto> playerInfos = new ArrayList<>();

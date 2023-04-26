@@ -10,11 +10,9 @@ export class ClockManager extends Component {
     @property
     private countdown = 10;
 
-    private time = 10;
 
     updateTime(dt: number){
-        this.time -= dt;
-        this.updateLabel(this.time);
+        this.updateLabel(this.countdown - dt);
     }
 
     updateLabel(_time: number){
@@ -25,8 +23,7 @@ export class ClockManager extends Component {
     }
 
     init(){
-        this.time = this.countdown;
-        this.updateLabel(this.time);
+        this.updateLabel(this.countdown);
     }
 
 }

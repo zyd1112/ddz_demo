@@ -80,8 +80,11 @@ public abstract class AbstractRoomManager {
                 playerDto.setRoomType(getType());
                 message.getPlayerInfos().add(playerDto);
             });
+            Player curPlayer = room.getCurPlayer();
+            message.setMultiple(room.getMultiple());
+            message.setFirstId(curPlayer == null ? 0 : curPlayer.getUid());
             message.setNextId(room.getNextPlayer().getUid());
-            message.getGarbageList().addAll(room.getCurPlayer() == null ? Collections.emptyList() : room.getCurPlayer().getSendCard());
+            message.getGarbageList().addAll(curPlayer == null ? Collections.emptyList() : curPlayer.getSendCard());
             MessageUtils.sendMessageForRoom(room, message);
             return;
         }
@@ -221,6 +224,7 @@ public abstract class AbstractRoomManager {
                 increase = 0;
             }
             player.setJoyBeans(player.getJoyBeans() + increase);
+            player.init();
             message.getPlayerRewards().put(player.getUid(), increase);
         }
         RoomServiceImpl roomService = IocHolder.getIoc().get(RoomServiceImpl.class);

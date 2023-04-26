@@ -102,6 +102,10 @@ export class PlayerManager extends Component {
         image.setPosition(this.landowner_offsetX, this.landowner_offsetY, 0);
         this.landowner = image;
     }
+    
+    clearCards(){
+        this.cardNode.removeAllChildren();
+    }
 
     clear(){
         this.playerInfo = {

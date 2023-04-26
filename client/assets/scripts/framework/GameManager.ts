@@ -27,11 +27,9 @@ export class GameManager extends Component {
 
     rewardTable: Node = null;
 
+    multipleNode: Node = null;
+
     public nextId: number = 0;
-
-    public gameStart: boolean = false;
-
-    public multiple: number = 15;
 
     private static INSTANCE: GameManager = new GameManager();
 
