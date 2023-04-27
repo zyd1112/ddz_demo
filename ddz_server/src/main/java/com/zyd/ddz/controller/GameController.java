@@ -33,9 +33,8 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.enterRoom(session, uid, playerDto.getRoomType());
+        roomService.enterRoom(uid, playerDto.getRoomType());
     }
 
     @PacketMapping(opcode = 12, state = Session.State.CONNECTED)
@@ -45,9 +44,8 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.sendCard(session, message.getUid(), message.getRoomType(), message.getCardList());
+        roomService.sendCard(message.getUid(), message.getRoomType(), message.getCardList());
     }
 
     @PacketMapping(opcode = 13, state = Session.State.CONNECTED)
@@ -57,16 +55,15 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
 
-        roomService.suggest(session, playerDto.getUid(), playerDto.getRoomType());
+        roomService.suggest(playerDto.getUid(), playerDto.getRoomType());
 
     }
 
     @PacketMapping(opcode = 14, state = Session.State.CONNECTED, printLog = false)
-    public void reqCountdown(Session session, PlayerDto playerDto){
-        roomService.reqCountdown(session, playerDto.getUid(), playerDto.getRoomType());
+    public void reqCountdown(PlayerDto playerDto){
+        roomService.reqCountdown(playerDto.getUid(), playerDto.getRoomType());
     }
 
     @PacketMapping(opcode = 15, state = Session.State.CONNECTED)
@@ -76,9 +73,8 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.noSend(session, playerDto.getUid(), playerDto.getRoomType());
+        roomService.noSend(playerDto.getUid(), playerDto.getRoomType());
     }
 
     @PacketMapping(opcode = 16, state = Session.State.CONNECTED)
@@ -88,9 +84,8 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.playerReady(session, uid, playerDto.getRoomType());
+        roomService.playerReady(uid, playerDto.getRoomType());
     }
 
     @PacketMapping(opcode = 17, state = Session.State.CONNECTED)
@@ -100,9 +95,8 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.playerStart(session, uid, playerDto.getRoomType());
+        roomService.playerStart(uid, playerDto.getRoomType());
     }
 
     @PacketMapping(opcode = 18, state = Session.State.CONNECTED)
@@ -112,9 +106,8 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.scramble(session, uid, message.getPlayerDto().getRoomType(), message.isStatus());
+        roomService.scramble(uid, message.getPlayerDto().getRoomType(), message.isStatus());
     }
 
     @PacketMapping(opcode = 19, state = Session.State.CONNECTED)
@@ -124,8 +117,7 @@ public class GameController {
             logger.info("[{}] 用户没有在线", uid);
             return;
         }
-        Session session = SessionManager.getSessionByPlayerId(uid);
 
-        roomService.playerLeave(session, uid, playerDto.getRoomType());
+        roomService.playerLeave(uid, playerDto.getRoomType());
     }
 }

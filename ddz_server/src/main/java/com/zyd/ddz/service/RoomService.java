@@ -16,46 +16,46 @@ public interface RoomService {
     /**
      * 玩家进入房间
      */
-    boolean enterRoom(Session session, long uid, int roomType);
+    boolean enterRoom(long uid, int roomType);
 
     /**
      * 玩家离开房间
      */
-    void exitRoom(Session session, long uid, int roomType);
+    void exitRoom(long uid, int roomType);
 
     /**
      * 玩家准备
      */
-    void playerReady(Session session, long uid, int roomType);
+    void playerReady(long uid, int roomType);
 
     /**
      * 玩家开始
      */
-    void playerStart(Session session, long uid, int roomType);
+    void playerStart(long uid, int roomType);
 
 
     /**
      * 争夺地主
      * @param scramble 是否抢地主
      */
-    void scramble(Session session, long uid, int roomType, boolean scramble);
+    void scramble(long uid, int roomType, boolean scramble);
 
     /**
      * 出牌
      */
-    void sendCard(Session session, long uid, int roomType, List<Card> cards);
+    void sendCard(long uid, int roomType, List<Card> cards);
 
     /**
      * 不出
      */
-    void noSend(Session session, long uid, int roomType);
+    void noSend(long uid, int roomType);
 
     /**
      * 提示
      */
-    void suggest(Session session, long uid, int roomType);
+    void suggest(long uid, int roomType);
 
-    void reqCountdown(Session session, long uid, int roomType);
+    void reqCountdown(long uid, int roomType);
 
     /**
      * 自动出牌
@@ -70,10 +70,10 @@ public interface RoomService {
     /**
      * 玩家离开
      */
-    void playerLeave(Session session, long uid, int roomType);
+    void playerLeave(long uid, int roomType);
 
     /**
      * 托管
      */
-    void autoRobot(Session session, long uid, int roomType, boolean choose);
+    void autoRobot(long uid, int roomType, boolean choose);
 }

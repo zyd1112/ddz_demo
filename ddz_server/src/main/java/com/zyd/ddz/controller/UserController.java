@@ -14,6 +14,7 @@ import xyz.noark.core.network.Session;
 import xyz.noark.core.network.SessionManager;
 import xyz.noark.log.LogHelper;
 import xyz.noark.log.Logger;
+import xyz.noark.network.WebSocketSession;
 
 
 /**
@@ -35,6 +36,7 @@ public class UserController {
         try {
             UserDomain userDomain = loginService.visitorLogin(session);
             SessionManager.bindPlayerIdAndSession(userDomain.getId(), session);
+            ((WebSocketSession) session).setPlayerId(userDomain.getId());
             loginMessage.setCode(ResponseCode.SUCCESS.getCode());
             loginMessage.setUser(DtoUtils.packUser(userDomain));
         }catch (Exception e){

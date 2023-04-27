@@ -17,6 +17,7 @@ import com.zyd.ddz.utils.TimeUtils;
 import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Service;
 import xyz.noark.core.network.Session;
+import xyz.noark.core.network.SessionManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class RoomServiceImpl implements RoomService {
     UserDao userDao;
 
     @Override
-    public boolean enterRoom(Session session, long uid, int roomType) {
+    public boolean enterRoom(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return false;
@@ -47,7 +48,6 @@ public class RoomServiceImpl implements RoomService {
             player = new Player();
             player.setJoyBeans(userDomain.getJoyBeans());
             player.setUid(uid);
-            player.setSession(session);
             player.setSuggestOffset(-1);
             player.setName(userDomain.getNickname());
             player.setImageIndex(userDomain.getImageIndex());
@@ -58,7 +58,7 @@ public class RoomServiceImpl implements RoomService {
 
 
     @Override
-    public void exitRoom(Session session, long uid, int roomType) {
+    public void exitRoom(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -75,7 +75,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void playerReady(Session session, long uid, int roomType) {
+    public void playerReady(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -102,7 +102,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void playerStart(Session session, long uid, int roomType) {
+    public void playerStart(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -129,7 +129,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void scramble(Session session, long uid, int roomType, boolean scramble) {
+    public void scramble(long uid, int roomType, boolean scramble) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -194,7 +194,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void sendCard(Session session, long uid, int roomType, List<Card> cards) {
+    public void sendCard(long uid, int roomType, List<Card> cards) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -228,7 +228,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void noSend(Session session, long uid, int roomType) {
+    public void noSend(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -264,7 +264,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void suggest(Session session, long uid, int roomType) {
+    public void suggest(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -284,7 +284,7 @@ public class RoomServiceImpl implements RoomService {
         ResPlayerSuggestMessage message = new ResPlayerSuggestMessage();
         List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
         if(availableCards.isEmpty()){
-            noSend(session, uid, roomType);
+            noSend(uid, roomType);
             return;
         }
         int suggestOffset = player.getSuggestOffset();
@@ -296,11 +296,11 @@ public class RoomServiceImpl implements RoomService {
         List<Card> list = availableCards.isEmpty() ? Collections.emptyList() : availableCards.get(suggestOffset);
         player.setSuggestOffset(suggestOffset);
         message.setAvailableCards(list);
-        MessageUtils.sendMessage(session, message);
+        MessageUtils.sendMessage(uid, message);
     }
 
     @Override
-    public void reqCountdown(Session session, long uid, int roomType) {
+    public void reqCountdown(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -317,24 +317,23 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void autoSend(Room room, Player player) {
-
         if (room.isCharacterInit()){
             Player curPlayer = room.getCurPlayer();
 
             if(curPlayer == null){
                 ArrayList<Card> list = new ArrayList<>();
                 list.add(player.getCardList().get(0));
-                sendCard(player.getSession(), player.getUid(), room.getType(), list);
+                sendCard(player.getUid(), room.getType(), list);
                 return;
             }
             List<List<Card>> availableCards = GameLogicUtils.getAvailableCards(player.getCardList(), curPlayer.getSendCard());
             if(availableCards.isEmpty()){
-                noSend(player.getSession(), player.getUid(), room.getType());
+                noSend(player.getUid(), room.getType());
             }else {
-                sendCard(player.getSession(), player.getUid(), room.getType(), availableCards.get(0));
+                sendCard(player.getUid(), room.getType(), availableCards.get(0));
             }
         }else {
-            scramble(player.getSession(), player.getUid(), room.getType(), false);
+            scramble(player.getUid(), room.getType(), false);
         }
 
     }
@@ -352,7 +351,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void playerLeave(Session session, long uid, int roomType) {
+    public void playerLeave(long uid, int roomType) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;
@@ -366,7 +365,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void autoRobot(Session session, long uid, int roomType, boolean choose) {
+    public void autoRobot(long uid, int roomType, boolean choose) {
         AbstractRoomManager roomManager = RoomManagerFactory.getRoom(roomType);
         if(roomManager == null){
             return;

@@ -42,8 +42,6 @@ public class Player {
      */
     boolean ready;
 
-    Session session;
-
     long enterTime;
 
     CharacterType character = CharacterType.LANDOWNER;

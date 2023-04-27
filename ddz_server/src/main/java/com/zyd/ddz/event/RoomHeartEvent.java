@@ -11,6 +11,7 @@ import com.zyd.ddz.utils.MessageUtils;
 import com.zyd.ddz.utils.TimeUtils;
 import xyz.noark.core.annotation.Component;
 import xyz.noark.core.ioc.IocHolder;
+import xyz.noark.core.network.Session;
 import xyz.noark.core.network.SessionManager;
 import xyz.noark.game.monitor.AbstractMonitorService;
 
@@ -48,7 +49,7 @@ public class RoomHeartEvent extends AbstractMonitorService {
 
                 Map<Long, Player> playerList = room.getPlayers();
                 playerList.forEach((k, p) -> {
-                    if(SessionManager.getSession(p.getSession().getId()) == null){
+                    if(!SessionManager.isOnline(p.getUid())){
                         if(!p.isLeave()){
                             abstractRoomManager.onPlayerExit(room, p);
                         }

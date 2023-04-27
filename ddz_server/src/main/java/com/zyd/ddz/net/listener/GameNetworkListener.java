@@ -5,6 +5,8 @@ import xyz.noark.core.annotation.Component;
 import xyz.noark.core.network.NetworkListener;
 import xyz.noark.core.network.NetworkPacket;
 import xyz.noark.core.network.Session;
+import xyz.noark.core.network.SessionManager;
+import xyz.noark.network.WebSocketSession;
 
 import static xyz.noark.log.LogHelper.logger;
 
@@ -16,13 +18,13 @@ import static xyz.noark.log.LogHelper.logger;
 public class GameNetworkListener implements NetworkListener {
     @Override
     public void channelActive(Session session) {
-        session.send(1, JSON.toJSONString("heart"));
-        logger.info("发送心跳包");
+        logger.info("{} 客户端连接成功.......", session.getIp());
     }
 
     @Override
     public void channelInactive(Session session) {
-
+        logger.info("{}, 断开连接", session.getPlayerId());
+        SessionManager.removeSession(session);
     }
 
     @Override

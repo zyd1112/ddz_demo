@@ -12,18 +12,17 @@ import xyz.noark.core.network.SessionManager;
  */
 public class MessageUtils {
 
-    public static void sendMessage(Player player, Message message){
-        player.getSession().send(message.getOpcode(), message);
-    }
-
-    public static void sendMessage(Session session, Message message){
-        session.send(message.getOpcode(), message);
+    public static void sendMessage(long uid, Message message){
+        Session session = SessionManager.getSessionByPlayerId(uid);
+        if(session != null){
+            session.send(message.getOpcode(), message);
+        }
     }
 
     public static void sendMessageForRoom(Room room, Message message){
         for (Player player : room.getPlayers().values()) {
             if(!player.isLeave()){
-                sendMessage(player, message);
+                sendMessage(player.getUid(), message);
             }
         }
     }
