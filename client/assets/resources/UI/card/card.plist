@@ -628,7 +628,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_14_5.png</key>
+            <key>card_15_5.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{710,2},{116,159}}</string>
@@ -641,7 +641,7 @@
                 <key>sourceSize</key>
                 <string>{116,159}</string>
             </dict>
-            <key>card_15_5.png</key>
+            <key>card_14_5.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{592,2},{116,159}}</string>

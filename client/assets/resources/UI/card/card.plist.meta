@@ -3810,12 +3810,12 @@
       ],
       "subMetas": {}
     },
-    "ea519": {
+    "7522d": {
       "importer": "sprite-frame",
-      "uuid": "0df6f387-8c7f-4e76-82cf-a2e102c57d00@ea519",
+      "uuid": "0df6f387-8c7f-4e76-82cf-a2e102c57d00@7522d",
       "displayName": "",
-      "id": "ea519",
-      "name": "card_14_5",
+      "id": "7522d",
+      "name": "card_15_5",
       "userData": {
         "trimType": "auto",
         "trimThreshold": 1,
@@ -3856,12 +3856,12 @@
       ],
       "subMetas": {}
     },
-    "7522d": {
+    "ea519": {
       "importer": "sprite-frame",
-      "uuid": "0df6f387-8c7f-4e76-82cf-a2e102c57d00@7522d",
+      "uuid": "0df6f387-8c7f-4e76-82cf-a2e102c57d00@ea519",
       "displayName": "",
-      "id": "7522d",
-      "name": "card_15_5",
+      "id": "ea519",
+      "name": "card_14_5",
       "userData": {
         "trimType": "auto",
         "trimThreshold": 1,
