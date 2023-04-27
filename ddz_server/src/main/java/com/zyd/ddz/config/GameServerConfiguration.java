@@ -1,9 +1,10 @@
 package com.zyd.ddz.config;
 
-import com.zyd.ddz.dao.UserDao;
+import com.zyd.ddz.event.monitor.RoomMonitor;
 import com.zyd.ddz.event.RoomHeartEvent;
+import com.zyd.ddz.factory.RoomManagerFactory;
+import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.utils.IdUtils;
-import xyz.noark.core.annotation.Autowired;
 import xyz.noark.core.annotation.Configuration;
 import xyz.noark.core.annotation.Value;
 import xyz.noark.core.annotation.configuration.Bean;
@@ -22,16 +23,20 @@ public class GameServerConfiguration {
     @Value("server.id")
     int sid;
 
-    @Autowired
-    UserDao userDao;
-
-
     @Bean
     public MonitorManager monitorManager() {
         MonitorManager manager = new MonitorManager();
         manager.addMonitorService(new MemoryMonitorService());
-        manager.addMonitorService(new RoomHeartEvent());
         return manager;
+    }
+
+    @Bean
+    public RoomMonitor roomExecutors(){
+        RoomMonitor roomMonitor = new RoomMonitor();
+        for (AbstractRoomManager roomManager : RoomManagerFactory.getRooms().values()) {
+            roomMonitor.addService(new RoomHeartEvent(roomManager));
+        }
+        return roomMonitor;
     }
 
 

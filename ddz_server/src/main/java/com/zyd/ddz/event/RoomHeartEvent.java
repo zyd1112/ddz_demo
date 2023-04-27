@@ -2,18 +2,14 @@ package com.zyd.ddz.event;
 
 import com.zyd.ddz.entity.Player;
 import com.zyd.ddz.entity.Room;
-import com.zyd.ddz.factory.RoomManagerFactory;
+import com.zyd.ddz.event.monitor.GameTask;
 import com.zyd.ddz.message.room.response.ResRoomReadyTimeMessage;
 import com.zyd.ddz.message.room.response.ResRoomTimeHeartMessage;
 import com.zyd.ddz.room.AbstractRoomManager;
 import com.zyd.ddz.service.impl.RoomServiceImpl;
 import com.zyd.ddz.utils.MessageUtils;
-import com.zyd.ddz.utils.TimeUtils;
-import xyz.noark.core.annotation.Component;
 import xyz.noark.core.ioc.IocHolder;
-import xyz.noark.core.network.Session;
 import xyz.noark.core.network.SessionManager;
-import xyz.noark.game.monitor.AbstractMonitorService;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,11 +18,16 @@ import java.util.concurrent.TimeUnit;
 import static xyz.noark.log.LogHelper.logger;
 
 
-@Component
-public class RoomHeartEvent extends AbstractMonitorService {
+public class RoomHeartEvent extends GameTask {
 
 
     long curTime = System.currentTimeMillis();
+    AbstractRoomManager roomManager;
+
+    public RoomHeartEvent(AbstractRoomManager roomManager){
+        this.roomManager = roomManager;
+        logger.info("{}, 心跳事件启动", roomManager.getName());
+    }
 
     /**
      * 准备时间
@@ -37,42 +38,39 @@ public class RoomHeartEvent extends AbstractMonitorService {
         long now = System.currentTimeMillis();
         int dt = (int) (now - curTime);
         curTime = now;
-        Map<Integer, AbstractRoomManager> rooms = RoomManagerFactory.getRooms();
-        rooms.forEach((type, roomManager) -> {
-            Collection<Room> roomList = roomManager.getRooms();
+        Collection<Room> roomList = roomManager.getRooms();
 
-            for (Room room : roomList) {
-                if(room.isDestroy()){
-                    continue;
-                }
-                AbstractRoomManager abstractRoomManager = room.getAbstractRoomManager();
-
-                Map<Long, Player> playerList = room.getPlayers();
-                playerList.forEach((k, p) -> {
-                    if(!SessionManager.isOnline(p.getUid())){
-                        if(!p.isLeave()){
-                            abstractRoomManager.onPlayerExit(room, p);
-                        }
-                    }
-
-                });
-                int waitDestroyTime;
-                if (playerList.size() == 0 || checkAllLeave(playerList)){
-                    waitDestroyTime = room.getWaitDestroyTime();
-                    waitDestroyTime += dt;
-                    if(waitDestroyTime >= 10000){
-                        abstractRoomManager.onDestroy(room);
-                    }
-                    room.setWaitDestroyTime(waitDestroyTime);
-                }
-                if(!room.isStart()){
-                    checkReady(room, dt);
-                }else if(!room.isGameOver()){
-                    updateHeart(room, dt, roomManager.getTimeout());
-                }
-                abstractRoomManager.onHeart(room, dt);
+        for (Room room : roomList) {
+            if(room.isDestroy()){
+                continue;
             }
-        });
+            AbstractRoomManager abstractRoomManager = room.getAbstractRoomManager();
+
+            Map<Long, Player> playerList = room.getPlayers();
+            playerList.forEach((k, p) -> {
+                if(!SessionManager.isOnline(p.getUid())){
+                    if(!p.isLeave()){
+                        abstractRoomManager.onPlayerExit(room, p);
+                    }
+                }
+
+            });
+            int waitDestroyTime;
+            if (playerList.size() == 0 || checkAllLeave(playerList)){
+                waitDestroyTime = room.getWaitDestroyTime();
+                waitDestroyTime += dt;
+                if(waitDestroyTime >= 10000){
+                    abstractRoomManager.onDestroy(room);
+                }
+                room.setWaitDestroyTime(waitDestroyTime);
+            }
+            if(!room.isStart()){
+                checkReady(room, dt);
+            }else if(!room.isGameOver()){
+                updateHeart(room, dt, roomManager.getTimeout());
+            }
+            abstractRoomManager.onHeart(room, dt);
+        }
 
     }
 
@@ -154,8 +152,4 @@ public class RoomHeartEvent extends AbstractMonitorService {
         return TimeUnit.MILLISECONDS;
     }
 
-    @Override
-    protected void exe() {
-        doAction();
-    }
 }

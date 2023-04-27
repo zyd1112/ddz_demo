@@ -14,6 +14,10 @@ import xyz.noark.core.ioc.IocHolder;
  */
 public class ClassicAbstractRoomManager extends AbstractRoomManager {
 
+    @Override
+    public String getName() {
+        return "欢乐斗地主 经典房";
+    }
 
     @Override
     public int getSize() {

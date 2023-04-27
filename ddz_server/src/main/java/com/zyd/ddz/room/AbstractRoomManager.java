@@ -59,6 +59,8 @@ public abstract class AbstractRoomManager {
 
     public abstract int getReward();
 
+    public abstract String getName();
+
     /**
      * 创建房间事件
      */
