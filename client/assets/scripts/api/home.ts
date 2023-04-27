@@ -41,7 +41,16 @@ export function userInit(){
                     const image = PoolManager.getInstance().getNode(Gloabal.image, node);
                     image.setPosition(name.position.x + 130, name.position.y, 0);
                     const joyBeans = node.getChildByName("joyBeans");
-                    joyBeans.getChildByName("value").getComponent(Label).string = Gloabal.joyBeans + "";
+                    let value = Gloabal.joyBeans;
+                    let unit = ""
+                    if(value >= 10000){
+                        value /= 10000;
+                        unit = "万";
+                    }else if(value >= 100000000){
+                        value /= 100000000;
+                        unit = "亿";
+                    }
+                    joyBeans.getChildByName("value").getComponent(Label).string = value + unit;
                     node.active = true; 
                 }
                 break;

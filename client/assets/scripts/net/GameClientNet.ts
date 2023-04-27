@@ -1,6 +1,3 @@
-import { _decorator, Component, Node, Socket } from 'cc';
-import { MessageFactory } from '../proto/MessageFactory';
-const { ccclass, property } = _decorator;
 
 export class GameClientNet {
     private static websocket: WebSocket = null;
