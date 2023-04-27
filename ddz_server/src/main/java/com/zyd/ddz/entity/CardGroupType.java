@@ -5,7 +5,6 @@ import com.zyd.ddz.checker.Checker;
 import com.zyd.ddz.checker.JokerBoomChecker;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +34,6 @@ public class CardGroupType {
             }
             return false;
         }
-
         return this.getChecker().compare(this.getCardList(), cardType.getCardList());
     }
 }

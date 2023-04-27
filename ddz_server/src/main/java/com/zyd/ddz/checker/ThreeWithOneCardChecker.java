@@ -22,19 +22,17 @@ public class ThreeWithOneCardChecker implements Checker{
 
     @Override
     public boolean test(List<Card> cardList) {
-        if(cardList.size() < 4){
+        if(cardList.size() < 4 || cardList.size() > 5){
             return false;
         }
 
         int[] cardsNum = new int[20];
-
         for (Card card : cardList) {
             int value = card.getCardValue();
             if(CardContext.Joker.contains(value)){
                 return false;
             }
             cardsNum[value]++;
-
         }
         return match(Arrays.stream(cardsNum), Arrays.stream(cardsNum));
     }

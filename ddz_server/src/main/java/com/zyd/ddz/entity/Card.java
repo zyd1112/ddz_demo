@@ -17,6 +17,13 @@ public class Card {
 
     private boolean send;
 
+    public Card(int cardValue, int shape, String content){
+        this.cardValue = cardValue;
+        this.shape = shape;
+        this.content = content;
+        this.send = false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

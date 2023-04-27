@@ -21,8 +21,10 @@ public class CardFactory {
         put(5, new ThreeWithOneCardChecker());
         put(6, new ThreeWithTwoCardChecker());
         put(7, new ShunZiChecker());
-        put(8, new ConsecutivePairsChecker());
-        put(9, new JokerBoomChecker());
+        put(8, new PlaneCardWithOneChecker());
+        put(9, new PlaneCardWithTwoChecker());
+        put(10, new ConsecutivePairsChecker());
+        put(11, new JokerBoomChecker());
     }};
 
 
