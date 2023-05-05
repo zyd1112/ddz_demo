@@ -22,7 +22,7 @@ public class ThreeWithOneCardChecker implements Checker{
 
     @Override
     public boolean test(List<Card> cardList) {
-        if(cardList.size() < 4 || cardList.size() > 5){
+        if(cardList.size() != length()){
             return false;
         }
 
@@ -39,6 +39,10 @@ public class ThreeWithOneCardChecker implements Checker{
 
     protected boolean match(IntStream stream1, IntStream stream2){
         return stream1.anyMatch(v -> v == 3) && stream2.anyMatch(v -> v == 1);
+    }
+
+    protected int length(){
+        return 4;
     }
 
     @Override
