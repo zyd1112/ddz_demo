@@ -1,9 +1,11 @@
 package com.zyd.ddz.server.config;
 
+import com.zyd.ddz.common.event.monitor.MailCheckMonitor;
 import com.zyd.ddz.common.event.monitor.RoomMonitor;
 
 import com.zyd.ddz.common.manager.AbstractRoomManager;
 import com.zyd.ddz.common.utils.IdUtils;
+import com.zyd.ddz.server.event.MailCheckEvent;
 import com.zyd.ddz.server.event.RoomHeartEvent;
 import com.zyd.ddz.server.factory.RoomManagerFactory;
 import xyz.noark.core.annotation.Configuration;
@@ -35,9 +37,16 @@ public class GameServerConfiguration {
     public RoomMonitor roomExecutors(){
         RoomMonitor roomMonitor = new RoomMonitor();
         for (AbstractRoomManager roomManager : RoomManagerFactory.getRooms().values()) {
-            roomMonitor.addService(new RoomHeartEvent(roomManager));
+            roomMonitor.addScheduleService(new RoomHeartEvent(roomManager));
         }
         return roomMonitor;
+    }
+
+    @Bean
+    public MailCheckMonitor mailExecutors(){
+        MailCheckMonitor mailCheckMonitor = new MailCheckMonitor();
+        mailCheckMonitor.addScheduleService(new MailCheckEvent());
+        return mailCheckMonitor;
     }
 
 

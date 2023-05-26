@@ -1,6 +1,7 @@
 package com.zyd.ddz.common.service;
 
 import com.zyd.ddz.common.domain.UserDomain;
+import com.zyd.ddz.common.entity.UserMail;
 import xyz.noark.core.network.Session;
 
 /**
@@ -10,7 +11,8 @@ import xyz.noark.core.network.Session;
 public interface LoginService {
 
     /**
-     * 游客登录
+     * 登录
      */
-    UserDomain visitorLogin(Session session);
+    UserDomain login(Session session, String username, String nickname, String password);
+
 }

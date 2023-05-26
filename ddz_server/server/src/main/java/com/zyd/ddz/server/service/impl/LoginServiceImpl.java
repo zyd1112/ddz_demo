@@ -1,5 +1,6 @@
 package com.zyd.ddz.server.service.impl;
 
+import com.zyd.ddz.common.entity.UserMail;
 import com.zyd.ddz.common.utils.IdUtils;
 import com.zyd.ddz.common.dao.UserDao;
 import com.zyd.ddz.common.domain.UserDomain;
@@ -22,17 +23,19 @@ public class LoginServiceImpl implements LoginService {
     UserDao userDao;
 
     @Override
-    public UserDomain visitorLogin(Session session) {
-        UserDomain userDomain = new UserDomain();
-        String name = "visitor-" + IdUtils.getVisitorId();
-        userDomain.setUsername(name);
-        userDomain.setNickname(name);
-        userDomain.setId(IdUtils.generator());
-        userDomain.setCreateTime(new Date());
-        userDomain.setIp(session.getIp());
-        userDomain.setPassword("111");
-        userDomain.setImageIndex(RandomUtils.nextInt(3));
-        userDao.insert(userDomain);
+    public UserDomain login(Session session, String username, String nickname, String password) {
+        UserDomain userDomain = userDao.getUserBy(user -> user.getUsername().equals(username));
+        if(userDomain == null){
+            userDomain = new UserDomain();
+            userDomain.setUsername(username);
+            userDomain.setNickname(nickname);
+            userDomain.setId(IdUtils.generator());
+            userDomain.setCreateTime(new Date());
+            userDomain.setIp(session.getIp());
+            userDomain.setPassword(password);
+            userDomain.setImageIndex(RandomUtils.nextInt(3));
+            userDao.insert(userDomain);
+        }
         return userDomain;
     }
 }

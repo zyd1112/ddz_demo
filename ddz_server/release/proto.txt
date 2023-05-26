@@ -1,4 +1,6 @@
 request:
+    8 : getCode;
+    9 : mailLogin
     10: enterRoom
     11: visitorLogin
     12: sendCard

@@ -1,4 +1,4 @@
-package com.zyd.ddz.common.config;
+package com.zyd.ddz.server.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import xyz.noark.core.annotation.Configuration;

@@ -2,7 +2,7 @@ import { _decorator, Button, Camera, Component, director, EventHandler, EventTou
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
-import { reqEnterRoom, reqLeaveRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
+import { reqEnterRoom, reqGetMailCode, reqLeaveRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
 import { GameManager } from '../framework/GameManager';
 import { resourceInit } from '../api/game';
 const { ccclass, property } = _decorator;
@@ -78,6 +78,11 @@ export class ButtonEvent extends Component {
         reqLeaveRoom();
         director.loadScene("HomeScene")
     }
+
+    public login(){
+        reqGetMailCode();
+    }
+
 
 }
 

@@ -17,4 +17,8 @@ public class TimeUtils {
     public static long getNowTimeMillis(){
         return System.currentTimeMillis();
     }
+
+    public static long getNowTimeSeconds(){
+        return System.currentTimeMillis() / 1000;
+    }
 }
