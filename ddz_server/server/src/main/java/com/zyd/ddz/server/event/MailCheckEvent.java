@@ -36,7 +36,7 @@ public class MailCheckEvent extends GameTask {
 
     @Override
     protected long getDelay() {
-        return 60;
+        return 300;
     }
 
     @Override

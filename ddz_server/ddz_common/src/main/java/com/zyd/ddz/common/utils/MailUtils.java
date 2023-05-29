@@ -96,7 +96,7 @@ public class MailUtils {
 
     public static boolean checkTimeout(UserMail userMail){
         UserMail mail = MAILS_MAP.get(userMail.getMail());
-        return mail != null && mail.getEnd() <= TimeUtils.getNowTimeMillis();
+        return mail != null && mail.getEnd() > TimeUtils.getNowTimeMillis();
     }
 
 }

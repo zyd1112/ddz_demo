@@ -1,8 +1,8 @@
-import { _decorator, Button, Camera, Component, director, EventHandler, EventTouch, geometry, Label, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
+import { _decorator, Button, Camera, Component, director, EditBox, EventHandler, EventTouch, geometry, Label, Node, NodeEventType, PhysicsSystem, UITransform } from 'cc';
 import { Gloabal } from '../Global';
 import { CardLoader } from '../player/CardLoader';
 import { CardManager } from '../player/CardManager';
-import { reqEnterRoom, reqGetMailCode, reqLeaveRoom, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
+import { reqEnterRoom, reqGetMailCode, reqLeaveRoom, reqMailLogin, reqNoSend, reqReady, reqScramble, reqSendCard, reqStart, reqSuggest, reqVisitorLogin } from '../api/request';
 import { GameManager } from '../framework/GameManager';
 import { resourceInit } from '../api/game';
 const { ccclass, property } = _decorator;
@@ -12,6 +12,8 @@ export class ButtonEvent extends Component {
 
     @property(Node)
     private cardSelf: Node = null;
+    @property(Node)
+    private dialog: Node = null;
 
     public visitorLogin(){
         reqVisitorLogin();
@@ -79,10 +81,29 @@ export class ButtonEvent extends Component {
         director.loadScene("HomeScene")
     }
 
-    public login(){
+    public showLoginBg(){
         const canvas = director.getScene().getChildByName("Canvas");
         canvas.getChildByName("button").active = false;
         canvas.getChildByName("loginBg").active = true;
+    }
+
+    public getCode(){
+        const mail = this.dialog.getChildByName("mail").getComponent(EditBox).string;
+        if(mail == ""){
+            alert("请输入邮箱")
+        }else{
+            reqGetMailCode(mail);
+        }
+    }
+
+    public mailLogin(){
+        const mail = this.dialog.getChildByName("mail").getComponent(EditBox).string;
+        const code = this.dialog.getChildByName("code").getComponent(EditBox).string;
+        if(mail == "" || code == ""){
+            alert("请输入信息")
+        }else{
+            reqMailLogin(mail, code);
+        }
     }
 
 

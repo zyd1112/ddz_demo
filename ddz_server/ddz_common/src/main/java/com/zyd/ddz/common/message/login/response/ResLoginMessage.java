@@ -15,6 +15,7 @@ import lombok.Setter;
 public class ResLoginMessage implements Message {
     int opcode = 1002;
     int code;
+    String content;
 
     UserDto user;
 }

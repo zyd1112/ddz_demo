@@ -2,13 +2,20 @@ import { Gloabal } from "../Global"
 import { MessageUtils } from "../net/MessageUtils"
 import { Card } from "../player/CardLoader"
 
-export function reqGetMailCode(){
+export function reqGetMailCode(mail: string){
     let message = {
         opcode: 8,
-        mail: "915646808@qq.com",
+        mail: mail,
     }
     MessageUtils.send(message.opcode, message);
 
+}
+
+export function reqMailLogin(mail: string, code: string){
+    MessageUtils.send(9, {
+        mail: mail,
+        code: code,
+    });
 }
 
 export function reqVisitorLogin(){
