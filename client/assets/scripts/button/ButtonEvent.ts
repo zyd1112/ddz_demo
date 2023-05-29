@@ -80,7 +80,9 @@ export class ButtonEvent extends Component {
     }
 
     public login(){
-        reqGetMailCode();
+        const canvas = director.getScene().getChildByName("Canvas");
+        canvas.getChildByName("button").active = false;
+        canvas.getChildByName("loginBg").active = true;
     }
 
 
