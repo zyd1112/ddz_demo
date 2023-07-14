@@ -10,7 +10,7 @@ export class GameClientService extends Component {
 
     start() {
         resourceLoad();
-        GameClientNet.startClient("10.40.4.208", 10001);
+        GameClientNet.startClient("127.0.0.1", 10001);
         GameClientNet.getConnection().onopen = () => {
             console.log("已连接")
         }
