@@ -1,12 +1,12 @@
 package com.zyd.ddz.server.service.impl;
 
+import com.zyd.ddz.common.domain.UserDomain;
 import com.zyd.ddz.common.message.login.dto.UserDto;
 import com.zyd.ddz.common.utils.DtoUtils;
-import com.zyd.ddz.common.dao.UserDao;
 import com.zyd.ddz.common.service.UserService;
-import xyz.noark.core.annotation.Autowired;
-import xyz.noark.core.annotation.Service;
-import xyz.noark.core.network.Session;
+import com.zyd.zgame.common.network.Session;
+import com.zyd.zgame.orm.cache.DataContext;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,19 +15,16 @@ import java.util.stream.Collectors;
  * @author zyd
  * @date 2023/4/7 15:06
  */
-@Service
+@Component
 public class UserServiceImpl implements UserService {
-
-    @Autowired
-    UserDao userDao;
 
     @Override
     public UserDto getById(Session session, long uid) {
-        return DtoUtils.packUser(userDao.cacheGet(uid));
+        return DtoUtils.packUser(DataContext.getManager().getById(UserDomain.class, uid));
     }
 
     @Override
     public List<UserDto> getList(Session session) {
-        return userDao.loadAll().stream().map(DtoUtils::packUser).collect(Collectors.toList());
+        return DataContext.getManager().getList(UserDomain.class).stream().map(DtoUtils::packUser).collect(Collectors.toList());
     }
 }

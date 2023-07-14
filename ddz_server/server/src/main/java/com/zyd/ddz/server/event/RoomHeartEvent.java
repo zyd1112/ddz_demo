@@ -7,19 +7,19 @@ import com.zyd.ddz.common.message.room.response.ResRoomTimeHeartMessage;
 import com.zyd.ddz.common.manager.AbstractRoomManager;
 import com.zyd.ddz.common.utils.MessageUtils;
 
-import com.zyd.ddz.common.event.monitor.GameTask;
 import com.zyd.ddz.server.service.impl.RoomServiceImpl;
-import xyz.noark.core.ioc.IocHolder;
-import xyz.noark.core.network.SessionManager;
+import com.zyd.zgame.common.network.SessionManager;
+import com.zyd.zgame.common.utils.ApplicationContextUtils;
+import com.zyd.zgame.core.thread.command.AbstractScheduleCommand;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static xyz.noark.log.LogHelper.logger;
 
-
-public class RoomHeartEvent extends GameTask {
+@Slf4j
+public class RoomHeartEvent extends AbstractScheduleCommand {
 
 
     long curTime = System.currentTimeMillis();
@@ -27,7 +27,7 @@ public class RoomHeartEvent extends GameTask {
 
     public RoomHeartEvent(AbstractRoomManager roomManager){
         this.roomManager = roomManager;
-        logger.info("{}, 心跳事件启动", roomManager.getName());
+        log.info("{}, 心跳事件启动", roomManager.getName());
     }
 
     /**
@@ -36,7 +36,7 @@ public class RoomHeartEvent extends GameTask {
     private final int readyTime = 10000;
 
     @Override
-    public void doAction() {
+    public void exe() {
         long now = System.currentTimeMillis();
         int dt = (int) (now - curTime);
         curTime = now;
@@ -93,7 +93,7 @@ public class RoomHeartEvent extends GameTask {
         int timeout = room.getTimeout();
         timeout++;
         if(timeout >= timeoutLimit){
-            IocHolder.getIoc().get(RoomServiceImpl.class).autoSend(room, room.getNextPlayer());
+            ApplicationContextUtils.getBean(RoomServiceImpl.class).autoSend(room, room.getNextPlayer());
         }else {
             room.setTimeout(timeout);
         }
@@ -131,7 +131,7 @@ public class RoomHeartEvent extends GameTask {
 
 
         if(gameReadyTime >= readyTime){
-            logger.info("{} 游戏开始", room.getName());
+            log.info("{} 游戏开始", room.getName());
             gameReadyTime = 0;
             room.getAbstractRoomManager().onGameStart(room);
         }
@@ -140,17 +140,17 @@ public class RoomHeartEvent extends GameTask {
     }
 
     @Override
-    protected long getInitialDelay() {
+    public long getInitialDelay() {
         return 0;
     }
 
     @Override
-    protected long getDelay() {
+    public long getDelay() {
         return 100;
     }
 
     @Override
-    protected TimeUnit getUnit() {
+    public TimeUnit getUnit() {
         return TimeUnit.MILLISECONDS;
     }
 

@@ -29,8 +29,9 @@ export function userInit(){
     for(let i = 0; i < canvas.children.length; i++){
         const node = canvas.children[i];
         switch(node.name){
-            case "vistorLogin":
-                node.active = Gloabal.uid == 0;
+            case "button":
+                node.getChildByName("vistorLogin").active = Gloabal.uid == 0;
+                node.getChildByName("login").active = Gloabal.uid == 0;
                 break;
             case "user":
                 if(Gloabal.uid == 0){
@@ -39,7 +40,7 @@ export function userInit(){
                     const name = node.getChildByName("name");
                     name.getComponent(Label).string = Gloabal.username;
                     const image = PoolManager.getInstance().getNode(Gloabal.image, node);
-                    image.setPosition(name.position.x + 130, name.position.y, 0);
+                    image.setPosition(name.position.x + 150, name.position.y, 0);
                     const joyBeans = node.getChildByName("joyBeans");
                     let value = Gloabal.joyBeans;
                     let unit = ""

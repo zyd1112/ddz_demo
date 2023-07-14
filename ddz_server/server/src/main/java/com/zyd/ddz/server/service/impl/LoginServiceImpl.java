@@ -1,14 +1,13 @@
 package com.zyd.ddz.server.service.impl;
 
-import com.zyd.ddz.common.entity.UserMail;
-import com.zyd.ddz.common.utils.IdUtils;
-import com.zyd.ddz.common.dao.UserDao;
 import com.zyd.ddz.common.domain.UserDomain;
 import com.zyd.ddz.common.service.LoginService;
-import xyz.noark.core.annotation.Autowired;
-import xyz.noark.core.annotation.Service;
-import xyz.noark.core.network.Session;
-import xyz.noark.core.util.RandomUtils;
+import com.zyd.zgame.common.network.Session;
+import com.zyd.zgame.common.utils.IdUtils;
+import com.zyd.zgame.common.utils.RandomUtils;
+import com.zyd.zgame.orm.cache.DataContext;
+import org.springframework.stereotype.Component;
+
 
 import java.util.Date;
 
@@ -16,15 +15,14 @@ import java.util.Date;
  * @author zyd
  * @date 2023/4/7 11:05
  */
-@Service
+@Component
 public class LoginServiceImpl implements LoginService {
 
-    @Autowired
-    UserDao userDao;
 
     @Override
     public UserDomain login(Session session, String username, String nickname, String password) {
-        UserDomain userDomain = userDao.getUserBy(user -> user.getUsername().equals(username));
+        UserDomain userDomain = DataContext.getManager().getList(UserDomain.class)
+                .stream().filter(user -> user.getUsername().equals(username)).findAny().orElse(null);
         if(userDomain == null){
             userDomain = new UserDomain();
             userDomain.setUsername(username);
@@ -33,8 +31,8 @@ public class LoginServiceImpl implements LoginService {
             userDomain.setCreateTime(new Date());
             userDomain.setIp(session.getIp());
             userDomain.setPassword(password);
-            userDomain.setImageIndex(RandomUtils.nextInt(3));
-            userDao.insert(userDomain);
+            userDomain.setImageIndex(RandomUtils.random(0, 3));
+            DataContext.getManager().update(userDomain);
         }
         return userDomain;
     }

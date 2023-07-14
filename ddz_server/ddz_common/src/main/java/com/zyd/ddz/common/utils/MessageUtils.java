@@ -3,8 +3,8 @@ package com.zyd.ddz.common.utils;
 import com.zyd.ddz.common.entity.Player;
 import com.zyd.ddz.common.entity.Room;
 import com.zyd.ddz.common.message.Message;
-import xyz.noark.core.network.Session;
-import xyz.noark.core.network.SessionManager;
+import com.zyd.zgame.common.network.Session;
+import com.zyd.zgame.common.network.SessionManager;
 
 /**
  * @author zyd
@@ -13,9 +13,9 @@ import xyz.noark.core.network.SessionManager;
 public class MessageUtils {
 
     public static void sendMessage(long uid, Message message){
-        Session session = SessionManager.getSessionByPlayerId(uid);
+        Session session = SessionManager.getSessionByUid(uid);
         if(session != null){
-            session.send(message.getOpcode(), message);
+            session.sendMessage(message.getOpcode(), message);
         }
     }
 

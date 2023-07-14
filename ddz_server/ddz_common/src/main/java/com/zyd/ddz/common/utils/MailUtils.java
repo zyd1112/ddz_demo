@@ -2,9 +2,9 @@ package com.zyd.ddz.common.utils;
 
 import com.sun.mail.util.MailSSLSocketFactory;
 import com.zyd.ddz.common.entity.UserMail;
+import com.zyd.zgame.common.utils.RandomUtils;
+import com.zyd.zgame.common.utils.TimeUtils;
 import lombok.Getter;
-import xyz.noark.core.util.RandomUtils;
-import xyz.noark.log.LogHelper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -35,7 +35,7 @@ public class MailUtils {
     public static String generateCode(int len){
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            builder.append(NUMBERS.charAt(RandomUtils.nextInt(0, NUMBERS.length())));
+            builder.append(NUMBERS.charAt(RandomUtils.random(0, NUMBERS.length())));
         }
         return builder.toString();
     }

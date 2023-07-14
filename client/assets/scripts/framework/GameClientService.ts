@@ -23,7 +23,7 @@ export class GameClientService extends Component {
                 data = JSON.parse(json);
             }
             
-            let handler = MessageFactory.getHandler(data.opcode)
+            let handler = MessageFactory.getHandler(data.id)
             if(handler){
                 handler.handler(data.protocol, GameManager.getInstance());
             }

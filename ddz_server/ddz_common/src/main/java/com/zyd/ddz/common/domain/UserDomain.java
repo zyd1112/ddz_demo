@@ -1,11 +1,10 @@
 package com.zyd.ddz.common.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.zyd.zgame.orm.cache.Cache;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.noark.core.annotation.orm.Column;
-import xyz.noark.core.annotation.orm.Entity;
-import xyz.noark.core.annotation.orm.Id;
-import xyz.noark.core.annotation.orm.Table;
+import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
@@ -14,34 +13,25 @@ import java.util.Date;
  * @date 2023/4/7 9:50
  */
 
-@Entity
-@Table(name = "game_user")
+@TableName(value = "game_user")
 @Setter
 @Getter
-public class UserDomain {
+public class UserDomain implements Cache {
 
     @Id
-    @Column(name = "id", nullable = false, comment = "用户id", length = 64)
-    private long id;
+    private Long id;
 
-    @Column(name = "username", nullable = false, comment = "用户名", length = 20)
     private String username;
 
-    @Column(name = "password", nullable = false, comment = "用户密码", length = 20)
     private String password;
 
-    @Column(name = "nickname", nullable = false, comment = "用户昵称", length = 20)
     private String nickname;
 
-    @Column(name = "create_time", nullable = false, comment = "创建时间")
     private Date createTime;
 
-    @Column(name = "ip", nullable = false, comment = "ip")
     private String ip;
 
-    @Column(name = "joy_beans", nullable = false, comment = "欢乐豆", length = 20)
     private int joyBeans;
 
-    @Column(name = "image_index", nullable = false, comment = "头像索引")
     private int imageIndex;
 }

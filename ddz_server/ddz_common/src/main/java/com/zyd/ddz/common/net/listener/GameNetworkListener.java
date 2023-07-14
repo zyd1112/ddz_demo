@@ -1,52 +1,44 @@
 package com.zyd.ddz.common.net.listener;
 
-import xyz.noark.core.annotation.Component;
-import xyz.noark.core.network.NetworkListener;
-import xyz.noark.core.network.NetworkPacket;
-import xyz.noark.core.network.Session;
-import xyz.noark.core.network.SessionManager;
+import com.zyd.zgame.common.network.NetworkEventListener;
+import com.zyd.zgame.common.network.Session;
+import com.zyd.zgame.common.network.SessionManager;
+import io.netty.handler.timeout.IdleState;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import static xyz.noark.log.LogHelper.logger;
 
 /**
  * @author zyd
  * @date 2023/4/15 11:01
  */
 @Component
-public class GameNetworkListener implements NetworkListener {
+@Slf4j
+public class GameNetworkListener implements NetworkEventListener {
+
     @Override
-    public void channelActive(Session session) {
-        logger.info("{} 客户端连接成功.......", session.getIp());
+    public void onActive(Session session) {
+        log.info("{} 客户端连接成功.......", session.getIp());
     }
 
     @Override
-    public void channelInactive(Session session) {
-        logger.info("{}, 断开连接", session.getPlayerId());
+    public void onChannelInactive(Session session) {
+        log.info("{}, 断开连接", session.getUid());
         SessionManager.removeSession(session);
     }
 
     @Override
-    public boolean handleDuplicatePacket(Session session, NetworkPacket networkPacket) {
+    public void onExceptionOccur(Session var1, Throwable var2) {
+
+    }
+
+    @Override
+    public void idle(Session var1, IdleState var2) {
+
+    }
+
+    @Override
+    public boolean onPacketWarning(Session session, int second, int count, int threshold) {
         return false;
-    }
-
-    @Override
-    public boolean handleChecksumFail(Session session, NetworkPacket networkPacket) {
-        return false;
-    }
-
-    @Override
-    public void handleDeprecatedPacket(Session session, NetworkPacket networkPacket) {
-
-    }
-
-    @Override
-    public boolean handlePacketWarning(Session session, int i, int i1, int i2) {
-        return false;
-    }
-
-    @Override
-    public void handleException(Session session, NetworkPacket networkPacket, Throwable throwable) {
-
     }
 }

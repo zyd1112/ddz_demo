@@ -7,8 +7,9 @@ import com.zyd.ddz.common.message.room.dto.PlayerDto;
 import com.zyd.ddz.common.message.room.response.*;
 import com.zyd.ddz.common.utils.GameLogicUtils;
 import com.zyd.ddz.common.utils.MessageUtils;
-import com.zyd.ddz.common.utils.TimeUtils;
-import xyz.noark.core.util.RandomUtils;
+import com.zyd.zgame.common.utils.RandomUtils;
+import com.zyd.zgame.common.utils.TimeUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,13 +18,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static xyz.noark.log.LogHelper.logger;
 /**
  * @author zyd
  * @date 2023/4/7 17:03
  * 定义房间事件的抽象类
  *
  */
+@Slf4j
 public abstract class AbstractRoomManager {
     protected static final AtomicInteger ROOM_NUM = new AtomicInteger(0);
 
@@ -68,7 +69,7 @@ public abstract class AbstractRoomManager {
     public void onPlayerEnter(Player player){
         long uid = player.getUid();
         if(playerMap.containsKey(uid)){
-            logger.info("{} 玩家, 断线重连", uid);
+            log.info("{} 玩家, 断线重连", uid);
             player.setAuto(false);
             player.setLeave(false);
             ResPlayerReconnectMessage message = new ResPlayerReconnectMessage();
@@ -100,7 +101,7 @@ public abstract class AbstractRoomManager {
                 roomMap.put(roomId, room);
                 availableRoom.add(room);
             }else {
-                int index = RandomUtils.nextInt(availableRoom.size());
+                int index = RandomUtils.random(0, availableRoom.size());
                 Room temp = availableRoom.get(index);
                 if(temp.isDestroy() || temp.getPlayers().size() >= getSize()){
                     availableRoom.remove(index);
@@ -117,7 +118,7 @@ public abstract class AbstractRoomManager {
         room.getPlayers().put(uid, player);
         playerMap.put(uid, player);
 
-        logger.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
+        log.info("[{}:{}] 玩家进入房间 {}", player.getUid(), player.getName(), room.getName());
 
         ResPlayerEnterRoomMessage message = new ResPlayerEnterRoomMessage();
         room.getPlayers().forEach((id, p) -> {
@@ -133,7 +134,7 @@ public abstract class AbstractRoomManager {
      * 玩家离开房间事件
      */
     public void onPlayerExit(Room room, Player player){
-        logger.info("{} 玩家 离开: {}", player.getUid(), room.getName());
+        log.info("{} 玩家 离开: {}", player.getUid(), room.getName());
         player.setLeave(true);
         if(!room.isStart() || room.isGameOver()){
             playerMap.remove(player.getUid());
@@ -162,7 +163,7 @@ public abstract class AbstractRoomManager {
      * 房间销毁事件
      */
     public void onDestroy(Room room){
-        logger.warn("{}, 销毁", room.getName());
+        log.warn("{}, 销毁", room.getName());
         room.setDestroy(true);
         room.setStart(false);
         roomMap.remove(room.getId());

@@ -9,29 +9,27 @@ import com.zyd.ddz.common.message.room.response.*;
 
 import com.zyd.ddz.common.utils.GameLogicUtils;
 import com.zyd.ddz.common.utils.MessageUtils;
-import com.zyd.ddz.common.dao.UserDao;
 import com.zyd.ddz.common.domain.UserDomain;
 
 import com.zyd.ddz.common.manager.AbstractRoomManager;
 import com.zyd.ddz.server.factory.RoomManagerFactory;
 import com.zyd.ddz.common.service.RoomService;
-import xyz.noark.core.annotation.Autowired;
-import xyz.noark.core.annotation.Service;
+import com.zyd.zgame.orm.cache.DataContext;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static xyz.noark.log.LogHelper.logger;
 
 /**
  * @author zyd
  * @date 2023/4/7 17:00
  */
-@Service
+@Component
+@Slf4j
 public class RoomServiceImpl implements RoomService {
 
-    @Autowired
-    UserDao userDao;
 
     @Override
     public boolean enterRoom(long uid, int roomType) {
@@ -39,7 +37,7 @@ public class RoomServiceImpl implements RoomService {
         if(roomManager == null){
             return false;
         }
-        UserDomain userDomain = userDao.cacheGet(uid);
+        UserDomain userDomain = DataContext.getManager().getById(UserDomain.class, uid);
         if(userDomain == null){
             return false;
         }
@@ -212,7 +210,7 @@ public class RoomServiceImpl implements RoomService {
         List<Card> cardList = player.getCardList();
         List<Card> curCards = curPlayer == null ? null : curPlayer.getSendCard();
         if(!GameLogicUtils.check(cards, curCards)){
-            logger.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curCards);
+            log.info("{} 出的牌不符合规则, cardList: {}, cast: {}, curTableCars: {}", uid, cardList, cards, curCards);
             return;
         }
         room.initClock();
@@ -224,7 +222,7 @@ public class RoomServiceImpl implements RoomService {
             roomManager.onGameOver(room);
         }
         sendCardMessage(room, cards, uid);
-        logger.info("[{}: {}] 玩家出牌: cards: {}", uid, player.getName(), cards);
+        log.info("[{}: {}] 玩家出牌: cards: {}", uid, player.getName(), cards);
     }
 
     @Override
@@ -341,12 +339,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void sendRewards(Room room) {
         room.getPlayers().forEach((uid, p) -> {
-            UserDomain userDomain = userDao.cacheGet(uid);
+            UserDomain userDomain = DataContext.getManager().getById(UserDomain.class, uid);
             if(userDomain == null){
                 return;
             }
             userDomain.setJoyBeans(p.getJoyBeans());
-            userDao.update(userDomain);
+            DataContext.getManager().update(userDomain);
         });
     }
 

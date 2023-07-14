@@ -1,8 +1,8 @@
 package com.zyd.ddz.common.dao;
 
 import com.zyd.ddz.common.domain.UserDomain;
-import xyz.noark.core.annotation.Repository;
-import xyz.noark.orm.repository.UniqueCacheRepository;
+import com.zyd.zgame.orm.cache.mapper.AbstractCacheService;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
 
@@ -10,10 +10,10 @@ import java.util.function.Predicate;
  * @author zyd
  * @date 2023/4/7 10:54
  */
-@Repository
-public class UserDao extends UniqueCacheRepository<UserDomain, Long> {
+@Component
+public class UserDao extends AbstractCacheService<UserMapper, UserDomain> {
 
     public UserDomain getUserBy(Predicate<UserDomain> filter){
-        return this.loadAll().stream().filter(filter).findAny().orElse(null);
+        return list().stream().filter(filter).findAny().orElse(null);
     }
 }

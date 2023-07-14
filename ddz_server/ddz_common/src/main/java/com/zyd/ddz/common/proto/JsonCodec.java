@@ -1,38 +1,37 @@
 package com.zyd.ddz.common.proto;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.zyd.zgame.common.constant.CodecType;
+import com.zyd.zgame.common.network.packet.*;
+import com.zyd.zgame.common.utils.CodecUtils;
+import com.zyd.zgame.core.codec.json.SimpleJsonCodec;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.noark.core.lang.ByteArray;
-import xyz.noark.core.lang.ImmutableByteArray;
-import xyz.noark.core.lang.StringByteArray;
-import xyz.noark.core.network.NetworkPacket;
-import xyz.noark.core.network.NetworkProtocol;
-import xyz.noark.network.codec.ByteBufWrapper;
-import xyz.noark.network.codec.DefaultNetworkPacket;
-import xyz.noark.network.codec.json.SimpleJsonCodec;
+import org.springframework.stereotype.Component;
 
 /**
  * @author zyd
  * @date 2023/4/15 11:42
  */
+@Component(value = "jsonCodec")
 public class JsonCodec extends SimpleJsonCodec {
 
 
     @Override
-    public ByteArray encodePacket(NetworkProtocol networkProtocol) {
-        return new StringByteArray(JSON.toJSONString(networkProtocol));
+    public Message encodePacket(NetworkProtocol networkProtocol) {
+        return new StringMessage(networkProtocol.getId(), JSONObject.toJSONString(networkProtocol));
     }
 
     @Override
-    public NetworkPacket decodePacket(ByteBuf byteBuf) {
-        DefaultNetworkPacket packet = new DefaultNetworkPacket();
-        ByteBufWrapper byteBufWrapper = new ByteBufWrapper(byteBuf);
-        Request request = JSON.parseObject(new String(byteBufWrapper.array()), Request.class);
+    public MessagePacket decodePacket(ByteBuf byteBuf) {
+        DefaultMessagePacket packet = new DefaultMessagePacket();
+        byte[] bytes = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(bytes);
+        Request request = JSON.parseObject(new String(bytes), Request.class);
         packet.setLength(byteBuf.readableBytes());
-        packet.setOpcode(request.getOpcode());
-        packet.setBytes(new ImmutableByteArray(request.getMessage().getBytes()));
+        packet.setMessage(new SimpleMessage(request.getMessage().getBytes(), request.getOpcode()));
 
         return packet;
     }

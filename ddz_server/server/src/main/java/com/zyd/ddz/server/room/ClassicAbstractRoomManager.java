@@ -8,16 +8,17 @@ import com.zyd.ddz.common.entity.Room;
 import com.zyd.ddz.common.message.room.response.ResGameOverRewardMessage;
 import com.zyd.ddz.common.manager.AbstractRoomManager;
 import com.zyd.ddz.common.utils.MessageUtils;
-import com.zyd.ddz.common.utils.TimeUtils;
 import com.zyd.ddz.server.service.impl.RoomServiceImpl;
-import xyz.noark.core.ioc.IocHolder;
+import com.zyd.zgame.common.utils.ApplicationContextUtils;
+import com.zyd.zgame.common.utils.TimeUtils;
+import lombok.extern.slf4j.Slf4j;
 
-import static xyz.noark.log.LogHelper.logger;
 
 /**
  * @author zyd
  * @date 2023/4/7 17:06
  */
+@Slf4j
 public class ClassicAbstractRoomManager extends AbstractRoomManager {
 
     @Override
@@ -47,7 +48,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
 
     @Override
     public void onGameOver(Room room) {
-        logger.info("[{}:{}] 游戏结束, 正在结算奖励", room.getId(), room.getName());
+        log.info("[{}:{}] 游戏结束, 正在结算奖励", room.getId(), room.getName());
         room.setGameOver(true);
         room.setGameOverTime(TimeUtils.getNowTimeMillis());
         room.setStart(false);
@@ -67,11 +68,11 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
             player.init();
             message.getPlayerRewards().put(player.getUid(), increase);
         }
-        RoomServiceImpl roomService = IocHolder.getIoc().get(RoomServiceImpl.class);
+        RoomServiceImpl roomService = ApplicationContextUtils.getBean(RoomServiceImpl.class);
         roomService.sendRewards(room);
 
         MessageUtils.sendMessageForRoom(room, message);
-        logger.info("[{}:{}] 游戏结束, 结算奖励成功", room.getId(), room.getName());
+        log.info("[{}:{}] 游戏结束, 结算奖励成功", room.getId(), room.getName());
     }
 
     @Override
@@ -86,7 +87,7 @@ public class ClassicAbstractRoomManager extends AbstractRoomManager {
             wait += dt;
             if(wait >= 2000){
                 wait = 0;
-                RoomServiceImpl roomService = IocHolder.getIoc().get(RoomServiceImpl.class);
+                RoomServiceImpl roomService = ApplicationContextUtils.getBean(RoomServiceImpl.class);
                 roomService.autoSend(room, nextPlayer);
             }
             nextPlayer.setWait(wait);

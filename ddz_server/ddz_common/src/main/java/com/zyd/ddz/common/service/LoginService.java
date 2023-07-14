@@ -1,8 +1,8 @@
 package com.zyd.ddz.common.service;
 
 import com.zyd.ddz.common.domain.UserDomain;
-import com.zyd.ddz.common.entity.UserMail;
-import xyz.noark.core.network.Session;
+import com.zyd.zgame.common.network.Session;
+
 
 /**
  * @author zyd
