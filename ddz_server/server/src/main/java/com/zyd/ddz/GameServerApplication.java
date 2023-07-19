@@ -9,6 +9,7 @@ import com.zyd.zgame.core.thread.ThreadManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 
 /**
@@ -22,11 +23,14 @@ public class GameServerApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(GameServerApplication.class, args);
         context.getBeanFactory().getBean(GameServerBootstrap.class).startUp(context);
+    }
 
-        ThreadManager.getDispatcher().dispatcherSchedule(new MailCheckEvent());
+    @Bean
+    public void scheduleTask(){
+        ThreadManager.getDelayExecutor().dispatcherSchedule(new MailCheckEvent());
 
         for (AbstractRoomManager roomManager : RoomManagerFactory.getRooms().values()) {
-            ThreadManager.getDispatcher().dispatcherSchedule(new RoomHeartEvent(roomManager));
+            ThreadManager.getDelayExecutor().dispatcherSchedule(new RoomHeartEvent(roomManager));
         }
     }
 }

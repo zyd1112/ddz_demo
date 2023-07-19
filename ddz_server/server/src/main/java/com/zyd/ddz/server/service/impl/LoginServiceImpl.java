@@ -21,7 +21,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserDomain login(Session session, String username, String nickname, String password) {
-        UserDomain userDomain = DataContext.getManager().getList(UserDomain.class)
+        UserDomain userDomain = DataContext.getManager().getAll(UserDomain.class)
                 .stream().filter(user -> user.getUsername().equals(username)).findAny().orElse(null);
         if(userDomain == null){
             userDomain = new UserDomain();

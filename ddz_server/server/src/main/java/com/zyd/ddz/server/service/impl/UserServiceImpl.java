@@ -25,6 +25,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getList(Session session) {
-        return DataContext.getManager().getList(UserDomain.class).stream().map(DtoUtils::packUser).collect(Collectors.toList());
+        return DataContext.getManager().getAll(UserDomain.class).stream().map(DtoUtils::packUser).collect(Collectors.toList());
     }
 }

@@ -1,10 +1,9 @@
 package com.zyd.ddz.common.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.zyd.zgame.orm.cache.Cache;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
@@ -16,22 +15,22 @@ import java.util.Date;
 @TableName(value = "game_user")
 @Setter
 @Getter
-public class UserDomain implements Cache {
+public class UserDomain {
 
-    @Id
-    private Long id;
+    @TableId
+    Long id;
 
-    private String username;
+    String username;
 
-    private String password;
+    String password;
 
-    private String nickname;
+    String nickname;
 
-    private Date createTime;
+    Date createTime;
 
-    private String ip;
+    String ip;
 
-    private int joyBeans;
+    Integer joyBeans;
 
-    private int imageIndex;
+    Integer imageIndex;
 }
