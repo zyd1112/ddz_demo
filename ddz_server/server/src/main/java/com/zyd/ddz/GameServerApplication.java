@@ -4,11 +4,9 @@ import com.zyd.ddz.common.manager.AbstractRoomManager;
 import com.zyd.ddz.server.event.MailCheckEvent;
 import com.zyd.ddz.server.event.RoomHeartEvent;
 import com.zyd.ddz.server.factory.RoomManagerFactory;
-import com.zyd.zgame.GameServerBootstrap;
 import com.zyd.zgame.core.thread.ThreadManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 
@@ -21,8 +19,7 @@ public class GameServerApplication {
 
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(GameServerApplication.class, args);
-        context.getBeanFactory().getBean(GameServerBootstrap.class).startUp(context);
+        SpringApplication.run(GameServerApplication.class, args);
     }
 
     @Bean
