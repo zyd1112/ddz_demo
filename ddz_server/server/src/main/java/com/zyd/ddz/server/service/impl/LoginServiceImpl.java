@@ -5,7 +5,7 @@ import com.zyd.ddz.common.service.LoginService;
 import com.zyd.zgame.common.network.Session;
 import com.zyd.zgame.common.utils.IdUtils;
 import com.zyd.zgame.common.utils.RandomUtils;
-import com.zyd.zgame.orm.cache.DataContext;
+import com.zyd.zgame.orm.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 
@@ -21,7 +21,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserDomain login(Session session, String username, String nickname, String password) {
-        UserDomain userDomain = DataContext.getManager().getAll(UserDomain.class)
+        UserDomain userDomain = CacheManager.getAll(UserDomain.class)
                 .stream().filter(user -> user.getUsername().equals(username)).findAny().orElse(null);
         if(userDomain == null){
             userDomain = new UserDomain();
@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
             userDomain.setIp(session.getIp());
             userDomain.setPassword(password);
             userDomain.setImageIndex(RandomUtils.random(0, 3));
-            DataContext.getManager().update(userDomain);
+            CacheManager.update(userDomain);
         }
         return userDomain;
     }

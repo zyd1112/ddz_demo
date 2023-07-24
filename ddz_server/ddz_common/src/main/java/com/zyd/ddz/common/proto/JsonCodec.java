@@ -21,7 +21,7 @@ public class JsonCodec extends SimpleJsonCodec {
 
     @Override
     public Message encodePacket(NetworkProtocol networkProtocol) {
-        return new StringMessage(networkProtocol.getId(), JSONObject.toJSONString(networkProtocol));
+        return new StringMessage(JSONObject.toJSONString(networkProtocol));
     }
 
     @Override
@@ -30,8 +30,9 @@ public class JsonCodec extends SimpleJsonCodec {
         byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
         Request request = JSON.parseObject(new String(bytes), Request.class);
+        packet.setId(request.getOpcode());
         packet.setLength(byteBuf.readableBytes());
-        packet.setMessage(new SimpleMessage(request.getMessage().getBytes(), request.getOpcode()));
+        packet.setMessage(new SimpleMessage(request.getMessage().getBytes()));
 
         return packet;
     }

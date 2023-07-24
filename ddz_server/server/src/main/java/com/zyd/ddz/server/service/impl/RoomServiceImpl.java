@@ -14,7 +14,7 @@ import com.zyd.ddz.common.domain.UserDomain;
 import com.zyd.ddz.common.manager.AbstractRoomManager;
 import com.zyd.ddz.server.factory.RoomManagerFactory;
 import com.zyd.ddz.common.service.RoomService;
-import com.zyd.zgame.orm.cache.DataContext;
+import com.zyd.zgame.orm.cache.CacheManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,7 @@ public class RoomServiceImpl implements RoomService {
         if(roomManager == null){
             return false;
         }
-        UserDomain userDomain = DataContext.getManager().getById(UserDomain.class, uid);
+        UserDomain userDomain = CacheManager.getById(UserDomain.class, uid);
         if(userDomain == null){
             return false;
         }
@@ -339,12 +339,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void sendRewards(Room room) {
         room.getPlayers().forEach((uid, p) -> {
-            UserDomain userDomain = DataContext.getManager().getById(UserDomain.class, uid);
+            UserDomain userDomain = CacheManager.getById(UserDomain.class, uid);
             if(userDomain == null){
                 return;
             }
             userDomain.setJoyBeans(p.getJoyBeans());
-            DataContext.getManager().update(userDomain);
+            CacheManager.update(userDomain);
         });
     }
 
