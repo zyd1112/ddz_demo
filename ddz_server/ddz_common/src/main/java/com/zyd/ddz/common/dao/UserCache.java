@@ -2,6 +2,7 @@ package com.zyd.ddz.common.dao;
 
 import com.zyd.ddz.common.domain.UserDomain;
 import com.zyd.zgame.orm.cache.action.LocalCache;
+import com.zyd.zgame.orm.cache.constant.FetchStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,5 +26,10 @@ public class UserCache extends LocalCache<Long, UserDomain> {
     @Override
     public TimeUnit unit() {
         return TimeUnit.DAYS;
+    }
+
+    @Override
+    public FetchStrategy fetchStrategy() {
+        return FetchStrategy.START;
     }
 }

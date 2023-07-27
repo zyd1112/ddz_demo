@@ -36,12 +36,4 @@ public class GameServerApplication {
             ThreadManager.getDelayExecutor().dispatcherSchedule(new RoomHeartEvent(roomManager));
         }
     }
-
-    @Autowired
-    UserDao userDao;
-
-    @Bean
-    public void initCache(){
-        CacheManager.updateOnBatch(UserDomain.class, userDao.list());
-    }
 }
