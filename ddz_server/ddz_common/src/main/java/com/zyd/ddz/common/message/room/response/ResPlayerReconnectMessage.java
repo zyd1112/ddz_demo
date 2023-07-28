@@ -16,7 +16,10 @@ import java.util.List;
 @Setter
 @Getter
 public class ResPlayerReconnectMessage implements Message {
-    int opcode = 1010;
+    @Override
+    public int getOpcode() {
+        return 1010;
+    }
 
     long nextId;
     long firstId;

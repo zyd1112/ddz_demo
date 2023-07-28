@@ -15,7 +15,10 @@ import java.util.Map;
 @Setter
 @Getter
 public class ResPlayerLeaveRoomMessage implements Message {
-    int opcode = 1008;
+    @Override
+    public int getOpcode() {
+        return 1008;
+    }
 
     Map<Long, PlayerDto> playerMap = new HashMap<>();
 }

@@ -14,10 +14,13 @@ import java.util.Map;
 @Setter
 @Getter
 public class ResGameOverRewardMessage implements Message {
-    int opcode = 1009;
-
     /**
      * 玩家奖励 uid -> joyBeans
      */
     Map<Long, Integer> playerRewards = new HashMap<>();
+
+    @Override
+    public int getOpcode() {
+        return 1009;
+    }
 }

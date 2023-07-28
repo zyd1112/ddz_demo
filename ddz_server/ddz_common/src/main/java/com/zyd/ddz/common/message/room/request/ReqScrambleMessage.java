@@ -1,6 +1,5 @@
 package com.zyd.ddz.common.message.room.request;
 
-import com.zyd.ddz.common.message.Message;
 import com.zyd.ddz.common.message.room.dto.PlayerDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +10,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class ReqScrambleMessage implements Message {
-    int opcode = 18;
-
+public class ReqScrambleMessage {
     /**
      * false 不抢
      * true 抢
@@ -21,5 +18,4 @@ public class ReqScrambleMessage implements Message {
     boolean status;
 
     PlayerDto playerDto;
-
 }

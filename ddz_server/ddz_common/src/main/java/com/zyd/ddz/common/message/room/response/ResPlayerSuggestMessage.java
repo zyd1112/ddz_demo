@@ -14,7 +14,10 @@ import java.util.List;
 @Setter
 @Getter
 public class ResPlayerSuggestMessage implements Message {
-    int opcode = 1003;
+    @Override
+    public int getOpcode() {
+        return 1003;
+    }
 
     List<Card> availableCards;
 }

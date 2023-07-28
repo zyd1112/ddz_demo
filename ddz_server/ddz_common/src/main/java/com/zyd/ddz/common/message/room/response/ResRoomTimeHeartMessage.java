@@ -11,6 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResRoomTimeHeartMessage implements Message {
-    int opcode = 1005;
+    @Override
+    public int getOpcode() {
+        return 1005;
+    }
+
     int time;
 }

@@ -17,7 +17,11 @@ import java.util.Map;
 @Setter
 @Getter
 public class ResPlayerCardMessage implements Message {
-    int opcode = 1001;
+    @Override
+    public int getOpcode() {
+        return 1001;
+    }
+
     Map<Long, List<Card>> cardsMap = new HashMap<>();
 
     /**

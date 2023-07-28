@@ -15,7 +15,10 @@ import java.util.List;
 @Setter
 @Getter
 public class ResPlayerReadyMessage implements Message {
-    int opcode = 1006;
+    @Override
+    public int getOpcode() {
+        return 1006;
+    }
 
     List<PlayerDto> playerDtoList = new ArrayList<>();
 }

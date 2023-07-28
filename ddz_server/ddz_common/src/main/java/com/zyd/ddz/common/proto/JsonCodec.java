@@ -1,14 +1,9 @@
 package com.zyd.ddz.common.proto;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zyd.zgame.common.constant.CodecType;
 import com.zyd.zgame.common.network.packet.*;
-import com.zyd.zgame.common.utils.CodecUtils;
 import com.zyd.zgame.core.codec.json.SimpleJsonCodec;
 import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,18 +24,11 @@ public class JsonCodec extends SimpleJsonCodec {
         DefaultMessagePacket packet = new DefaultMessagePacket();
         byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
-        Request request = JSON.parseObject(new String(bytes), Request.class);
-        packet.setId(request.getOpcode());
+        JSONObject jsonObject = JSONObject.parseObject(new String(bytes));
+        packet.setId(jsonObject.getInteger("opcode"));
         packet.setLength(byteBuf.readableBytes());
-        packet.setMessage(new SimpleMessage(request.getMessage().getBytes()));
+        packet.setMessage(new StringMessage(jsonObject.getString("message")));
 
         return packet;
-    }
-
-    @Setter
-    @Getter
-    static class Request{
-        int opcode;
-        String message;
     }
 }

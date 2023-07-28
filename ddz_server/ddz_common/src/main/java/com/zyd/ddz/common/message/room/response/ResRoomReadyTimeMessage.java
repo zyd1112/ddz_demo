@@ -11,7 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResRoomReadyTimeMessage implements Message {
-    int opcode = 1007;
+    @Override
+    public int getOpcode() {
+        return 1007;
+    }
+
     /**
      * 倒计时
      */

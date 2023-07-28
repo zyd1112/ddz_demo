@@ -15,7 +15,10 @@ import java.util.List;
 @Setter
 @Getter
 public class ResPlayerEnterRoomMessage implements Message {
-    int opcode = 1004;
+    @Override
+    public int getOpcode() {
+        return 1004;
+    }
 
     List<PlayerDto> playerInfos = new ArrayList<>();
 }
